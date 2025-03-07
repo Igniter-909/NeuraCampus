@@ -1,48 +1,126 @@
-import vision from '@google-cloud/vision';
-const client = new vision.ImageAnnotatorClient();
+import * as tf from '@tensorflow/tfjs-node';
+import * as faceapi from '@vladmandic/face-api';
+import { User } from '../models/User.js';
+import logger from '../utils/logger.js';
 
-const performLivenessCheck = async (imageBuffer) => {
-    try {
-        const [result] = await client.detectFaces(imageBuffer, {
-            enableLivenessDetection: true,
-            model: '3d'
-        });
-        
-        return {
-            livenessScore: result.liveness.score,
-            livenessVerified: result.liveness.score > 0.8,
-            facialLandmarks: result.landmarks3D,
-            faceGeometry: {
-                vertices: result.mesh.vertices,
-                landmarks3D: result.mesh.landmarks
-            }
-        };
-    } catch (error) {
-        throw new Error('Face verification failed: ' + error.message);
+class FaceRecognitionService {
+    constructor() {
+        this.initialized = false;
+        this.initializeModels();
     }
-};
 
-const saveFaceData = async (userId, faceData) => {
-    // Save depth map and other 3D data to your storage solution
-    const depthMapUrl = await uploadToStorage(faceData.depthMap);
-    
-    // Update user's attendance record
-    await Attendance.findOneAndUpdate(
-        { userId },
-        {
-            'verificationMethod.faceRecognition': {
-                verified: faceData.livenessVerified,
-                confidence: faceData.confidence,
-                timestamp: new Date(),
-                imageUrl: faceData.imageUrl,
-                livenessScore: faceData.livenessScore,
-                livenessVerified: faceData.livenessVerified,
-                facialLandmarks: faceData.facialLandmarks,
-                depthMap: depthMapUrl,
-                faceGeometry: faceData.faceGeometry
-            }
+    async initializeModels() {
+        try {
+            // Load face-api models
+            await faceapi.nets.ssdMobilenetv1.loadFromDisk('path/to/models');
+            await faceapi.nets.faceLandmark68Net.loadFromDisk('path/to/models');
+            await faceapi.nets.faceRecognitionNet.loadFromDisk('path/to/models');
+            this.initialized = true;
+            logger.info('Face recognition models loaded successfully');
+        } catch (error) {
+            logger.error('Error loading face recognition models:', error);
+            throw error;
         }
-    );
-};
+    }
 
-export { performLivenessCheck, saveFaceData };
+    async extractFaceEmbeddings(imageBuffer) {
+        if (!this.initialized) {
+            throw new Error('Face recognition models not initialized');
+        }
+
+        try {
+            // Convert buffer to tensor
+            const img = await faceapi.bufferToImage(imageBuffer);
+            
+            // Detect face and get embeddings
+            const detections = await faceapi
+                .detectSingleFace(img)
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+
+            if (!detections) {
+                throw new Error('No face detected in image');
+            }
+
+            return {
+                embeddings: Array.from(detections.descriptor),
+                confidence: detections.detection.score,
+                landmarks: detections.landmarks.positions
+            };
+        } catch (error) {
+            logger.error('Error extracting face embeddings:', error);
+            throw error;
+        }
+    }
+
+    async verifyFace(userId, imageBuffer, threshold = 0.6) {
+        try {
+            // Get user's stored embeddings
+            const user = await User.findById(userId);
+            if (!user.faceData?.embeddings?.length) {
+                throw new Error('No face data registered for user');
+            }
+
+            // Get embeddings from new image
+            const { embeddings: newEmbeddings } = await this.extractFaceEmbeddings(imageBuffer);
+
+            // Compare with stored embeddings
+            const matches = user.faceData.embeddings.map(storedEmbedding => {
+                const distance = faceapi.euclideanDistance(newEmbeddings, storedEmbedding);
+                return {
+                    distance,
+                    matched: distance < threshold
+                };
+            });
+
+            const bestMatch = matches.reduce((best, current) => 
+                current.distance < best.distance ? current : best
+            );
+
+            return {
+                verified: bestMatch.matched,
+                confidence: 1 - bestMatch.distance,
+                threshold
+            };
+        } catch (error) {
+            logger.error('Error verifying face:', error);
+            throw error;
+        }
+    }
+
+    async registerFace(userId, imageBuffer) {
+        try {
+            const { embeddings, confidence, landmarks } = await this.extractFaceEmbeddings(imageBuffer);
+
+            // Update user's face data
+            await User.findByIdAndUpdate(userId, {
+                $push: {
+                    'faceData.embeddings': embeddings,
+                    'faceData.faceImages': {
+                        capturedAt: new Date(),
+                        metadata: {
+                            confidence,
+                            quality: confidence,
+                            lighting: 'good' // You can implement lighting detection
+                        }
+                    }
+                },
+                $set: {
+                    'faceData.lastUpdated': new Date(),
+                    'faceData.verificationStatus': 'verified'
+                }
+            });
+
+            return {
+                success: true,
+                confidence,
+                embeddings
+            };
+        } catch (error) {
+            logger.error('Error registering face:', error);
+            throw error;
+        }
+    }
+}
+
+export const faceRecognitionService = new FaceRecognitionService();

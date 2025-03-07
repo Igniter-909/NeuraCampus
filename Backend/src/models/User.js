@@ -147,6 +147,36 @@ const userSchema = new mongoose.Schema({
         lastPasswordChange: Date,
         passwordResetToken: String,
         passwordResetExpires: Date
+    },
+    faceData: {
+        embeddings: [{
+            type: [Number],  // Array of face embedding vectors
+            index: true     // Index for faster similarity search
+        }],
+        lastUpdated: Date,
+        verificationStatus: {
+            type: String,
+            enum: ['pending', 'verified', 'failed'],
+            default: 'pending'
+        },
+        verificationAttempts: {
+            type: Number,
+            default: 0
+        },
+        faceImages: [{
+            url: String,
+            capturedAt: Date,
+            deviceInfo: {
+                type: String,
+                userAgent: String,
+                ip: String
+            },
+            metadata: {
+                confidence: Number,
+                quality: Number,
+                lighting: String
+            }
+        }]
     }
 }, {
     timestamps: true

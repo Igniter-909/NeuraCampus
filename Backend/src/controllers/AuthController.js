@@ -5,7 +5,8 @@ import { College } from '../models/College.js';
 import { sendVerificationEmail } from '../utils/emailService.js';
 import passport from 'passport';
 import logger from '../utils/logger.js';
-
+import { faceRecognitionService } from '../services/faceRecognitionService.js';
+import { upload } from '../middleware/fileUpload.js';
 
 export const getUser = async (req, res) => {
     try {
@@ -230,5 +231,60 @@ export const verifyToken = async (req, res) => {
     } catch (error) {
         logger.error('Token verification error:', error);
         res.status(401).json({ message: 'Invalid token' });
+    }
+};
+
+export const registerFace = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No face image provided' });
+        }
+
+        const result = await faceRecognitionService.registerFace(
+            req.user._id,
+            req.file.buffer
+        );
+
+        res.status(200).json({
+            message: 'Face registered successfully',
+            confidence: result.confidence
+        });
+    } catch (error) {
+        logger.error('Error registering face:', error);
+        res.status(500).json({ 
+            message: 'Error registering face',
+            error: error.message
+        });
+    }
+};
+
+export const verifyFace = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No face image provided' });
+        }
+
+        const result = await faceRecognitionService.verifyFace(
+            req.user._id,
+            req.file.buffer
+        );
+
+        if (!result.verified) {
+            return res.status(401).json({
+                message: 'Face verification failed',
+                confidence: result.confidence
+            });
+        }
+
+        res.status(200).json({
+            message: 'Face verified successfully',
+            confidence: result.confidence
+        });
+    } catch (error) {
+        logger.error('Face verification error:', error);
+        res.status(500).json({ 
+            message: 'Face verification failed',
+            error: error.message
+        });
     }
 }; 
