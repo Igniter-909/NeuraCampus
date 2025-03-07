@@ -1,0 +1,68 @@
+uploads/
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+debug.log
+.log
+log/
+*.pid
+*.seed
+*.log.*
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+prisma/dev.db
+prisma/dev.db-journal
+prisma/migrations/
+
+# Sequelize
+sequelize-meta.json
+sequelize-meta.js
+
+# Prisma
+prisma/generated/
+prisma/schema.prisma
+
+# Build files
+dist/
+out/
+build/
+.cache
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+.nyc_output/
+.vscode/
+.idea/
