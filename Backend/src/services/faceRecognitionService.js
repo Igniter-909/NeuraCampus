@@ -12,9 +12,9 @@ class FaceRecognitionService {
     async initializeModels() {
         try {
             // Load face-api models
-            await faceapi.nets.ssdMobilenetv1.loadFromDisk('path/to/models');
-            await faceapi.nets.faceLandmark68Net.loadFromDisk('path/to/models');
-            await faceapi.nets.faceRecognitionNet.loadFromDisk('path/to/models');
+            await faceapi.nets.ssdMobilenetv1.loadFromDisk('Backend\src\modules\ssd_mobilenetv1');
+            await faceapi.nets.faceLandmark68Net.loadFromDisk('Backend\src\modules\face_landmark_68');
+            await faceapi.nets.faceRecognitionNet.loadFromDisk('Backend\src\modules\face_recognition');
             this.initialized = true;
             logger.info('Face recognition models loaded successfully');
         } catch (error) {
