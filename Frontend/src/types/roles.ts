@@ -1,0 +1,1 @@
+export type Role = 'superadmin'| 'college_admin'| 'hod'| 'clerk'| 'teacher'| 'student'| 'recruiter';
