@@ -84,9 +84,9 @@ function EventCalendar({ className }: EventCalendarProps) {
   return (
     <>
       <Card className={cn("w-full", className)}>
-        <CardHeader className="flex bg-[#F4F295]  flex-row items-center justify-between space-y-0 pb-4">
+        <CardHeader className="flex bg-white  flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-xl">Event Calendar</CardTitle>
-          <div className="flex items-center bg-emerald-200 space-x-4">
+          <div className="flex items-center bg-white space-x-4">
             <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -96,7 +96,7 @@ function EventCalendar({ className }: EventCalendarProps) {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="bg-emerald-200 pt-1">
+        <CardContent className="bg-white pt-1">
           <div className="grid grid-cols-7 bg-emerald--200 text-center text-sm mb-2">
             {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
               <div key={day} className="font-medium py-2">

@@ -128,7 +128,7 @@ export default function DashboardLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full p-4 lg:p-6 overflow-y-auto bg-[#dbdde0b5] dark:bg-[#585858]">
+        <main className="flex-1 w-full md:p-4 lg:p-0 overflow-y-auto bg-[#dbdde0b5] dark:bg-[#585858]">
           <BackgroundPattern/>
           {children}
         </main>

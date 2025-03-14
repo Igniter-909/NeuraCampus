@@ -1,33 +1,14 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
-
-// import { GraduationCap } from "lucide-react"
-// import { ThemeToggle } from "@/components/ui/ThemeToggle"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
-  LayoutDashboard,
-  Building2,
-  Users,
   GraduationCap,
-  Settings,
   LogOut,
   ChevronRight,
   ChevronLeft,
-  X,
-  School,
-  BookOpen,
-  Calendar,
-  FileText,
-  Bell,
-  BarChart3,
-  Building,
-  Cog,
-  Landmark
+  X
 } from "lucide-react"
 import Image from "next/image"
 import ProfessorIcon from "../../../../public/sidebar/002-professor.svg"
@@ -45,6 +26,7 @@ import UserIcon from "../../../../public/sidebar/004-student.svg"
 import JobsIcon from "../../../../public/sidebar/027-businessman.svg"
 import ApplicationIcon from "../../../../public/sidebar/053-contract.svg"
 import UserIcon2 from "../../../../public/sidebar/033-student.svg"
+import CommunityIcon from "../../../../public/sidebar/033-student.svg"
 import UserIcon3 from "../../../../public/sidebar/034-student.svg" 
 import AttendanceIcon from "../../../../public/sidebar/024-schedule.svg"
 import { ROLE_DISPLAY_NAMES } from "@/constants/roles"
@@ -85,6 +67,7 @@ const iconMap: Record<string, React.ReactNode> = {
   attendance: <Image src={AttendanceIcon} width={30} height={30} alt="User" />,
   jobs: <Image src={JobsIcon} width={30} height={30} alt="Jobs" />,
   applications: <Image src={ApplicationIcon} width={30} height={30} alt="Application" />,
+  community: <Image src={CommunityIcon} width={30} height={30} alt="Community" />,
   
 }
 

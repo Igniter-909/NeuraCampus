@@ -1,5 +1,4 @@
 import { NavigationItem } from '@/components/forms/layouts/Siderbar';
-import { Role } from '@/constants/roles';
 
 export const ROUTES = {
   // Auth Routes
@@ -155,9 +154,11 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
   ],
   student: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.student, icon: 'dashboard' },
-    { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
-    { label: 'Attendance', path: ROUTES.ACADEMICS.ATTENDANCE, icon: 'attendance' },
-    { label: 'Grades', path: ROUTES.ACADEMICS.GRADES, icon: 'grades' }
+    { label: 'Courses', path: 'student/courses', icon: 'courses' },
+    { label: 'Attendance', path: 'student/academics/attendance', icon: 'attendance' },
+    { label: 'Grades', path: 'student/academics/grades', icon: 'grades' },
+    { label: 'Community', path: 'student/academics/community', icon: 'community' }
+
   ],
   recruiter: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.recruiter, icon: 'dashboard' },

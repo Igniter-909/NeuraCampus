@@ -15,7 +15,7 @@ export function BackgroundPattern() {
               x="0" 
               y="0" 
               fill="currentColor"
-              className="text-slate-400 dark:text-slate-950"
+              className="text-slate-800 dark:text-slate-200"
             />
           </pattern>
         </defs>

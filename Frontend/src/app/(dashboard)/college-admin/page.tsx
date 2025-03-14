@@ -183,7 +183,7 @@ export default function CollegeAdminDashboard() {
               description="Here you can manage your college and see your stats" 
               buttonText="View Stats" 
               onButtonClick={() => {}} 
-              className="shadow-lg rounded-xl"
+              className="shadow-lg rounded-xl bg-gradient-to-r from-purple-800 to-amber-500"
             />
 
             <div className="flex flex-col sm:flex-row gap-4">
