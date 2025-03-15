@@ -83,28 +83,28 @@ function EventCalendar({ className }: EventCalendarProps) {
 
   return (
     <>
-      <Card className={cn("w-full", className)}>
-        <CardHeader className="flex bg-white  flex-row items-center justify-between space-y-0 pb-4">
+      <Card className={cn("w-full", className, "bg-white dark:bg-gray-800")}>
+        <CardHeader className="flex bg-white dark:bg-gray-900 flex-row items-center justify-between space-y-0 pb-4">
           <CardTitle className="text-xl">Event Calendar</CardTitle>
-          <div className="flex items-center bg-white space-x-4">
+          <div className="flex items-center bg-white dark:bg-black space-x-4">
             <Button variant="ghost" size="icon" onClick={() => setCurrentDate(subMonths(currentDate, 1))}>
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <span className="text-sm font-medium">{format(currentDate, "MMMM yyyy")}</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">{format(currentDate, "MMMM yyyy")}</span>
             <Button variant="ghost" size="icon" onClick={() => setCurrentDate(addMonths(currentDate, 1))}>
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="bg-white pt-1">
-          <div className="grid grid-cols-7 bg-emerald--200 text-center text-sm mb-2">
+        <CardContent className="bg-white dark:bg-gray-900 pt-1">
+          <div className="grid grid-cols-7 bg-emerald--200 dark:bg-emerald-800 text-center text-sm mb-2">
             {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
               <div key={day} className="font-medium py-2">
                 {day}
               </div>
             ))}
           </div>
-          <div className="grid grid-cols-7 bg-emerald--200 gap-px text-center">
+          <div className="grid grid-cols-7 bg-emerald--200 dark:bg-emerald-800 gap-px text-center">
             {getDaysArray().map((date, i) => {
               const isCurrentMonth = isSameMonth(date, currentDate)
               const dayEvents = getEventsForDate(date)
@@ -118,12 +118,12 @@ function EventCalendar({ className }: EventCalendarProps) {
                     setIsModalOpen(true)
                   }}
                   className={cn(
-                    "p-2 relative hover:bg-gray-100 transition-colors h-16 sm:h-20",
+                    "p-2 relative hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors h-16 sm:h-20",
                     "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50",
-                    !isCurrentMonth && "text-muted-foreground",
-                    isCurrentMonth && "hover:bg-muted cursor-pointer",
+                    !isCurrentMonth && "text-muted-foreground dark:text-gray-400",
+                    isCurrentMonth && "hover:bg-muted cursor-pointer dark:hover:bg-gray-700",
                     hasEvent && "font-medium",
-                    isSameDay(date, selectedDate) && "bg-primary/10",
+                    isSameDay(date, selectedDate) && "bg-primary/10 dark:bg-primary/20",
                   )}
                 >
                   <span
@@ -151,7 +151,7 @@ function EventCalendar({ className }: EventCalendarProps) {
                       )
                     ))}
                     {dayEvents.length > 2 && (
-                      <div className="text-xs text-muted-foreground">+{dayEvents.length - 2} more</div>
+                      <div className="text-xs text-muted-foreground dark:text-gray-400">+{dayEvents.length - 2} more</div>
                     )}
                   </div>
                 </button>

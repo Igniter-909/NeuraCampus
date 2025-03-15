@@ -128,8 +128,8 @@ export default function DashboardLayout({
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 w-full md:p-4 lg:p-0 overflow-y-auto bg-[#dbdde0b5] dark:bg-[#585858]">
-          <BackgroundPattern/>
+        <main className="flex-1 w-full md:p-4 lg:p-0 overflow-y-auto bg-[#dbdde0b5] dark:bg-[#131313]">
+          <BackgroundPattern />
           {children}
         </main>
       </div>

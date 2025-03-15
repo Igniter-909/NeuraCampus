@@ -253,7 +253,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="flex h-[calc(100vh-70px)] p-0 bg-gradient-to-br from-blue-50 to-indigo-50 relative">
+    <div className="flex h-[calc(100vh-70px)] p-0 bg-gradient-to-br from-blue-50 to-indigo-50 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 relative">
       <Sidebar 
         data={data} 
         isMobile={isMobile} 

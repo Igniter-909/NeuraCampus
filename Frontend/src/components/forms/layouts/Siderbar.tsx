@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   X
 } from "lucide-react"
+import logo from "../../../../public/logo11.svg"
 import Image from "next/image"
 import ProfessorIcon from "../../../../public/sidebar/002-professor.svg"
 import SchoolIcon from "../../../../public/sidebar/002-school.svg"
@@ -28,6 +29,7 @@ import ApplicationIcon from "../../../../public/sidebar/053-contract.svg"
 import UserIcon2 from "../../../../public/sidebar/033-student.svg"
 import CommunityIcon from "../../../../public/sidebar/033-student.svg"
 import UserIcon3 from "../../../../public/sidebar/034-student.svg" 
+import PortalIcon from "../../../../public/sidebar/034-student.svg"
 import AttendanceIcon from "../../../../public/sidebar/024-schedule.svg"
 import { ROLE_DISPLAY_NAMES } from "@/constants/roles"
 import { useAuth } from "@/hooks/auth/useAuth"
@@ -68,7 +70,7 @@ const iconMap: Record<string, React.ReactNode> = {
   jobs: <Image src={JobsIcon} width={30} height={30} alt="Jobs" />,
   applications: <Image src={ApplicationIcon} width={30} height={30} alt="Application" />,
   community: <Image src={CommunityIcon} width={30} height={30} alt="Community" />,
-  
+  portal: <Image src={PortalIcon} width={30} height={30} alt="Portal" />,
 }
 
 export default function Sidebar({ navigationItems, role, userName, isCollapsed, setIsCollapsed, mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
@@ -105,15 +107,17 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
         `}
       >
         {/* Header with slightly transparent background */}
-        <div className="bg-white/5 backdrop-blur-sm shadow-lg h-16 flex items-center justify-between px-5 flex-shrink-0">
+        <div className={`bg-white/5 backdrop-blur-sm shadow-lg h-16 flex items-center justify-between  flex-shrink-0 ${isCollapsed && !mobileMenuOpen ? 'justify-center px-1' : 'px-3'}`}>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-md bg-white/10 flex items-center justify-center">
-              <GraduationCap size={20} className="text-white" />
+            <div className="w-14 h-14 rounded-md bg-white/10 flex items-center justify-center">
+              {/* <GraduationCap size={20} className="text-white" />
+               */}
+               <Image src={logo} width={40} height={40} alt="logo" />
             </div>
             {(!isCollapsed || mobileMenuOpen) && (
               <div>
-                <h1 className="text-lg font-semibold text-white">Campus</h1>
-                <p className="text-[10px] -mt-1 text-white/60">Management System</p>
+                <h1 className="text-lg font-semibold text-white">NeuraCampus</h1>
+                <p className="text-[10px] -mt-1 text-white/60">New Era for College</p>
               </div>
             )}
           </div>

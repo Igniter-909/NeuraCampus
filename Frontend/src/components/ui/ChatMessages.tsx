@@ -8,7 +8,7 @@ interface ChatMessagesProps {
 
 const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, activeCommunity }) => {
   return (
-    <div className="flex-1 bg-transparent overflow-y-auto p-2 md:p-3 space-y-3 bg-gray-50">
+    <div className="flex-1 bg-transparent overflow-y-auto p-2 md:p-3 space-y-3 bg-gray-50 ">
       {messages.map((chat) => (
         <div key={chat.id} className={`flex gap-2 ${chat.isOwn ? 'flex-row-reverse' : ''}`}>
           <img src={chat.avatar} alt={chat.sender} className="w-7 h-7 rounded-lg object-cover flex-shrink-0" width={28} height={28} />
@@ -17,7 +17,7 @@ const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, activeCommunity }
               <span className="text-xs font-medium text-gray-900">{chat.sender}</span>
               <span className="text-[10px] text-gray-400">{chat.time}</span>
             </div>
-            <div className={`max-w-[85vw] md:max-w-md rounded-xl px-3 py-1.5 ${chat.isOwn ? 'bg-blue-500 text-white' : 'bg-white text-gray-800 shadow-sm'}`}>
+            <div className={`max-w-[85vw] md:max-w-md rounded-xl px-3 py-1.5 ${chat.isOwn ? 'bg-blue-500 text-white' : 'bg-white text-gray-800 dark:bg-black dark:text-gray-200 shadow-sm'}`}>
               <p className="text-xs leading-relaxed">{chat.message}</p>
             </div>
           </div>

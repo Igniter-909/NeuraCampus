@@ -3,7 +3,8 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { usePathname } from 'next/navigation';
 import Loader from './Loader';
-
+import logo from '../../../public/logo11.svg'
+import Image from 'next/image'
 export default function PageTransition() {
   const overlayRef = useRef(null);
   const pathname = usePathname();
@@ -50,8 +51,9 @@ export default function PageTransition() {
   }, [pathname]);
 
   return (
-    <div ref={overlayRef}>
+    <div ref={overlayRef} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
       <Loader />
+      <Image src={logo} alt="Logo" width={60} height={60} style={{ position: 'absolute', zIndex: 2 }} />
     </div>
   );
 }
