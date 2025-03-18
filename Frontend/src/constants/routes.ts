@@ -158,9 +158,8 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
     { label: 'Attendance', path: 'student/academics/attendance', icon: 'attendance' },
     { label: 'Grades', path: 'student/academics/grades', icon: 'grades' },
     { label: 'Community', path: 'student/academics/community', icon: 'community' },
-    { label: 'Internship-Portal', path: 'student/academics/portal', icon: 'portal' }
-
-
+    { label: 'Internship-Portal', path: 'student/academics/portal', icon: 'portal' },
+    { label: 'Feeds', path: 'student/academics/feeds', icon: 'feeds' }
   ],
   recruiter: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.recruiter, icon: 'dashboard' },

@@ -71,6 +71,7 @@ const iconMap: Record<string, React.ReactNode> = {
   applications: <Image src={ApplicationIcon} width={30} height={30} alt="Application" />,
   community: <Image src={CommunityIcon} width={30} height={30} alt="Community" />,
   portal: <Image src={PortalIcon} width={30} height={30} alt="Portal" />,
+  feeds: <Image src={JobsIcon} width={30} height={30} alt="Feeds" />,
 }
 
 export default function Sidebar({ navigationItems, role, userName, isCollapsed, setIsCollapsed, mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
