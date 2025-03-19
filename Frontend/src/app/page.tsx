@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { Typewriter } from "react-simple-typewriter"
 import { useEffect, useState } from "react"
 import { BackgroundShapes } from "@/components/ui/background-shapes"
+import { ImageCollage } from "@/components/ui/image-collage"
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
@@ -16,7 +17,7 @@ export default function Home() {
     setTimeout(() => {
       setIsLoading(false)
       setTimeout(() => setStartTyping(true), 600)
-    }, 3000)
+    }, 2200)
   }, [])
 
   return (
@@ -82,8 +83,10 @@ export default function Home() {
           </div>
         </nav>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
+        <main className="max-w-full mx-10 flex items-center my-auto px-4 sm:px-6 lg:px-0 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full">
+           
+          <div className="flex flex-col justify-center">
             {isLoading ? (
               <motion.div
                 className="text-white text-3xl font-bold"
@@ -93,7 +96,7 @@ export default function Home() {
               ></motion.div>
             ) : (
               <motion.h1
-                className="text-4xl tracking-tight font-extrabold text-white sm:text-5xl md:text-6xl"
+                className="text-5xl  tracking-tight font-extrabold text-white sm:text-6xl md:text-7xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, ease: "easeOut" }}
@@ -102,9 +105,9 @@ export default function Home() {
                 <span className="block text-gray-900">
                   {startTyping && (
                     <>
-                      <span className="text-white">Neura</span>
-                      <span className="text-black">
-                        <Typewriter words={["Campus"]} typeSpeed={150} delaySpeed={500} cursor />
+                      <span className="text-white text-6xl sm:text-7xl md:text-8xl">Neura</span>
+                      <span className="text-black text-5xl sm:text-6xl md:text-7xl">
+                        <Typewriter words={["Campus"]} typeSpeed={300} delaySpeed={500} cursor loop={true} />
                       </span>
                     </>
                   )}
@@ -112,7 +115,7 @@ export default function Home() {
               </motion.h1>
             )}
             <motion.p
-              className="mt-2 line-clamp-2 max-w-md mx-auto text-sm text-blue-100 sm:text-base md:max-w-2xl"
+              className="mt-2 line-clamp-2 max-w-md mx-2 text-sm text-blue-100 sm:text-md md:max-w-2xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2, duration: 1.5, ease: "easeInOut" }}
@@ -121,33 +124,9 @@ export default function Home() {
               Streamline your academic processes, enhance communication, and improve efficiency.
             </motion.p>
 
-            {/* Center Image */}
-            <motion.div
-              className="mt-8 flex justify-center"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 2.5, duration: 0.8 }}
-            >
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64">
-                <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="NeuraCampus Platform"
-                  width={400}
-                  height={400}
-                  className="rounded-lg shadow-2xl object-cover"
-                />
-                <motion.div
-                  className="absolute -top-4 -right-4 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold"
-                  initial={{ rotate: -5 }}
-                  animate={{ rotate: 5 }}
-                  transition={{ repeat: Number.POSITIVE_INFINITY, repeatType: "mirror", duration: 2 }}
-                >
-                  New!
-                </motion.div>
-              </div>
-            </motion.div>
+            
 
-            <div className="mt-6 max-w-md mx-auto sm:flex sm:justify-center">
+            <div className="mt-6 max-w-md mx-2 sm:flex sm:justify-center">
               <motion.div className="rounded-md shadow" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Link
                   href="/register"
@@ -169,6 +148,9 @@ export default function Home() {
                 </Link>
               </motion.div>
             </div>
+          </div>
+          <ImageCollage/>
+
           </div>
         </main>
       </div>
