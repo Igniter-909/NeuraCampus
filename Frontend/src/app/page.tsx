@@ -28,7 +28,7 @@ export default function Home() {
       <div className="relative z-10 flex flex-col flex-1">
         <nav className="bg-transparent shadow-md border border-white/10 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
+            <div className="flex flex-col sm:flex-row justify-between h-16">
               <div className="flex items-center">
                 <Link href="/" className="flex-shrink-0 flex items-center">
                   <Image className="h-8 w-auto" src={logo || "/placeholder.svg"} alt="Logo" width={32} height={32} />
@@ -65,7 +65,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-4 mt-2 sm:mt-0">
                 <Link
                   href="/login"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent border shadow-xl border-white text-white hover:bg-white/10 hover:text-black transition-all ease-in-out duration-300"
@@ -83,74 +83,70 @@ export default function Home() {
           </div>
         </nav>
 
-        <main className="max-w-full mx-10 flex items-center my-auto px-4 sm:px-6 lg:px-0 py-8">
+        <main className="max-w-full mx-4 sm:mx-10 flex items-center my-5 md:my-auto px-4 sm:px-6 lg:px-0 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 w-full">
-           
-          <div className="flex flex-col justify-center">
-            {isLoading ? (
-              <motion.div
-                className="text-white text-3xl font-bold"
-                initial={{ opacity: 1 }}
-                animate={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: 2.5 }}
-              ></motion.div>
-            ) : (
-              <motion.h1
-                className="text-5xl  tracking-tight font-extrabold text-white sm:text-6xl md:text-7xl"
+            <div className="flex flex-col justify-center">
+              {isLoading ? (
+                <motion.div
+                  className="text-white text-3xl font-bold"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ duration: 0.5, delay: 2.5 }}
+                ></motion.div>
+              ) : (
+                <motion.h1
+                  className="text-4xl sm:text-5xl tracking-tight font-extrabold text-white sm:text-6xl md:text-7xl"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                >
+                  <span className="block">Welcome to</span>
+                  <span className="block text-gray-900">
+                    {startTyping && (
+                      <>
+                        <span className="text-white text-5xl sm:text-6xl md:text-7xl">Neura</span>
+                        <span className="text-black text-4xl sm:text-5xl md:text-6xl">
+                          <Typewriter words={["Campus"]} typeSpeed={300} delaySpeed={500} cursor loop={true} />
+                        </span>
+                      </>
+                    )}
+                  </span>
+                </motion.h1>
+              )}
+              <motion.p
+                className="mt-2 line-clamp-2 max-w-md mx-2 text-sm text-blue-100 sm:text-md md:max-w-2xl"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, ease: "easeOut" }}
+                transition={{ delay: 2, duration: 1.5, ease: "easeInOut" }}
               >
-                <span className="block">Welcome to</span>
-                <span className="block text-gray-900">
-                  {startTyping && (
-                    <>
-                      <span className="text-white text-6xl sm:text-7xl md:text-8xl">Neura</span>
-                      <span className="text-black text-5xl sm:text-6xl md:text-7xl">
-                        <Typewriter words={["Campus"]} typeSpeed={300} delaySpeed={500} cursor loop={true} />
-                      </span>
-                    </>
-                  )}
-                </span>
-              </motion.h1>
-            )}
-            <motion.p
-              className="mt-2 line-clamp-2 max-w-md mx-2 text-sm text-blue-100 sm:text-md md:max-w-2xl"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2, duration: 1.5, ease: "easeInOut" }}
-            >
-              A comprehensive solution for managing educational institutions.
-              Streamline your academic processes, enhance communication, and improve efficiency.
-            </motion.p>
+                A comprehensive solution for managing educational institutions.
+                Streamline your academic processes, enhance communication, and improve efficiency.
+              </motion.p>
 
-            
-
-            <div className="mt-6 max-w-md mx-2 sm:flex sm:justify-center">
-              <motion.div className="rounded-md shadow" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  href="/register"
-                  className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-white bg-blue-700/80 backdrop-blur-[80px] shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-blue-800 transition-all ease-in-out duration-300 md:py-4 md:text-lg md:px-10"
+              <div className="mt-6 max-w-md mx-2 sm:flex sm:justify-center">
+                <motion.div className="rounded-md shadow" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/register"
+                    className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-white bg-blue-700/80 backdrop-blur-[80px] shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-blue-800 transition-all ease-in-out duration-300 md:py-4 md:text-lg md:px-10"
+                  >
+                    Get started
+                  </Link>
+                </motion.div>
+                <motion.div
+                  className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Get started
-                </Link>
-              </motion.div>
-              <motion.div
-                className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link
-                  href="/about"
-                  className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-blue-700 bg-white shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-gray-100 transition-all ease-in-out duration-300 md:py-4 md:text-lg md:px-10"
-                >
-                  Learn more
-                </Link>
-              </motion.div>
+                  <Link
+                    href="/about"
+                    className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-blue-700 bg-white shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-gray-100 transition-all ease-in-out duration-300 md:py-4 md:text-lg md:px-10"
+                  >
+                    Learn more
+                  </Link>
+                </motion.div>
+              </div>
             </div>
-          </div>
-          <ImageCollage/>
-
+            <ImageCollage />
           </div>
         </main>
       </div>
