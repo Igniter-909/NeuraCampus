@@ -201,6 +201,18 @@ export default function Home() {
           />
         </svg>
       </div>
+
+      <div className="absolute bottom-10 left-10 transform -translate-x-1/2 animate-bounce">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-8 w-8 text-white"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
+        </svg>
+      </div>
     </div>
   )
 }
