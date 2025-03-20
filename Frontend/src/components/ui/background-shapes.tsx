@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 type Shape = {
   id: number
-  type: "circle" | "triangle" | "square" | "hexagon"
+  type: "circle" | "triangle" | "square" | "hexagon" | "ring" | "solidSquare"
   x: number
   y: number
   size: number
@@ -20,12 +20,14 @@ export function BackgroundShapes() {
 
   useEffect(() => {
     // Generate random shapes
-    const types = ["circle", "triangle", "square", "hexagon"]
+    const types = ["circle", "triangle", "square", "hexagon", "ring", "solidSquare"]
     const colors = [
       "rgba(59, 130, 246, 0.35)", // blue
       "rgba(99, 102, 241, 0.3)", // indigo
       "rgba(16, 35, 79, 0.25)", // dark blue
       "rgba(255, 255, 255, 0.2)", // white
+      "rgba(255, 0, 0, 0.5)", // red for solid squares
+      "rgba(0, 255, 0, 0.5)", // green for solid squares
     ]
 
     const newShapes: Shape[] = []
@@ -150,6 +152,64 @@ export function BackgroundShapes() {
               height: `${shape.size * 0.866}px`,
               backgroundColor: shape.color,
               clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+              zIndex: 1,
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+              x: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
+              y: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
+              rotate: [0, shape.rotation, shape.rotation * 2, shape.rotation * 3],
+              scale: [0, 1, 0.8, 1],
+              opacity: [0, 0.9, 0.7, 0],
+            }}
+            transition={{
+              duration: shape.duration,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: shape.delay,
+              ease: "easeInOut",
+            }}
+          />
+        )
+      case "ring":
+        return (
+          <motion.div
+            key={shape.id}
+            className="absolute rounded-full"
+            style={{
+              left: `${shape.x}%`,
+              top: `${shape.y}%`,
+              width: shape.size,
+              height: shape.size,
+              backgroundColor: shape.color,
+              zIndex: 1,
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+              x: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
+              y: [0, Math.random() * 100 - 50, Math.random() * 100 - 50, 0],
+              rotate: [0, shape.rotation, shape.rotation * 2, shape.rotation * 3],
+              scale: [0, 1, 0.8, 1],
+              opacity: [0, 0.9, 0.7, 0],
+            }}
+            transition={{
+              duration: shape.duration,
+              repeat: Number.POSITIVE_INFINITY,
+              delay: shape.delay,
+              ease: "easeInOut",
+            }}
+          />
+        )
+      case "solidSquare":
+        return (
+          <motion.div
+            key={shape.id}
+            className="absolute"
+            style={{
+              left: `${shape.x}%`,
+              top: `${shape.y}%`,
+              width: shape.size,
+              height: shape.size,
+              backgroundColor: shape.color,
               zIndex: 1,
             }}
             initial={{ scale: 0, opacity: 0 }}
