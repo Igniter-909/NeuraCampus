@@ -549,6 +549,11 @@ const ReviewCard = ({
                   </div>
                 </div>
               </div>
+
+              <div className="mt-12 bg-white/10 backdrop-blur-sm p-6 rounded-lg">
+                <h3 className="text-xl font-semibold text-white mb-4">Business Hours</h3>
+                <Image src="https://eskooly.com/assets/images/illustrations/drawings/line-city.svg" height={16} width={450} alt="" />
+              </div>
             </motion.div>
           </div>
         </div>
