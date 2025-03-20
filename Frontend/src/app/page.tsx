@@ -7,6 +7,7 @@ import intern from "../../public/intern.png"
 import pyq from "../../public/pyq.png"
 import networking from "../../public/networking.png"
 import additional from "../../public/additional.png"
+import feedback from "../../public/feedback.png"
 import Link from "next/link"
 import { BeamsBackground } from "@/components/ui/beams-background"
 import { motion } from "framer-motion"
@@ -446,8 +447,8 @@ const ReviewCard = ({
       </section>
 
       {/* Contact Section */}
-      <section id="contact" ref={contactRef} className="min-h-screen bg-[#426ac7] pt-16 flex items-center relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
+      <section id="contact" ref={contactRef} className="min-h-screen bg-[#7896db] pt-16 flex items-center relative">
+        <div className="w-3/4 mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
           <motion.div
             className="text-center mb-12"
             initial={{ opacity: 0, y: 20 }}
@@ -507,7 +508,7 @@ const ReviewCard = ({
                   </div>
                   <button
                     type="submit"
-                    className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
+                    className="w-full px-6 py-3 bg-blue-900 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
                   >
                     Send Message
                   </button>
@@ -526,45 +527,27 @@ const ReviewCard = ({
                 <h3 className="text-xl font-semibold text-white mb-6">Contact Information</h3>
                 <div className="space-y-6">
                   <div className="flex items-start">
-                    <MapPin className="w-6 h-6 text-blue-400 mr-4 mt-1" />
+                    <MapPin className="w-6 h-6 text-blue-900 mr-4 mt-1" />
                     <div>
                       <h4 className="font-medium text-white">Address</h4>
-                      <p className="text-blue-100 mt-1">123 Education Street, Tech City, TC 12345</p>
+                      <p className="text-blue-100 mt-1">Indian Institute of Information Technology Una, 177209</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Phone className="w-6 h-6 text-blue-400 mr-4 mt-1" />
+                    <Phone className="w-6 h-6 text-blue-900 mr-4 mt-1" />
                     <div>
                       <h4 className="font-medium text-white">Phone</h4>
-                      <p className="text-blue-100 mt-1">+1 (555) 123-4567</p>
+                      <p className="text-blue-100 mt-1">+91 9225679921</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Mail className="w-6 h-6 text-blue-400 mr-4 mt-1" />
+                    <Mail className="w-6 h-6 text-blue-900 mr-4 mt-1" />
                     <div>
                       <h4 className="font-medium text-white">Email</h4>
-                      <p className="text-blue-100 mt-1">info@neuracampus.com</p>
+                      <p className="text-blue-100 mt-1">amanchn13@gmail.com</p>
                     </div>
                   </div>
                 </div>
-              </div>
-
-              <div className="mt-12 bg-white/10 backdrop-blur-sm p-6 rounded-lg">
-                <h3 className="text-xl font-semibold text-white mb-4">Business Hours</h3>
-                <ul className="space-y-2">
-                  <li className="flex justify-between text-blue-100">
-                    <span>Monday - Friday:</span>
-                    <span>9:00 AM - 6:00 PM</span>
-                  </li>
-                  <li className="flex justify-between text-blue-100">
-                    <span>Saturday:</span>
-                    <span>10:00 AM - 4:00 PM</span>
-                  </li>
-                  <li className="flex justify-between text-blue-100">
-                    <span>Sunday:</span>
-                    <span>Closed</span>
-                  </li>
-                </ul>
               </div>
             </motion.div>
           </div>
