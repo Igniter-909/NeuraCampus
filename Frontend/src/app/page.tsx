@@ -1,6 +1,12 @@
 "use client"
 import Image from "next/image"
 import logo from "../../public/logo11.svg" // Static import
+import college from "../../public/college.png"
+import attendance from "../../public/attendance.png"
+import intern from "../../public/intern.png"
+import pyq from "../../public/pyq.png"
+import networking from "../../public/networking.png"
+import additional from "../../public/additional.png"
 import Link from "next/link"
 import { BeamsBackground } from "@/components/ui/beams-background"
 import { motion } from "framer-motion"
@@ -9,8 +15,81 @@ import { useEffect, useRef, useState } from "react"
 import { BackgroundShapes } from "@/components/ui/background-shapes"
 import { ImageCollage } from "@/components/ui/image-collage"
 import { Mail, MapPin, Phone } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Marquee } from "@/components/magicui/marquee";
 
 export default function Home() {
+  const reviews = [
+  {
+    name: "College Management",
+    body: "Manage documents without having to sit under piles of paper",
+    img: college,
+  },
+  {
+    name: "Attendance Management",
+    body: "Proxy-proof sound-cum-face recognition based attendance",
+    img: attendance,
+  },
+  {
+    name: "Internship & Placement Support",
+    body: "Connect with recruiters and showcase your skills",
+    img: intern,
+  },
+  {
+    name: "PYQ Papers",
+    body: "Access to previous year papers with solutions",
+    img: pyq,
+  },
+  {
+    name: "Additional Features",
+    body: "Additional features for college like fee payments and admission stats",
+    img: additional,
+  },
+  {
+    name: "Networking",
+    body: "Collaborate with other institutions through exciting events",
+    img: networking,
+  },
+];
+ 
+const firstRow = reviews.slice(0, reviews.length / 2);
+const secondRow = reviews.slice(reviews.length / 2);
+ 
+const ReviewCard = ({
+  img,
+  name,
+  body,
+}: {
+  img: any;
+  name: string;
+  body: string;
+}) => {
+  return (
+    <figure
+      className={cn(
+        "relative w-72 sm:w-80 p-6 rounded-2xl transition-all duration-300",
+        "border border-blue-400/40 shadow-lg hover:shadow-2xl",
+        "bg-gradient-to-br from-[#adaeb0] to-[#7f2e60] dark:from-[#1b2d5d]/80 dark:to-[#4466b2]/80",
+        "hover:scale-[1.02] hover:border-blue-500/60",
+        "backdrop-blur-md"
+      )}
+    >
+      <div className="flex items-center gap-3">
+        <Image
+          className="rounded-full border border-white/20 shadow-md"
+          width={56}
+          height={56}
+          alt=""
+          src={img}
+        />
+        <figcaption className="text-lg font-semibold text-white">{name}</figcaption>
+      </div>
+      <blockquote className="mt-3 text-sm text-blue-200 leading-relaxed">
+        "{body}"
+      </blockquote>
+    </figure>
+  );
+};
   const [isLoading, setIsLoading] = useState(true)
   const [startTyping, setStartTyping] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
@@ -341,70 +420,28 @@ export default function Home() {
       </section>
 
       {/* Our Work Section */}
-      <section id="work" ref={workRef} className="min-h-screen bg-[#2451b9] pt-16 flex items-center relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
-          <motion.div
-            className="text-center mb-12"
+      <section id="work" ref={workRef} className="min-h-screen bg-gradient-to-br from-[#1a3b78] to-[#3658a7] pt-16 flex items-center relative">
+        <motion.div
+            className="text-center mb-12 bg-transparent"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Our Work</h2>
-            <div className="mt-2 h-1 w-20 bg-blue-600 mx-auto"></div>
-            <p className="mt-4 text-blue-100 max-w-2xl mx-auto">
-              Explore our innovative solutions that are transforming educational institutions worldwide.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: item * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white/10 backdrop-blur-sm rounded-lg overflow-hidden shadow-xl"
-              >
-                <div className="relative h-48">
-                  <Image
-                    src={`/placeholder.svg?height=300&width=400&text=Project+${item}`}
-                    alt={`Project ${item}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-white mb-2">Project {item}</h3>
-                  <p className="text-blue-100 mb-4">
-                    A comprehensive solution for managing educational institutions with advanced features.
-                  </p>
-                  <button
-                    className="text-blue-300 hover:text-blue-100 font-medium transition-colors"
-                    onClick={() => scrollToSection("contact")}
-                  >
-                    Learn more →
-                  </button>
-                </div>
-              </motion.div>
+            <h2 className="text-3xl font-bold text-black sm:text-4xl">Our Work</h2>
+            <div className="mt-2 h-1 w-20 bg-white mx-auto"></div>
+        </motion.div>
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+          <Marquee pauseOnHover className="[--duration:20s] h-64">
+            {firstRow.map((review) => (
+              <ReviewCard key={review.name} {...review} />
             ))}
-          </div>
-
-          <motion.div
-            className="mt-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="px-8 py-3 text-base font-medium rounded-md text-white bg-blue-700/80 backdrop-blur-[80px] shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-blue-800 transition-all ease-in-out duration-300"
-            >
-              View All Projects
-            </button>
-          </motion.div>
+          </Marquee>
+          <Marquee reverse pauseOnHover className="[--duration:20s] h-64">
+            {secondRow.map((review) => (
+              <ReviewCard key={review.name} {...review} />
+            ))}
+          </Marquee>
         </div>
       </section>
 
