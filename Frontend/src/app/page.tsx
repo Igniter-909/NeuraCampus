@@ -22,6 +22,7 @@ export default function Home() {
 
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Reset scroll position to the top
     setTimeout(() => {
       setIsLoading(false)
       setTimeout(() => setStartTyping(true), 600)
