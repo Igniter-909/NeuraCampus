@@ -23,9 +23,9 @@ export function ImageCollage() {
       <motion.div
         className="absolute z-10 shadow-2xl shadow-blue-950  rounded-xl overflow-hidden border-4 border-white/20"
         initial={{ opacity: 0, x: -100, rotate: -8, y: 0 }}
-        animate={isVisible ? { opacity: 1, x: 0, rotate: 0, y: [0, -20, 10, -15, 5, -10, 0] } : {}}
+        animate={isVisible ? { opacity: 1, x: 0, rotate: 0, y: [0, -20, 10, -15, 5, 10, 0] } : {}}
         transition={{ duration: 2.2, ease: "easeInOut", loop: Infinity }}
-        style={{ width: "100%", maxWidth: "800px", top: "-60%", right: "5%" }}
+        style={{ width: "100%", maxWidth: "800px", top: "-35%", right: "5%" }}
       > 
       
         <Safari
@@ -43,7 +43,7 @@ export function ImageCollage() {
         initial={{ opacity: 0, x: -100, rotate: 8, y: 0 }}
         animate={isVisible ? { opacity: 1, x: 0, rotate: 0, y: [0, 15, -10, 20, -5, 10, 0] } : {}}
         transition={{ duration: 2.2, ease: "easeInOut", loop: Infinity }}
-        style={{ width: "80%", maxWidth: "1000px", top: "0%", left: "25%" }}
+        style={{ width: "80%", maxWidth: "1000px", top: "25%", left: "25%" }}
       >
         <Safari
           imageSrc="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20%281%29-N14FYSzapK9Wncm08KXQQFqZdghXWJ.png"
