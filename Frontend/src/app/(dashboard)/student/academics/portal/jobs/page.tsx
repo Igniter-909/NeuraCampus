@@ -225,7 +225,7 @@ export default function JobsPage() {
   })
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-transparent">
       <div className="container px-4 py-8 md:px-6 md:py-12">
         <motion.div
           initial={{ y: -20, opacity: 0 }}

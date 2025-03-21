@@ -29,6 +29,22 @@ export interface Department {
     instagram: string
   }
   
+  export interface Placement {
+    companyName: string
+    role: string
+    studentName: string
+    package: string
+    year: string
+  }
+  
+  export interface Internship {
+    companyName: string
+    role: string
+    studentName: string
+    duration: string
+    year: string
+  }
+  
   export interface CollegeData {
     coverImage: string
     logo: string
@@ -44,6 +60,8 @@ export interface Department {
     faculty: Faculty[]
     facilities: Facility[]
     achievements: string[]
+    placements: Placement[]
+    internships: Internship[]
     applyUrl: string
   }
   
@@ -129,6 +147,52 @@ export interface Department {
       "Ranked #5 in National University Rankings",
       "Awarded an AI Research Grant of $500,000 in 2023",
       "Winners of Hackathon 2024 at Silicon Valley Tech Fest",
+    ],
+    placements: [
+      {
+        companyName: "Google",
+        role: "Software Engineer",
+        studentName: "John Doe",
+        package: "$120,000",
+        year: "2023"
+      },
+      {
+        companyName: "Microsoft",
+        role: "Product Manager",
+        studentName: "Jane Smith",
+        package: "$110,000",
+        year: "2023"
+      },
+      {
+        companyName: "Amazon",
+        role: "Data Scientist",
+        studentName: "Robert Johnson",
+        package: "$115,000",
+        year: "2023"
+      }
+    ],
+    internships: [
+      {
+        companyName: "Meta",
+        role: "UX Designer Intern",
+        studentName: "Emily Chen",
+        duration: "3 months",
+        year: "2023"
+      },
+      {
+        companyName: "IBM",
+        role: "Machine Learning Intern",
+        studentName: "David Wilson",
+        duration: "6 months",
+        year: "2023"
+      },
+      {
+        companyName: "Apple",
+        role: "iOS Developer Intern",
+        studentName: "Sarah Lee",
+        duration: "3 months",
+        year: "2023"
+      }
     ],
     applyUrl: "https://git.edu/apply",
   }
