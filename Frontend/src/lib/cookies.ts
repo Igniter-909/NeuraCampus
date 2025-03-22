@@ -1,13 +1,28 @@
 import Cookies from 'js-cookie';
 
+interface CookieOptions {
+  expires?: number | Date;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+  maxAge?: number;
+}
+
 // Cookie options
-const cookieOptions = {
-  expires: 7, // 7 days
+const cookieOptions: CookieOptions = {
   secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
+  sameSite: 'strict',
+  path: '/'
 };
 
-function setCookie(name: string, value: string, options = {}) {
+function setCookie(name: string, value: string, options: CookieOptions = {}) {
+  // Convert maxAge to expires if provided
+  if (options.maxAge) {
+    options.expires = new Date(Date.now() + options.maxAge * 1000);
+    delete options.maxAge;
+  }
+  
   Cookies.set(name, value, {
     ...cookieOptions,
     ...options,
@@ -19,7 +34,7 @@ function getCookie(name: string): string | undefined {
 }
 
 function deleteCookie(name: string) {
-  Cookies.remove(name);
+  Cookies.remove(name, { path: '/' });
 }
 
 function clearAllCookies() {
