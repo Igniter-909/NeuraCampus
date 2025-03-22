@@ -12,7 +12,8 @@ import {
   FaCommentAlt,
   FaTimes,
   FaChevronDown,
-  FaArrowRight
+  FaArrowRight,
+  FaEnvelope
 } from 'react-icons/fa';
 
 interface Props {
@@ -147,6 +148,24 @@ export function RegistrationQuestionnaire({ userType, email, onSubmit, onCancel,
                 Contact Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Email Address *
+                  </label>
+                  <div className="relative group">
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      value={formData.email || ''}
+                      onChange={handleInputChange}
+                      className={inputClasses}
+                      placeholder="Enter your email address"
+                    />
+                    <FaEnvelope className="absolute left-4 top-4 w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700">
                     Your Position *

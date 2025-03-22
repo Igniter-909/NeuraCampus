@@ -19,6 +19,7 @@ import { AnimatedBackground } from '@/components/ui/animated-background';
 import { questionnaireApi } from '@/services/api/questionnaire';
 import { QuestionnaireData } from '@/types/questionnaire';
 import { RegistrationQuestionnaire } from '@/components/common/RegistrationQuestionnaire';
+import { FaUserGraduate, FaChalkboardTeacher, FaBriefcase, FaUserShield, FaUserTie } from 'react-icons/fa';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -27,24 +28,15 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-interface AuthError {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}
-
 export default function LoginPage() {
   const router = useRouter();
-  const { login, getUser } = useAuth();
+  const { getUser } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [userType, setUserType] = useState("admin");
   const [isLoading, setIsLoading] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => {
-    // Initialize rememberMe from localStorage if available
     if (typeof window !== 'undefined') {
       const remembered = localStorage.getItem('rememberMe');
       return remembered === 'true';
@@ -52,6 +44,7 @@ export default function LoginPage() {
     return false;
   });
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
 
   const {
     register,
@@ -89,71 +82,20 @@ export default function LoginPage() {
     }
   }, [router, getUser]);
 
-  const onSubmit = async (data: LoginFormData) => {
-    if (userType === 'admin' || userType === 'recruiter') {
+  const onSubmit = async () => {
+    if (userType === 'admin' || userType === 'recruiter'|| userType === 'alumni' || userType === 'faculty' || userType === 'student') {
       setShowQuestionnaire(true);
       return;
     }
     setShowComingSoon(true);
-    // Uncomment the below code when ready to implement actual login
-    /*
-    try {
-      setIsLoading(true);
-      // Store rememberMe preference
-      localStorage.setItem('rememberMe', rememberMe.toString());
-      
-      const user = await login({
-        email: data.email,
-        password: data.password,
-        rememberMe
-      });
-
-      // If remember me is checked, store the email
-      if (rememberMe) {
-        localStorage.setItem('rememberedEmail', data.email);
-      } else {
-        localStorage.removeItem('rememberedEmail');
-      }
-
-      toast({
-        title: 'Success',
-        content: 'Logged in successfully',
-        variant: 'default'
-      });
-
-      // Get the dashboard route for the user's role
-      const dashboardRoute = ROLE_DASHBOARD_ROUTES[user.role as UserRole];
-      if (!dashboardRoute) {
-        throw new Error('Invalid user role');
-      }
-
-      router.push(dashboardRoute);
-    } catch (error) {
-      console.error('Login error:', error);
-      const authError = error as AuthError;
-      toast({
-        title: 'Error',
-        content: authError.response?.data?.message || 'Login failed. Please check your credentials.',
-        variant: 'destructive'
-      });
-    } finally {
-      setIsLoading(false);
-    }
-    */
   };
 
   const handleQuestionnaireSubmit = async (data: QuestionnaireData) => {
     try {
       setIsLoading(true);
       await questionnaireApi.submit(data);
-
-      toast({
-        title: 'Success',
-        content: 'Thank you for your submission. We will review and get back to you soon.',
-        variant: 'default'
-      });
-      
       setShowQuestionnaire(false);
+      setShowSuccessOverlay(true);
     } catch (error) {
       console.error('Questionnaire submission error:', error);
       toast({
@@ -177,46 +119,42 @@ export default function LoginPage() {
 
   const userTypes = [
     {
-      id: "admin",
-      title: "Admin",
-      description: "School administration",
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      ),
-    },
-    {
-      id: "teacher",
-      title: "Teacher",
-      description: "Faculty access",
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
-      ),
-    },
-    {
       id: "student",
       title: "Student",
       description: "Student portal",
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-        </svg>
-      ),
+      icon: <FaUserGraduate className="w-5 h-5" />,
+    },
+    {
+      id: "faculty",
+      title: "Faculty",
+      description: "Faculty access",
+      icon: <FaChalkboardTeacher className="w-5 h-5" />,
     },
     {
       id: "recruiter",
       title: "Recruiter",
       description: "Placement portal",
-      icon: (
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: <FaBriefcase className="w-5 h-5" />,
     },
-  ]
+    {
+      id: "admin",
+      title: "Admin",
+      description: "School administration",
+      icon: <FaUserShield className="w-5 h-5" />,
+    },
+    {
+      id: "alumni",
+      title: "Alumni",
+      description: "Former students",
+      icon: <FaUserTie className="w-5 h-5" />,
+    },
+  ];
+
+  const handleInputFocus = () => {
+    if (userType === 'recruiter' || userType === 'admin') {
+      setShowQuestionnaire(true);
+    }
+  };
 
   return (
     <div className="relative overflow-hidden h-screen flex">
@@ -232,6 +170,47 @@ export default function LoginPage() {
         />
       )}
 
+      {/* Success Overlay */}
+      {showSuccessOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-black/80 backdrop-blur-md"></div>
+          <div className="relative z-10 bg-white/95 backdrop-blur-sm p-8 rounded-[30px] shadow-2xl max-w-lg mx-4 text-center transform transition-all duration-300 animate-in fade-in zoom-in">
+            <div className="mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full mx-auto flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4">
+                Thank You!
+              </h2>
+              <p className="text-gray-600 text-lg mb-8">
+                Thanks for sharing your information. We will review and get back to you soon.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={() => router.push('/')}
+                className="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium 
+                  hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
+                  shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 flex items-center justify-center gap-2"
+              >
+                <span>Return to Home</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setShowSuccessOverlay(false)}
+                className="text-gray-600 hover:text-gray-800 transition-colors text-sm"
+              >
+                Continue browsing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Coming Soon Overlay */}
       {showComingSoon && (
         <div 
@@ -244,7 +223,7 @@ export default function LoginPage() {
               Coming Soon
             </h2>
             <p className="text-gray-600 text-center text-lg mb-6">
-              We're working hard to bring you an amazing experience!
+              We&apos;re working hard to bring you an amazing experience!
             </p>
             <button
               onClick={() => setShowComingSoon(false)}
@@ -334,6 +313,7 @@ export default function LoginPage() {
                     type="email"
                     {...register('email')}
                     placeholder="Email address"
+                    onFocus={handleInputFocus}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
                   />
                   {errors.email && (
@@ -346,6 +326,7 @@ export default function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     {...register('password')}
                     placeholder="Password"
+                    onFocus={handleInputFocus}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10 shadow-sm"
                   />
                   {errors.password && (
@@ -354,6 +335,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
+                    onFocus={handleInputFocus}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
@@ -373,18 +355,20 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
+                    onFocus={handleInputFocus}
                     className="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-colors"
                   />
                   <label htmlFor="remember-me" className="ml-2 text-sm text-gray-600">
                     Remember me
                   </label>
                 </div>
-                <Link
-                  href="/forgot-password"
+                <button
+                  type="button"
+                  onClick={handleInputFocus}
                   className="text-sm text-blue-500 hover:text-blue-600 transition-colors"
                 >
                   Forgot password?
-                </Link>
+                </button>
               </div>
 
               <button
