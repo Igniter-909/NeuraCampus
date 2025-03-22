@@ -16,6 +16,9 @@ import { useToast } from '@/components/ui/use-toast';
 import loginImage from '../../../../public/login.png';
 import logo from '../../../../public/logo11.png';
 import { AnimatedBackground } from '@/components/ui/animated-background';
+import { questionnaireApi } from '@/services/api/questionnaire';
+import { QuestionnaireData } from '@/types/questionnaire';
+import { RegistrationQuestionnaire } from '@/components/common/RegistrationQuestionnaire';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -39,6 +42,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [userType, setUserType] = useState("admin");
   const [isLoading, setIsLoading] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => {
     // Initialize rememberMe from localStorage if available
     if (typeof window !== 'undefined') {
@@ -47,12 +51,14 @@ export default function LoginPage() {
     }
     return false;
   });
+  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    getValues
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -84,6 +90,13 @@ export default function LoginPage() {
   }, [router, getUser]);
 
   const onSubmit = async (data: LoginFormData) => {
+    if (userType === 'admin' || userType === 'recruiter') {
+      setShowQuestionnaire(true);
+      return;
+    }
+    setShowComingSoon(true);
+    // Uncomment the below code when ready to implement actual login
+    /*
     try {
       setIsLoading(true);
       // Store rememberMe preference
@@ -121,6 +134,31 @@ export default function LoginPage() {
       toast({
         title: 'Error',
         content: authError.response?.data?.message || 'Login failed. Please check your credentials.',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+    */
+  };
+
+  const handleQuestionnaireSubmit = async (data: QuestionnaireData) => {
+    try {
+      setIsLoading(true);
+      await questionnaireApi.submit(data);
+
+      toast({
+        title: 'Success',
+        content: 'Thank you for your submission. We will review and get back to you soon.',
+        variant: 'default'
+      });
+      
+      setShowQuestionnaire(false);
+    } catch (error) {
+      console.error('Questionnaire submission error:', error);
+      toast({
+        title: 'Error',
+        content: 'Failed to submit questionnaire. Please try again.',
         variant: 'destructive'
       });
     } finally {
@@ -184,6 +222,41 @@ export default function LoginPage() {
     <div className="relative overflow-hidden h-screen flex">
       <AnimatedBackground />
       
+      {showQuestionnaire && (
+        <RegistrationQuestionnaire
+          userType={userType}
+          email={getValues('email')}
+          onSubmit={handleQuestionnaireSubmit}
+          onCancel={() => setShowQuestionnaire(false)}
+          isLoading={isLoading}
+        />
+      )}
+
+      {/* Coming Soon Overlay */}
+      {showComingSoon && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={() => setShowComingSoon(false)}
+        >
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+          <div className="relative z-10 bg-white/90 backdrop-blur-sm p-8 rounded-[30px] shadow-2xl transform transition-all duration-300 animate-in fade-in zoom-in">
+            <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4 text-center">
+              Coming Soon
+            </h2>
+            <p className="text-gray-600 text-center text-lg mb-6">
+              We're working hard to bring you an amazing experience!
+            </p>
+            <button
+              onClick={() => setShowComingSoon(false)}
+              className="w-full py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl 
+                hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Left Section - Login Form */}
       <div className="relative z-10 w-full md:w-1/2 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-md">
