@@ -288,18 +288,18 @@ export default function Home() {
 
             {/* Desktop Sign in/Register buttons */}
             <div className="hidden sm:flex items-center space-x-4">
-              <button
-                onClick={() => scrollToSection("contact")}
+              <Link
+                href="/login"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent border shadow-xl border-white text-white hover:bg-white/10 hover:text-black transition-all ease-in-out duration-300"
               >
                 Sign in
-              </button>
-              <button
-                onClick={() => scrollToSection("contact")}
+              </Link>
+              <Link
+                href="/register"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent border shadow-xl border-white text-white hover:bg-white/10 hover:text-black transition-all ease-in-out duration-300"
               >
                 Register
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -505,7 +505,7 @@ export default function Home() {
                 duration: 6,
                 ease: "easeInOut",
               }}
-              className="fill-current text-[#15347b]"
+              className="fill-current text-[#10234f]"
             />
           </svg>
         </div>
