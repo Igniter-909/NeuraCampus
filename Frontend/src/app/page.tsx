@@ -1,5 +1,6 @@
 "use client"
 import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Import all the components we created
 import { Navbar } from "@/components/homePage/Navbar";
@@ -17,6 +18,7 @@ import { WhyUs } from "@/components/homePage/WhyUs";
  */
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Create refs for each section
   const homeRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,7 @@ export default function Home() {
   const whyUsRef = useRef<HTMLDivElement>(null);
   const workRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   // Set up intersection observer to update active section based on scroll position
   useEffect(() => {
@@ -92,18 +95,33 @@ export default function Home() {
   return (
     <div className="relative min-h-screen flex flex-col">
       {/* Fixed Navigation */}
-      <Navbar activeSection={activeSection} scrollToSection={scrollToSection} />
+      <Navbar 
+        activeSection={activeSection} 
+        scrollToSection={scrollToSection} 
+        setMobileMenuOpen={setIsMobileMenuOpen}
+        isMobileMenuOpen={isMobileMenuOpen}
+      />
 
-      {/* Main content sections */}
-      <HeroSection id="home" forwardedRef={homeRef} />
-      <AboutSection id="about" forwardedRef={aboutRef} />
-      <FeaturesSection id="features" forwardedRef={featuresRef} />
-      <WhyUs id="whyus" forwardedRef={whyUsRef} />
-      <WorkSection id="work" forwardedRef={workRef} />
-      <ContactSection id="contact" forwardedRef={contactRef} />
+      {/* Main content sections with enhanced blur effect when mobile menu is open */}
+      <motion.div 
+        ref={mainContentRef}
+        animate={{ 
+          filter: isMobileMenuOpen ? "blur(8px) brightness(0.6)" : "blur(0px) brightness(1)",
+          scale: isMobileMenuOpen ? 0.97 : 1
+        }}
+        transition={{ duration: 0.4 }}
+        className="relative transition-all"
+      >
+        <HeroSection id="home" forwardedRef={homeRef} />
+        <AboutSection id="about" forwardedRef={aboutRef} />
+        <FeaturesSection id="features" forwardedRef={featuresRef} />
+        <WhyUs id="whyus" forwardedRef={whyUsRef} />
+        <WorkSection id="work" forwardedRef={workRef} />
+        <ContactSection id="contact" forwardedRef={contactRef} />
 
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </motion.div>
     </div>
   );
 }

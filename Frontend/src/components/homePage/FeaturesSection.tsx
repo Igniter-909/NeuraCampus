@@ -1,11 +1,14 @@
-import { motion } from "framer-motion";
-import { Iphone15Pro } from "@/components/ui/iphone";
-import { BookOpen, Users, Award, FileText, Network, Zap } from "lucide-react";
-import React from "react";
+"use client"
+
+import { motion } from "framer-motion"
+import { BookOpen, Users, Award, FileText, Network, Zap } from "lucide-react"
+import type React from "react"
+import Image from "next/image"
+import iphonee from "../../../public/iphonn.png"
 
 interface FeaturesSectionProps {
-  id: string;
-  forwardedRef: React.RefObject<HTMLDivElement | null>;
+  id: string
+  forwardedRef: React.RefObject<HTMLDivElement | null>
 }
 
 /**
@@ -63,13 +66,13 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
       iconBg: "bg-red-500/20",
       iconColor: "text-red-300",
     },
-  ];
+  ]
 
   return (
     <section
       id={id}
       ref={forwardedRef}
-      className="h-auto min-h-screen bg-gradient-to-b from-[#4059a3] to-[#5884fd] flex items-center relative overflow-hidden pt-16 pb-24 lg:py-32"
+      className="h-auto min-h-screen bg-gradient-to-b from-[#8ca8fb] to-[#aca5fd] flex items-center relative overflow-hidden pt-16 pb-24 lg:py-32"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -130,6 +133,10 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
               Powerful Features
             </motion.span>
           </h2>
+          <div className="mt-2 h-1 w-20 bg-white mx-auto"></div>
+          <p className="text-white/80 text-sm md:text-base max-w-xl mx-auto">
+            Explore the rich capabilities of our school management system
+          </p>
         </motion.div>
 
         {/* Mobile view - Features in grid with center image */}
@@ -141,7 +148,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
             ))}
           </div>
 
-          {/* Center phone */}
+          {/* Center phone image */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -149,10 +156,14 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
             viewport={{ once: true }}
             className="relative z-20 w-[250px] mx-auto"
           >
-            <Iphone15Pro
-              className="size-full rounded-xl"
-              src="https://res.cloudinary.com/dicfvq6fj/image/upload/v1742590379/mobilePreview_rbd8oc.png"
-            />
+            <div className="relative w-[250px] h-[500px] rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src={iphonee || "/placeholder.svg"}
+                alt="Mobile App Preview"
+                fill
+                className="object-cover rounded-xl"
+              />
+            </div>
 
             {/* Connecting lines with static gradients */}
             <div className="absolute top-1/4 -left-24 w-24 h-0.5 bg-gradient-to-r from-transparent to-blue-400/70"></div>
@@ -174,7 +185,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
         {/* Desktop view - Hexagonal layout */}
         <div className="hidden lg:block relative">
           <div className="flex justify-center items-center">
-            {/* Center phone */}
+            {/* Center phone image */}
             <motion.div
               initial={{ opacity: 0.5, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -182,10 +193,14 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
               viewport={{ once: true }}
               className="relative z-20 w-[250px] mx-auto"
             >
-              <Iphone15Pro
-                className="size-full rounded-3xl overflow-hidden"
-                src="https://res.cloudinary.com/dicfvq6fj/image/upload/v1742590379/mobilePreview_rbd8oc.png"
-              />
+              <div className="relative w-[250px] h-[500px] rounded-3xl overflow-hidden shadow-xl">
+                <Image
+                  src={iphonee || "/placeholder.svg"}
+                  alt="Mobile App Preview"
+                  fill
+                  className="object-cover rounded-3xl"
+                />
+              </div>
 
               {/* Connecting lines with static gradients */}
               <div className="absolute top-1/4 -left-24 w-24 h-0.5 bg-gradient-to-r from-transparent to-blue-400/70"></div>
@@ -200,19 +215,29 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
           {/* Left side features */}
           <div className="absolute left-0 top-0 h-full flex flex-col justify-around">
             {[0, 2, 4].map((index) => (
-              <FeatureCardDesktop key={`left-feature-${index}`} feature={features[index]} index={index} position="left" />
+              <FeatureCardDesktop
+                key={`left-feature-${index}`}
+                feature={features[index]}
+                index={index}
+                position="left"
+              />
             ))}
           </div>
 
           {/* Right side features */}
           <div className="absolute right-0 top-0 h-full flex flex-col justify-around">
             {[1, 3, 5].map((index) => (
-              <FeatureCardDesktop key={`right-feature-${index}`} feature={features[index]} index={index} position="right" />
+              <FeatureCardDesktop
+                key={`right-feature-${index}`}
+                feature={features[index]}
+                index={index}
+                position="right"
+              />
             ))}
           </div>
         </div>
       </div>
-      
+
       {/* Wave divider */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
         <svg
@@ -238,7 +263,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
               duration: 1,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#a0c0ff]/40"
+            className="fill-current text-[#928af0]/40"
           />
 
           <motion.path
@@ -257,28 +282,28 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#8fb1f6]"
+            className="fill-current text-[#5a53be]"
           />
         </svg>
       </div>
     </section>
-  );
-};
+  )
+}
 
 // Feature Card Components
 
 interface FeatureType {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  color: string;
-  iconBg: string;
-  iconColor: string;
+  icon: React.ReactNode
+  title: string
+  description: string
+  color: string
+  iconBg: string
+  iconColor: string
 }
 
 interface FeatureCardMobileProps {
-  feature: FeatureType;
-  index: number;
+  feature: FeatureType
+  index: number
 }
 
 /**
@@ -298,15 +323,15 @@ const FeatureCardMobile: React.FC<FeatureCardMobileProps> = ({ feature, index })
         <div className={feature.iconColor}>{feature.icon}</div>
       </div>
       <h3 className="text-base font-semibold text-white mb-1">{feature.title}</h3>
-      <p className="text-blue-50 text-xs leading-tight">{feature.description}</p>
+      <p className="text-white/90 text-xs leading-tight">{feature.description}</p>
     </motion.div>
-  );
-};
+  )
+}
 
 interface FeatureCardDesktopProps {
-  feature: FeatureType;
-  index: number;
-  position: "left" | "right";
+  feature: FeatureType
+  index: number
+  position: "left" | "right"
 }
 
 /**
@@ -328,9 +353,7 @@ const FeatureCardDesktop: React.FC<FeatureCardDesktopProps> = ({ feature, index,
       className={`bg-gradient-to-${position === "left" ? "r" : "l"} ${feature.color} rounded-lg p-4 shadow-lg w-[300px] transition-all duration-300`}
     >
       <div className="flex items-center gap-3">
-        <div
-          className={`w-10 h-10 ${feature.iconBg} rounded-full flex items-center justify-center flex-shrink-0`}
-        >
+        <div className={`w-10 h-10 ${feature.iconBg} rounded-full flex items-center justify-center flex-shrink-0`}>
           <motion.div
             className={feature.iconColor}
             initial={{ rotate: position === "left" ? -10 : 10 }}
@@ -342,9 +365,10 @@ const FeatureCardDesktop: React.FC<FeatureCardDesktopProps> = ({ feature, index,
         </div>
         <div>
           <h3 className="text-base font-semibold text-white">{feature.title}</h3>
-          <p className="text-blue-50 text-xs mt-1">{feature.description}</p>
+          <p className="text-white/90 text-xs mt-1">{feature.description}</p>
         </div>
       </div>
     </motion.div>
-  );
-}; 
+  )
+}
+

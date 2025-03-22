@@ -154,7 +154,7 @@ export const WaveDivider: React.FC = () => {
             duration: 6,
             ease: "easeInOut",
           }}
-          className="fill-current text-[#15347b]"
+          className="fill-current text-[#10234f]"
         />
       </svg>
     </div>
