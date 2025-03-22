@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .section {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .video-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        #videoElement {
+            width: 100%;
+            border-radius: 5px;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .image-grid img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Face Recognition System</h1>
+
+        <div class="section">
+            <h2>Model Status</h2>
+            <div id="modelStatus"></div>
+        </div>
+
+        <div class="section">
+            <h2>Capture Face</h2>
+            <div class="video-container">
+                <video id="videoElement" autoplay playsinline></video>
+            </div>
+            <div class="button-group">
+                <input type="text" id="userId" placeholder="Enter User ID">
+                <button onclick="startCamera()" id="startCameraBtn">Start Camera</button>
+                <button onclick="captureFace()" id="captureBtn" disabled>Capture Face</button>
+                <button onclick="stopCamera()" id="stopCameraBtn" disabled>Stop Camera</button>
+            </div>
+            <div id="cameraStatus" class="status"></div>
+            <div id="captureStatus" class="status"></div>
+            <div id="capturedImages" class="image-grid"></div>
+        </div>
+
+        <div class="section">
+            <h2>Train Model</h2>
+            <button onclick="trainModel()">Train Model</button>
+            <div id="trainStatus" class="status"></div>
+        </div>
+
+        <div class="section">
+            <h2>Recognize Face</h2>
+            <div class="button-group">
+                <button onclick="startRecognition()" id="startRecognitionBtn">Start Recognition</button>
+                <button onclick="stopRecognition()" id="stopRecognitionBtn" disabled>Stop Recognition</button>
+            </div>
+            <div id="recognitionStatus" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        let videoStream;
+        let recognitionInterval;
+
+        // Replace the existing startCamera function
+        async function startCamera() {
+            try {
+                const constraints = {
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: "user"
+                    }
+                };
+
+                videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                const video = document.getElementById('videoElement');
+                video.srcObject = videoStream;
+                
+                // Wait for video to be ready
+                await video.play();
+                
+                // Enable/disable buttons
+                document.getElementById('startCameraBtn').disabled = true;
+                document.getElementById('stopCameraBtn').disabled = false;
+                document.getElementById('captureBtn').disabled = false;
+                
+                showStatus('cameraStatus', 'Camera started successfully', true);
+            } catch (error) {
+                console.error('Error starting camera:', error);
+                showStatus('cameraStatus', `Error starting camera: ${error.message}`, false);
+            }
+        }
+
+        // Replace the existing stopCamera function
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                const video = document.getElementById('videoElement');
+                video.srcObject = null;
+                
+                // Reset buttons
+                document.getElementById('startCameraBtn').disabled = false;
+                document.getElementById('stopCameraBtn').disabled = true;
+                document.getElementById('captureBtn').disabled = true;
+                
+                showStatus('cameraStatus', 'Camera stopped', true);
+            }
+        }
+
+        // Replace the existing captureFace function
+        async function captureFace() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                showStatus('captureStatus', 'Please enter a User ID', false);
+                return;
+            }
+
+            const video = document.getElementById('videoElement');
+            if (!video.srcObject) {
+                showStatus('captureStatus', 'Camera is not started', false);
+                return;
+            }
+
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0);
+                
+                const imageData = canvas.toDataURL('image/jpeg');
+
+                const response = await fetch('/api/capture', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, image: imageData })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus('captureStatus', 'Face captured successfully!', true);
+                    await loadUserImages(userId);
+                } else {
+                    showStatus('captureStatus', data.error || 'Failed to capture face', false);
+                }
+            } catch (error) {
+                console.error('Capture error:', error);
+                showStatus('captureStatus', `Error capturing face: ${error.message}`, false);
+            }
+        }
+
+        // Train model
+        async function trainModel() {
+            try {
+                showStatus('trainStatus', 'Training model...', true);
+                const response = await fetch('/api/train', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    showStatus('trainStatus', 'Model trained successfully!', true);
+                } else {
+                    showStatus('trainStatus', result.message || 'Training failed', false);
+                }
+                
+                updateModelStatus(); // Update the model status display
+            } catch (error) {
+                console.error('Training error:', error);
+                showStatus('trainStatus', `Training error: ${error.message}`, false);
+            }
+        }
+
+        // Replace the existing recognizeFace function
+        async function recognizeFace() {
+            try {
+                const video = document.getElementById('videoElement');
+                const userId = document.getElementById('userId').value;
+
+                if (!video || !video.srcObject) {
+                    showStatus('recognitionStatus', 'Camera not started. Please start the camera first.', false);
+                    return;
+                }
+
+                if (!userId) {
+                    showStatus('recognitionStatus', 'Please enter a User ID for verification.', false);
+                    return;
+                }
+
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = canvas.toDataURL('image/jpeg');
+
+                const response = await fetch('/api/recognize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        image: imageData,
+                        userId: userId
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    const confidence = (result.confidence * 100).toFixed(2);
+                    const status = `
+                        ✅ Verified: User ${result.userId}
+                        👁️ Confidence: ${confidence}%
+                        🔒 Liveness: ${result.liveness_confirmed ? 'Confirmed' : 'Not Confirmed'}
+                        😉 Blinks: ${result.blinks || 0}
+                    `.replace(/\n\s+/g, '\n');
+                    
+                    showStatus('recognitionStatus', status, true);
+                } else {
+                    showStatus('recognitionStatus', 
+                        result.message || 'Verification failed', 
+                        false);
+                }
+            } catch (error) {
+                console.error('Recognition error:', error);
+                showStatus('recognitionStatus', 
+                    `Recognition error: ${error.message}`, 
+                    false);
+                stopRecognition();
+            }
+        }
+
+        function startRecognition() {
+            startCamera().then(() => {
+                document.getElementById('startRecognitionBtn').disabled = true;
+                document.getElementById('stopRecognitionBtn').disabled = false;
+                // Increase frequency of checks to better detect blinks
+                recognitionInterval = setInterval(recognizeFace, 200); // Check every 200ms
+            }).catch(error => {
+                showStatus('recognitionStatus', 
+                    'Failed to start camera for recognition', 
+                    false);
+            });
+        }
+
+        function stopRecognition() {
+            document.getElementById('startRecognitionBtn').disabled = false;
+            document.getElementById('stopRecognitionBtn').disabled = true;
+            if (recognitionInterval) {
+                clearInterval(recognitionInterval);
+            }
+            stopCamera();
+            showStatus('recognitionStatus', '', true);
+        }
+
+        // Utility functions
+        function showStatus(elementId, message, success) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'status ' + (success ? 'success' : 'error');
+        }
+
+        async function loadUserImages(userId) {
+            try {
+                const response = await fetch(`/api/users/${userId}/images`);
+                const data = await response.json();
+                
+                const container = document.getElementById('capturedImages');
+                container.innerHTML = '';
+                
+                data.images.forEach(image => {
+                    const img = document.createElement('img');
+                    img.src = image.data;
+                    container.appendChild(img);
+                });
+            } catch (error) {
+                console.error('Error loading images:', error);
+            }
+        }
+
+        async function updateModelStatus() {
+            try {
+                const response = await fetch('/api/model/status');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                const statusHtml = `
+                    <p>Model Trained: ${data.modelTrained ? '✅' : '❌'}</p>
+                    <p>Total Users: ${data.totalUsers}</p>
+                    <p>Total Images: ${data.totalImages}</p>
+                    <p>Last Trained: ${data.lastTrained ? new Date(data.lastTrained * 1000).toLocaleString() : 'Never'}</p>
+                `;
+                
+                document.getElementById('modelStatus').innerHTML = statusHtml;
+            } catch (error) {
+                console.error('Error updating model status:', error);
+                document.getElementById('modelStatus').innerHTML = 
+                    '<p class="error">Error loading model status</p>';
+            }
+        }
+
+        // Initialize
+        updateModelStatus();
+        setInterval(updateModelStatus, 30000); // Update status every 30 seconds
+    </script>
+</body>
+</html>
