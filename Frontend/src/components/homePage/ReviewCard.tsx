@@ -32,9 +32,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ img, name, body }) => {
             src={img || "/placeholder.svg"}
           />
         </div>
-        <figcaption className="text-base sm:text-lg font-semibold text-[#0f1c3f]">{name}</figcaption>
+        <figcaption className="text-base sm:text-lg font-semibold text-white">{name}</figcaption>
       </div>
-      <blockquote className="mt-3 text-xs sm:text-sm text-[#172a54] leading-relaxed font-medium">"{body}"</blockquote>
+      <blockquote className="mt-3 text-xs sm:text-sm text-white/90 leading-relaxed font-medium">"{body}"</blockquote>
     </figure>
   );
 }; 

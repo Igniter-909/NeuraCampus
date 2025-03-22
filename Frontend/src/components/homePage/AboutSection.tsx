@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { WaveDivider } from "./HeroSection";
+import about from "../../../public/about.png";
 
 interface AboutSectionProps {
   id: string;
@@ -39,11 +40,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
             className="aspect-square w-full max-w-lg mx-auto"
           >
             <Image
-              src="/placeholder.svg?height=500&width=500"
+              src={about}
               alt="About NeuraCampus"
               width={500}
               height={500}
-              className="rounded-lg shadow-2xl w-full h-full object-cover"
+              className="w-full h-full object-cover"
             />
           </motion.div>
 
@@ -105,7 +106,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
               duration: 1,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#3d57a5]/40"
+            className="fill-current text-[#3d57a5]/80"
           />
 
           <motion.path
@@ -124,7 +125,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#4059a3]"
+            className="fill-current text-[#8ca8fb]"
           />
         </svg>
       </div>

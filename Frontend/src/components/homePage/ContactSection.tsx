@@ -15,7 +15,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ id, forwardedRef
     <section
       id={id}
       ref={forwardedRef}
-      className="h-auto min-h-screen bg-gradient-to-b from-[#2a4080] to-[#152548] pt-24 pb-12 flex items-center relative overflow-hidden"
+      className="h-auto min-h-screen bg-gradient-to-b from-[#20488d] to-[#1b3366] pt-24 pb-12 flex items-center relative overflow-hidden"
     >
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
         <motion.div
@@ -82,7 +82,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ id, forwardedRef
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#10234f]"
+            className="fill-current bg-[#10234f] border-0 border-[#10234f] text-[#10234f]"
           />
         </svg>
       </div>

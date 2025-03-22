@@ -1,7 +1,9 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
 import { Play } from "lucide-react"
-import React from "react"
+import type React from "react"
 import { motion } from "framer-motion"
 import whyUs1 from "../../../public/whyUs1.svg"
 import whyUs2 from "../../../public/whyUs2.svg"
@@ -13,44 +15,58 @@ import lab from "../../../public/lab.png"
 import adminControl from "../../../public/adminControl.png"
 
 interface WhyUsProps {
-  id: string;
-  forwardedRef: React.RefObject<HTMLDivElement | null>;
+  id: string
+  forwardedRef: React.RefObject<HTMLDivElement | null>
 }
 
 export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
   return (
-    <section 
+    <section
       id={id}
       ref={forwardedRef}
-      className="bg-gradient-to-b from-[#5884fd] to-[#a0c0ff] text-white min-h-screen w-full relative overflow-hidden"
+      className="bg-gradient-to-b from-[#5a53be] to-[#31177a] via-[#3b35ec] text-white min-h-screen w-full relative overflow-hidden"
     >
-      {/* Section separator at the top */}
-      <div className="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-[#4059a3] to-transparent"></div>
-      
+      {/* Section Heading */}
+      <div className="pt-24 px-4 md:px-8 container mx-auto text-center">
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+            <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.8 }}>
+              Why Us
+            </motion.span>
+          </h2>
+          <div className="mt-2 h-1 w-20 bg-white mx-auto"></div>
+          <p className="text-sm md:text-base text-white/80 max-w-xl mx-auto">
+            Discover why NeuraCampus is the perfect school management solution for your institution
+          </p>
+        </motion.div>
+      </div>
+
       {/* Why Us Section */}
-      <section className="pt-14 pb-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+      <section className="pt-6 pb-10 px-4 md:px-8 lg:px-12 container mx-auto">
+        <motion.div
           className="flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-4">Why Us?</span>
-          <div className="max-w-6xl mx-auto mb-8">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-6 text-[#2a4080] text-center">
-              Why NeuraCampus is the best school management software?
-            </h2>
+          <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="md:w-1/2">
-                <p className="text-sm md:text-base text-[#172a54] text-justify">
-                  NeuraCampus, simply is a completely free online school management software. It has more school management
-                  features than any other online school management software. It is a cloud-based software with no need for
-                  exhausting hardware. You will be automatically updated as a new feature will be a part of our future
-                  school management software. Never miss school management features.
+                <p className="text-sm md:text-base text-white/90 text-justify">
+                  NeuraCampus, simply is a completely free online school management software. It has more school
+                  management features than any other online school management software. It is a cloud-based software
+                  with no need for exhausting hardware. You will be automatically updated as a new feature will be a
+                  part of our future school management software. Never miss school management features.
                 </p>
               </div>
-              <motion.div 
+              <motion.div
                 className="md:w-1/2 flex justify-center"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -58,7 +74,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                 viewport={{ once: true }}
               >
                 <Image
-                  src={whyUs1}
+                  src={whyUs1 || "/placeholder.svg"}
                   alt="NeuraCampus Dashboard"
                   width={400}
                   height={300}
@@ -72,7 +88,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
 
       {/* Separate Portals Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -82,13 +98,15 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col justify-between items-center gap-10">
               <div className="md:w-1/2 text-left">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-[#2a4080]">Separate Portals Available</h2>
-                <p className="text-sm md:text-base text-[#172a54]">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-white">
+                  Separate Portals Available
+                </h2>
+                <p className="text-sm md:text-base text-white/90">
                   Our school management system comes with a separate portal for every user. An admin portal with full
                   controls, separate portals for Parents, staff, Accountants, and Students. Manage your school easily.
                 </p>
               </div>
-              <motion.div 
+              <motion.div
                 className="md:w-1/2"
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -96,7 +114,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                 viewport={{ once: true }}
               >
                 <Image
-                  src={whyUs2}
+                  src={whyUs2 || "/placeholder.svg"}
                   alt="School Staff Illustration"
                   width={600}
                   height={400}
@@ -110,36 +128,38 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
 
       {/* Messaging System Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Message System
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">Messaging and file sharing system</h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">
+              Messaging and file sharing system
+            </h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
               Discuss and share files with other users through our messaging system. With this feature, you can do
               real-time chat with every individual associated with your institution.
             </p>
             <Link
               href="#"
-              className="bg-gradient-to-r from-[#4a7aff] to-[#2a4080] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block"
+              className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block shadow-lg hover:shadow-purple-900/50"
             >
               Sign Up Now
             </Link>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -147,7 +167,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={message}
+              src={message || "/placeholder.svg"}
               alt="Messaging System"
               width={400}
               height={300}
@@ -159,89 +179,83 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
 
       {/* Exams Center Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row-reverse items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Exams Center
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">Exams Center</h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Exams Center</h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
               Send unlimited free SMS alerts on mobile numbers with our integrated SMS gateway. Get instant
               notifications to their respective branded SMS to send alerts on mobile phones.
             </p>
             <Link
-                href="#"
-                className="bg-[#4a7aff] text-white px-4 py-2 rounded-md font-medium hover:bg-[#2a4080] transition-colors inline-flex items-center"
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Coming Soon
-              </Link>
+              href="#"
+              className="bg-purple-700 text-white px-4 py-2 rounded-md font-medium hover:bg-purple-800 transition-colors inline-flex items-center shadow-md"
+            >
+              <Play className="h-4 w-4 mr-2" />
+              Coming Soon
+            </Link>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <Image
-              src={exams}
-              alt="Exam Services"
-              width={400}
-              height={300}
-              className="h-auto"
-            />
+            <Image src={exams || "/placeholder.svg"} alt="Exam Services" width={400} height={300} className="h-auto" />
           </motion.div>
         </motion.div>
       </section>
 
       {/* Question Answer Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Solutions at your fingertips
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">Free PYQ Solutions</h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
-              Get answers to your questions with our question answer system. With this feature, you can do
-              real-time chat with every individual associated with your institution.
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Free PYQ Solutions</h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
+              Get answers to your questions with our question answer system. With this feature, you can do real-time
+              chat with every individual associated with your institution.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
                 href="#"
-                className="bg-[#4a7aff] text-white px-4 py-2 rounded-md font-medium hover:bg-[#2a4080] transition-colors inline-flex items-center"
+                className="bg-purple-700 text-white px-4 py-2 rounded-md font-medium hover:bg-purple-800 transition-colors inline-flex items-center shadow-md"
               >
                 <Play className="h-4 w-4 mr-2" />
                 Coming Soon
               </Link>
               <Link
                 href="#"
-                className="bg-[#2a4080] text-white px-4 py-2 rounded-md font-medium hover:bg-[#4a7aff] transition-colors inline-flex items-center"
+                className="bg-indigo-700 text-white px-4 py-2 rounded-md font-medium hover:bg-indigo-800 transition-colors inline-flex items-center shadow-md"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -255,7 +269,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
               </Link>
             </div>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -263,7 +277,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={questionAnswer}
+              src={questionAnswer || "/placeholder.svg"}
               alt="question answer"
               width={400}
               height={300}
@@ -275,36 +289,36 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
 
       {/* Attendance Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row-reverse items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Attendance
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">Attendance System</h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
-              Attendance system is a feature that allows you to track the attendance of your students. With this feature, you can do
-              mark attendance in a single click.
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Attendance System</h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
+              Attendance system is a feature that allows you to track the attendance of your students. With this
+              feature, you can do mark attendance in a single click.
             </p>
             <Link
               href="#"
-              className="bg-gradient-to-r from-[#4a7aff] to-[#2a4080] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block"
+              className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block shadow-lg hover:shadow-purple-900/50"
             >
-              Know More(Coming Soon)
+              Know More (Coming Soon)
             </Link>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -312,7 +326,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={attendance}
+              src={attendance || "/placeholder.svg"}
               alt="attendance"
               width={400}
               height={300}
@@ -324,33 +338,31 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
 
       {/* Lab Management Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Lab Management
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">
-              Lab Management System
-            </h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
-              Lab management system is a feature that allows you to manage the lab of your institution. With this feature, you can do
-              real-time chat with every individual associated with your institution.
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Lab Management System</h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
+              Lab management system is a feature that allows you to manage the lab of your institution. With this
+              feature, you can do real-time chat with every individual associated with your institution.
             </p>
             <Link
               href="#"
-              className="bg-gradient-to-r from-[#4a7aff] to-[#2a4080] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-flex items-center"
+              className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-flex items-center shadow-lg hover:shadow-purple-900/50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path
@@ -359,59 +371,53 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              Know More(Coming Soon)
+              Know More (Coming Soon)
             </Link>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <Image
-              src={lab}
-              alt="lab"
-              width={400}
-              height={300}
-              className="h-auto"
-            />
+            <Image src={lab || "/placeholder.svg"} alt="lab" width={400} height={300} className="h-auto" />
           </motion.div>
         </motion.div>
       </section>
 
       {/* Admin Control Section */}
       <section className="py-10 px-4 md:px-8 lg:px-12 container mx-auto pb-20">
-        <motion.div 
+        <motion.div
           className="flex flex-col md:flex-row-reverse items-center gap-8 max-w-6xl mx-auto"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <motion.div 
+          <motion.div
             className="md:w-1/2"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <span className="bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
+            <span className="bg-purple-800/70 text-white text-xs font-medium px-3 py-1 rounded-full mb-3 inline-block">
               Admin Control
             </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-[#2a4080]">Admin Control</h2>
-            <p className="text-sm md:text-base text-[#172a54] mb-4">
-              Admin control is a feature that allows you to control the access of your users. With this feature, you can do
-              real-time chat with every individual associated with your institution.
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Admin Control</h2>
+            <p className="text-sm md:text-base text-white/90 mb-4">
+              Admin control is a feature that allows you to control the access of your users. With this feature, you can
+              do real-time chat with every individual associated with your institution.
             </p>
             <Link
               href="#"
-              className="bg-gradient-to-r from-[#4a7aff] to-[#2a4080] text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block"
+              className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block shadow-lg hover:shadow-purple-900/50"
             >
-              Know More(Coming Soon)
+              Know More (Coming Soon)
             </Link>
           </motion.div>
-          <motion.div 
+          <motion.div
             className="md:w-1/2 flex justify-center"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -419,7 +425,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={adminControl}
+              src={adminControl || "/placeholder.svg"}
               alt="admin control"
               width={400}
               height={300}
@@ -454,7 +460,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
               duration: 1,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#2a4080]/40"
+            className="fill-current text-[#4f398bb1]/80"
           />
 
           <motion.path
@@ -473,7 +479,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#2a4080]"
+            className="fill-current text-[#5442f2]"
           />
         </svg>
       </div>

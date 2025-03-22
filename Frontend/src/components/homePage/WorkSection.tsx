@@ -1,16 +1,20 @@
-import { motion } from "framer-motion";
-import { Marquee } from "@/components/magicui/marquee";
-import { ReviewCard } from "./ReviewCard";
-import college from "../../../public/college.png";
-import attendance from "../../../public/attendance.png";
-import intern from "../../../public/intern.png";
-import pyq from "../../../public/pyq.png";
-import networking from "../../../public/networking.png";
-import additional from "../../../public/additional.png";
+"use client"
+
+import type React from "react"
+
+import { motion } from "framer-motion"
+import { Marquee } from "@/components/magicui/marquee"
+import { ReviewCard } from "./ReviewCard"
+import college from "../../../public/college.png"
+import attendance from "../../../public/attendance.png"
+import intern from "../../../public/intern.png"
+import pyq from "../../../public/pyq.png"
+import networking from "../../../public/networking.png"
+import additional from "../../../public/additional.png"
 
 interface WorkSectionProps {
-  id: string;
-  forwardedRef: React.RefObject<HTMLDivElement | null>;
+  id: string
+  forwardedRef: React.RefObject<HTMLDivElement | null>
 }
 
 /**
@@ -48,20 +52,20 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
       body: "Collaborate with other institutions through exciting events",
       img: networking,
     },
-  ];
+  ]
 
-  const firstRow = reviews.slice(0, reviews.length / 2);
-  const secondRow = reviews.slice(reviews.length / 2);
+  const firstRow = reviews.slice(0, reviews.length / 2)
+  const secondRow = reviews.slice(reviews.length / 2)
 
   return (
     <section
       id={id}
       ref={forwardedRef}
-      className="h-auto min-h-screen bg-gradient-to-b from-[#8fb1f6] to-[#d8e6ff] pt-24 pb-12 flex items-center relative overflow-hidden"
+      className="h-auto min-h-screen bg-gradient-to-b from-[#5442f2] to-[#0d117e] pt-24 pb-12 flex items-center relative overflow-hidden"
     >
       {/* Section separator at the top */}
       {/* <div className="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-[#4a7aff] to-transparent"></div> */}
-      
+
       <div className="w-full px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <motion.div
           className="text-center mb-8 sm:mb-12"
@@ -70,10 +74,10 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2a4080]">
-            Our <span className="text-[#1a2e60]">Work</span>
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+            Our <span className="text-white/90">Work</span>
           </h2>
-          <div className="mt-2 h-1 w-20 bg-[#2a4080] mx-auto"></div>
+          <div className="mt-2 h-1 w-20 bg-white mx-auto"></div>
         </motion.div>
         <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
           <Marquee pauseOnHover className="[--duration:20s] h-[250px] sm:h-64">
@@ -88,7 +92,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
           </Marquee>
         </div>
       </div>
-      
+
       {/* Wave divider */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
         <svg
@@ -133,10 +137,11 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#2a4080]"
+            className="fill-current text-[#20488d]"
           />
         </svg>
       </div>
     </section>
-  );
-}; 
+  )
+}
+
