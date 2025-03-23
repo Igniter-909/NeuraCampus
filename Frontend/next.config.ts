@@ -9,10 +9,10 @@ const nextConfig = {
       'i.pinimg.com',
       'hebbkx1anhila5yf.public.blob.vercel-storage.com',
       'images.collegedunia.com',
-      'images.collegedunia.com',
       'wallpapercave.com',
       'placeholder.svg',
       'images.unsplash.com'],
+    unoptimized: true
   },
   serverExternalPackages: ['axios'],
   eslint: {
@@ -29,7 +29,23 @@ const nextConfig = {
   },
   output: 'standalone',
   experimental: {
-    // Remove any experimental features that aren't needed
+    // Enable specific features needed for proper build
+    appDir: true,
+    serverActions: true,
+    serverComponentsExternalPackages: ['axios']
+  },
+  generateBuildId: async () => {
+    return 'build-' + Date.now()
+  },
+  webpack: (config, { isServer }) => {
+    // Add webpack optimization
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
   },
   pageExtensions: ['ts', 'tsx', 'js', 'jsx'],
 }
