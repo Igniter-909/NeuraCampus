@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { WaveDivider } from "./HeroSection";
 import about from "../../../public/about.png";
+import { BackgroundShapes } from "@/components/ui/background-shapes";
 
 interface AboutSectionProps {
   id: string;
@@ -19,6 +19,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
       ref={forwardedRef}
       className="h-auto min-h-screen bg-gradient-to-b from-[#10234f] to-[#1a4090] border-0 pt-24 pb-12 flex items-center relative overflow-hidden"
     >
+      <BackgroundShapes />
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
         <motion.div
           className="text-center mb-12 sm:mb-16"
@@ -72,17 +73,18 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
             </div>
 
             <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-8">
-              <StatsCard value="10+" label="Years Experience" />
-              <StatsCard value="500+" label="Institutions" />
-              <StatsCard value="24/7" label="Support" />
-              <StatsCard value="99.9%" label="Uptime" />
+              <StatsCard value="Active" label="Research & Development" />
+              <StatsCard value="Beta Phase" label="Product Launch Status" />
+              <StatsCard value="24/7" label="Continuous Improvement & Support" />
+              <StatsCard value="100%" label="Commitment to Innovation" />
             </div>
+
           </motion.div>
         </div>
       </div>
       
       {/* Custom wave divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
+      <div className="absolute  bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
         <svg
           data-name="Layer 1"
           xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +108,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
               duration: 1,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#3d57a5]/80"
+            className="fill-current text-[#3d57a5]/80 shadow-lg shadow-[#3d57a5]/80"
           />
 
           <motion.path
@@ -125,7 +127,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
               duration: 6,
               ease: "easeInOut",
             }}
-            className="fill-current text-[#8ca8fb]"
+            className="fill-current drop-shadow-xl shadow-[#8ca8fb] text-[#8ca8fb]"
           />
         </svg>
       </div>

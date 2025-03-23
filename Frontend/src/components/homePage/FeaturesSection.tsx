@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { BookOpen, Users, Award, FileText, Network, Zap } from "lucide-react"
 import type React from "react"
 import Image from "next/image"
-import iphonee from "../../../public/iphonn.png"
+import { BackgroundShapes } from "@/components/ui/background-shapes"
 
 interface FeaturesSectionProps {
   id: string
@@ -20,53 +20,54 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
   const features = [
     {
       icon: <BookOpen className="w-6 h-6" />,
-      title: "Academic Management",
-      description: "Streamline curriculum planning, grading, and academic reporting",
+      title: "Academic Planning",
+      description: "Developing tools to assist in curriculum structuring and grading",
       color: "from-purple-500 to-indigo-600",
       iconBg: "bg-purple-500/20",
       iconColor: "text-purple-300",
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: "Student Information",
-      description: "Centralized database for student records and performance tracking",
+      title: "Student Data Management",
+      description: "Building a centralized platform for student records and tracking",
       color: "from-blue-500 to-cyan-600",
       iconBg: "bg-blue-500/20",
       iconColor: "text-blue-300",
     },
     {
       icon: <Award className="w-6 h-6" />,
-      title: "Attendance Tracking",
-      description: "Biometric and facial recognition for secure attendance management",
+      title: "Attendance System",
+      description: "Exploring biometric & digital solutions for secure attendance tracking",
       color: "from-emerald-500 to-teal-600",
       iconBg: "bg-emerald-500/20",
       iconColor: "text-emerald-300",
     },
     {
       icon: <FileText className="w-6 h-6" />,
-      title: "Exam Management",
-      description: "Create, schedule, and grade exams with detailed analytics",
+      title: "Examination Module",
+      description: "Planning automated exam creation, scheduling, and analytics",
       color: "from-amber-500 to-orange-600",
       iconBg: "bg-amber-500/20",
       iconColor: "text-amber-300",
     },
     {
       icon: <Network className="w-6 h-6" />,
-      title: "Communication Tools",
-      description: "Connect students, parents, and staff with integrated messaging",
+      title: "Campus Networking",
+      description: "Working on integrated messaging & collaboration tools for students",
       color: "from-pink-500 to-rose-600",
       iconBg: "bg-pink-500/20",
       iconColor: "text-pink-300",
     },
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Fee Management",
-      description: "Streamline payment processing and financial reporting",
+      title: "Finance & Payments",
+      description: "Developing streamlined fee management & reporting solutions",
       color: "from-red-500 to-rose-600",
       iconBg: "bg-red-500/20",
       iconColor: "text-red-300",
     },
-  ]
+  ];
+  
 
   return (
     <section
@@ -74,6 +75,7 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
       ref={forwardedRef}
       className="h-auto min-h-screen bg-gradient-to-b from-[#8ca8fb] to-[#aca5fd] flex items-center relative overflow-hidden pt-16 pb-24 lg:py-32"
     >
+      <BackgroundShapes />
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -157,11 +159,12 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
             className="relative z-20 w-[250px] mx-auto"
           >
             <div className="relative w-[250px] h-[500px] rounded-xl overflow-hidden shadow-lg">
+              {/* <Iphone15Pro className="w-[250px] h-[500px] rounded-xl" /> */}
               <Image
-                src={iphonee || "/placeholder.svg"}
+                src="https://res.cloudinary.com/dicfvq6fj/image/upload/v1742590379/mobilePreview_rbd8oc.png"
                 alt="Mobile App Preview"
                 fill
-                className="object-cover rounded-xl"
+                className="object-cover border-4 border-white rounded-xl"
               />
             </div>
 
@@ -191,14 +194,14 @@ export const FeaturesSection: React.FC<FeaturesSectionProps> = ({ id, forwardedR
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1 }}
               viewport={{ once: true }}
-              className="relative z-20 w-[250px] mx-auto"
+              className="relative shadow-xl rounded-3xl shadow-purple-950 z-20 w-[250px] mx-auto"
             >
               <div className="relative w-[250px] h-[500px] rounded-3xl overflow-hidden shadow-xl">
                 <Image
-                  src={iphonee || "/placeholder.svg"}
+                  src="https://res.cloudinary.com/dicfvq6fj/image/upload/v1742590379/mobilePreview_rbd8oc.png"
                   alt="Mobile App Preview"
                   fill
-                  className="object-cover rounded-3xl"
+                  className="object-cover border-4 border-white rounded-3xl"
                 />
               </div>
 

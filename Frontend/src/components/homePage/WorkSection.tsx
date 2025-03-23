@@ -11,6 +11,7 @@ import intern from "../../../public/intern.png"
 import pyq from "../../../public/pyq.png"
 import networking from "../../../public/networking.png"
 import additional from "../../../public/additional.png"
+import { BackgroundShapes } from "@/components/ui/background-shapes"
 
 interface WorkSectionProps {
   id: string
@@ -63,6 +64,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
       ref={forwardedRef}
       className="h-auto min-h-screen bg-gradient-to-b from-[#5442f2] to-[#0d117e] pt-24 pb-12 flex items-center relative overflow-hidden"
     >
+      <BackgroundShapes />
       {/* Section separator at the top */}
       {/* <div className="absolute top-0 left-0 w-full h-8 bg-gradient-to-b from-[#4a7aff] to-transparent"></div> */}
 

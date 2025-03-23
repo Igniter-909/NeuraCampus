@@ -13,6 +13,7 @@ import questionAnswer from "../../../public/qna.png"
 import attendance from "../../../public/attendancee.png"
 import lab from "../../../public/lab.png"
 import adminControl from "../../../public/adminControl.png"
+import { BackgroundShapes } from "@/components/ui/background-shapes"
 
 interface WhyUsProps {
   id: string
@@ -26,6 +27,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
       ref={forwardedRef}
       className="bg-gradient-to-b from-[#5a53be] to-[#31177a] via-[#3b35ec] text-white min-h-screen w-full relative overflow-hidden"
     >
+      <BackgroundShapes />
       {/* Section Heading */}
       <div className="pt-24 px-4 md:px-8 container mx-auto text-center">
         <motion.div

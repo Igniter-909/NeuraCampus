@@ -82,15 +82,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ id, forwardedRef }) =>
                     href="/register"
                     className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-base font-medium rounded-md text-white bg-blue-700/80 backdrop-blur-[80px] shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-blue-800 transition-all ease-in-out duration-300 md:py-4 md:text-lg"
                   >
-                    Get started
+                    Register Now
                   </Link>
                 </motion.div>
                 <motion.div className="w-full sm:w-auto" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
-                    href="/about"
+                    href="/login"
                     className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-base font-medium rounded-md text-blue-700 bg-white shadow-[0px_17px_18px_0px_rgba(0,0,0,0.2)] hover:bg-gray-100 transition-all ease-in-out duration-300 md:py-4 md:text-lg"
                   >
-                    Learn more
+                    Login 
                   </Link>
                 </motion.div>
               </div>

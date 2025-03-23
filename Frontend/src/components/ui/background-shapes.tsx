@@ -32,17 +32,17 @@ export function BackgroundShapes() {
 
     const newShapes: Shape[] = []
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 30; i++) {
       newShapes.push({
         id: i,
         type: types[Math.floor(Math.random() * types.length)] as Shape["type"],
         x: Math.random() * 100,
         y: Math.random() * 100,
-        size: Math.random() * 60 + 20,
+        size: Math.random() * 40 + 10,
         rotation: Math.random() * 360,
         color: colors[Math.floor(Math.random() * colors.length)],
-        duration: Math.random() * 20 + 10,
-        delay: Math.random() * 5,
+        duration: Math.random() * 15 + 8,
+        delay: Math.random() * 3,
       })
     }
 

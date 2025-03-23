@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
+import { BackgroundShapes } from "@/components/ui/background-shapes";
 
 interface ContactSectionProps {
   id: string;
@@ -17,6 +19,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ id, forwardedRef
       ref={forwardedRef}
       className="h-auto min-h-screen bg-gradient-to-b from-[#20488d] to-[#1b3366] pt-24 pb-12 flex items-center relative overflow-hidden"
     >
+      <BackgroundShapes />
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
         <motion.div
           className="text-center mb-8 sm:mb-12"
@@ -94,6 +97,45 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ id, forwardedRef
  * Contact form component
  */
 const ContactForm: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) throw new Error('Failed to send message');
+
+      setStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => setStatus('idle'), 3000);
+    } catch (error) {
+      console.log(error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 3000);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.id]: e.target.value
+    }));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -30 }}
@@ -103,7 +145,7 @@ const ContactForm: React.FC = () => {
     >
       <div className="bg-white/10 backdrop-blur-sm p-6 sm:p-8 rounded-lg shadow-xl">
         <h3 className="text-lg sm:text-xl font-semibold text-white mb-6">Send us a message</h3>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-blue-100 mb-1">
               Name
@@ -111,6 +153,9 @@ const ContactForm: React.FC = () => {
             <input
               type="text"
               id="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
               className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Your name"
             />
@@ -122,6 +167,9 @@ const ContactForm: React.FC = () => {
             <input
               type="email"
               id="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
               className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="your@email.com"
             />
@@ -133,16 +181,28 @@ const ContactForm: React.FC = () => {
             <textarea
               id="message"
               rows={4}
+              value={formData.message}
+              onChange={handleChange}
+              required
               className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-md text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="How can we help you?"
             ></textarea>
           </div>
           <button
             type="submit"
-            className="w-full px-6 py-3 bg-blue-900 text-white font-medium rounded-md hover:bg-blue-700 transition-colors"
+            disabled={status === 'loading'}
+            className={`w-full px-6 py-3 bg-blue-900 text-white font-medium rounded-md transition-colors ${
+              status === 'loading' ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700'
+            }`}
           >
-            Send Message
+            {status === 'loading' ? 'Sending...' : 'Send Message'}
           </button>
+          {status === 'success' && (
+            <p className="text-green-400 text-sm mt-2">Message sent successfully!</p>
+          )}
+          {status === 'error' && (
+            <p className="text-red-400 text-sm mt-2">Failed to send message. Please try again.</p>
+          )}
         </form>
       </div>
     </motion.div>
@@ -172,12 +232,12 @@ const ContactInfo: React.FC = () => {
           <ContactInfoItem
             icon={<Phone className="w-6 h-6 text-blue-900 mr-4 mt-1 flex-shrink-0" />}
             title="Phone"
-            content="+91 9225679921"
+            content="+91 7206244949"
           />
           <ContactInfoItem
             icon={<Mail className="w-6 h-6 text-blue-900 mr-4 mt-1 flex-shrink-0" />}
             title="Email"
-            content="amanchn13@gmail.com"
+            content="NeuraCampus@outlook.com"
           />
         </div>
       </div>

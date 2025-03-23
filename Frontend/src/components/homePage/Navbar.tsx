@@ -57,15 +57,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   // Handle login and signup
-  const handleLogin = () => {
-    console.log("Login clicked");
-    // Will be implemented with actual authentication
-  };
+  // const handleLogin = () => {
+  //   console.log("Login clicked");
+  //   // Will be implemented with actual authentication
+  // };
 
-  const handleSignup = () => {
-    console.log("Signup clicked");
-    // Will be implemented with actual authentication
-  };
+  // const handleSignup = () => {
+  //   console.log("Signup clicked");
+  //   // Will be implemented with actual authentication
+  // };
 
   // Handle mobile navigation click - improved for better scroll behavior
   const handleMobileNavClick = (sectionId: string) => {
@@ -160,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
           ))}
           
-          {/* Auth Buttons - Desktop */}
+          {/* Auth Buttons - Desktop
           <div className="flex items-center ml-4 space-x-2">
             <AuthButton onClick={handleLogin}>
               <LogIn className="h-4 w-4 mr-1" />
@@ -173,7 +173,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <UserPlus className="h-4 w-4 mr-1" />
               Sign Up
             </AuthButton>
-          </div>
+          </div> */}
         </div>
 
         {/* Mobile Navigation Button */}
@@ -227,7 +227,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </motion.div>
                   ))}
                   
-                  {/* Auth Buttons - Mobile */}
+                  {/* Auth Buttons - Mobile
                   <div className="mt-4 px-2 space-y-2">
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
@@ -252,7 +252,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         Sign Up
                       </button>
                     </motion.div>
-                  </div>
+                  </div> */}
                 </div>
               </motion.div>
             </>
@@ -263,31 +263,31 @@ export const Navbar: React.FC<NavbarProps> = ({
   );
 };
 
-// Auth Button components
-interface AuthButtonProps {
-  children: React.ReactNode;
-  onClick: () => void;
-  className?: string;
-}
+// // Auth Button components
+// interface AuthButtonProps {
+//   children: React.ReactNode;
+//   onClick: () => void;
+//   className?: string;
+// }
 
-const AuthButton: React.FC<AuthButtonProps> = ({ children, onClick, className = "" }) => {
-  return (
-    <button
-      onClick={onClick}
-      className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent border shadow-lg border-white text-white hover:bg-white/10 hover:text-white transition-all ease-in-out duration-300 ${className}`}
-    >
-      {children}
-    </button>
-  );
-};
+// const AuthButton: React.FC<AuthButtonProps> = ({ children, onClick, className = "" }) => {
+//   return (
+//     <button
+//       onClick={onClick}
+//       className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-md bg-transparent border shadow-lg border-white text-white hover:bg-white/10 hover:text-white transition-all ease-in-out duration-300 ${className}`}
+//     >
+//       {children}
+//     </button>
+//   );
+// };
 
-const MobileAuthButton: React.FC<AuthButtonProps> = ({ children, onClick }) => {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full px-4 py-3 flex justify-center items-center text-sm font-medium rounded-lg bg-transparent border border-blue-300/30 text-white hover:bg-white/10 transition-all duration-300"
-    >
-      {children}
-    </button>
-  );
-}; 
+// const MobileAuthButton: React.FC<AuthButtonProps> = ({ children, onClick }) => {
+//   return (
+//     <button
+//       onClick={onClick}
+//       className="w-full px-4 py-3 flex justify-center items-center text-sm font-medium rounded-lg bg-transparent border border-blue-300/30 text-white hover:bg-white/10 transition-all duration-300"
+//     >
+//       {children}
+//     </button>
+//   );
+// }; 

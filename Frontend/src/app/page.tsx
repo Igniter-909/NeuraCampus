@@ -11,6 +11,7 @@ import { WorkSection } from "@/components/homePage/WorkSection";
 import { ContactSection } from "@/components/homePage/ContactSection";
 import { Footer } from "@/components/homePage/Footer";
 import { WhyUs } from "@/components/homePage/WhyUs";
+import { BackgroundShapes } from "@/components/ui/background-shapes";
 
 /**
  * Main page component that composes all homepage sections
@@ -111,7 +112,7 @@ export default function Home() {
         }}
         transition={{ duration: 0.4 }}
         className="relative transition-all"
-      >
+      ><BackgroundShapes />
         <HeroSection id="home" forwardedRef={homeRef} />
         <AboutSection id="about" forwardedRef={aboutRef} />
         <FeaturesSection id="features" forwardedRef={featuresRef} />
