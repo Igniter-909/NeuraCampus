@@ -1,45 +1,86 @@
 // src/services/auth.ts
 import axios from 'axios';
+import { ErrorResponse, SuccessResponse } from '@/types/api';
+
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface RegisterData {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+interface AuthResponse {
+  token: string;
+  user: User;
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-export interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  role?: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    collegeId?: string;
-    departmentId?: string;
-  };
-}
-
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<AuthResponse> {
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
-    return response.data;
+  async login(credentials: LoginCredentials): Promise<SuccessResponse<AuthResponse> | ErrorResponse> {
+    try {
+      const response = await axios.post<SuccessResponse<AuthResponse>>(`${API_URL}/auth/login`, credentials);
+      if (response.data.success && response.data.data) {
+        return response.data;
+      }
+      return {
+        success: false,
+        error: 'Invalid response from server',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An error occurred during login',
+      };
+    }
   },
   
-  async register(data: RegisterData): Promise<AuthResponse> {
-    const response = await axios.post(`${API_URL}/auth/register`, data);
-    return response.data;
+  async register(data: RegisterData): Promise<SuccessResponse<AuthResponse> | ErrorResponse> {
+    try {
+      const response = await axios.post<SuccessResponse<AuthResponse>>(`${API_URL}/auth/register`, data);
+      if (response.data.success && response.data.data) {
+        return response.data;
+      }
+      return {
+        success: false,
+        error: 'Invalid response from server',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An error occurred during registration',
+      };
+    }
   },
   
-  async logout(): Promise<void> {
-    await axios.post(`${API_URL}/auth/logout`);
+  async logout(): Promise<SuccessResponse | ErrorResponse> {
+    try {
+      const response = await axios.post<SuccessResponse>(`${API_URL}/auth/logout`);
+      if (response.data.success) {
+        return response.data;
+      }
+      return {
+        success: false,
+        error: 'Invalid response from server',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An error occurred during logout',
+      };
+    }
   },
   
   async forgotPassword(email: string): Promise<{ message: string }> {
@@ -55,10 +96,23 @@ export const authService = {
     return response.data;
   },
   
-  async getMe(): Promise<AuthResponse['user']> {
-    const response = await axios.get(`${API_URL}/auth/me`);
-    return response.data;
-  },
+  async getCurrentUser(): Promise<SuccessResponse<User> | ErrorResponse> {
+    try {
+      const response = await axios.get<SuccessResponse<User>>(`${API_URL}/auth/me`);
+      if (response.data.success && response.data.data) {
+        return response.data;
+      }
+      return {
+        success: false,
+        error: 'Invalid response from server',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'An error occurred while fetching user data',
+      };
+    }
+  }
 };
 
 // src/hooks/auth/useAuth.ts
@@ -78,8 +132,8 @@ export const useAuth = () => {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const userData = await authService.getMe();
-        setUser(userData);
+        const userData = await authService.getCurrentUser();
+        setUser(userData.user);
       } catch (error: Error | unknown) {
         console.log(error);
         setUser(null);
@@ -146,18 +200,21 @@ export const useAuth = () => {
   // Logout function
   const logout = async () => {
     try {
-      await authService.logout();
+      const response = await authService.logout();
+      if (response.success) {
+        // Delete token cookie
+        cookieUtils.remove('token');
+        
+        // Clear user state
+        setUser(null);
+        
+        // Redirect to login
+        router.push('/login');
+      } else {
+        console.error('Logout API error:', response.error);
+      }
     } catch (err) {
       console.error('Logout API error:', err);
-    } finally {
-      // Delete token cookie
-      cookieUtils.remove('token');
-      
-      // Clear user state
-      setUser(null);
-      
-      // Redirect to login
-      router.push('/login');
     }
   };
   
