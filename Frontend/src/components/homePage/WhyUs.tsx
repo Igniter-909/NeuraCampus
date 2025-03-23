@@ -61,12 +61,13 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-center gap-10">
               <div className="md:w-1/2">
-                <p className="text-sm md:text-base text-white/90 text-justify">
-                  NeuraCampus, simply is a completely free online school management software. It has more school
-                  management features than any other online school management software. It is a cloud-based software
-                  with no need for exhausting hardware. You will be automatically updated as a new feature will be a
-                  part of our future school management software. Never miss school management features.
-                </p>
+              <p className="text-sm md:text-base text-white/90 text-justify">
+                NeuraCampus is an advanced cloud-based campus management system designed for colleges and universities.  
+                Our platform offers a comprehensive suite of features to streamline academic and administrative operations,  
+                eliminating the need for complex hardware installations. With continuous updates and evolving functionalities,  
+                NeuraCampus ensures that institutions stay ahead with the latest in digital campus solutions.
+              </p>
+
               </div>
               <motion.div
                 className="md:w-1/2 flex justify-center"
@@ -104,8 +105,8 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                   Separate Portals Available
                 </h2>
                 <p className="text-sm md:text-base text-white/90">
-                  Our school management system comes with a separate portal for every user. An admin portal with full
-                  controls, separate portals for Parents, staff, Accountants, and Students. Manage your school easily.
+                  Our college management system comes with a separate portal for every user. An admin portal with full
+                  controls, separate portals for Admin, clerk, faculty, hods and Students. Manage your college easily.
                 </p>
               </div>
               <motion.div
@@ -152,7 +153,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             </h2>
             <p className="text-sm md:text-base text-white/90 mb-4">
               Discuss and share files with other users through our messaging system. With this feature, you can do
-              real-time chat with every individual associated with your institution.
+              real-time chat with every individual associated with your institution.And also share files with other users outside your institution for building a better connection.
             </p>
             <Link
               href="#"
@@ -199,10 +200,13 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
               Exams Center
             </span>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Exams Center</h2>
-            <p className="text-sm md:text-base text-white/90 mb-4">
-              Send unlimited free SMS alerts on mobile numbers with our integrated SMS gateway. Get instant
-              notifications to their respective branded SMS to send alerts on mobile phones.
+            <p className="text-sm md:text-base text-white/90 text-justify">
+              The Exams Center in NeuraCampus streamlines exam management with automated notifications.  
+              Institutions can effortlessly send exam schedules, updates, and important alerts via  
+              email, ensuring students and faculty stay informed in real-time. Enhance communication  
+              and eliminate last-minute confusion with a seamless and reliable notification system.
             </p>
+
             <Link
               href="#"
               className="bg-purple-700 text-white px-4 py-2 rounded-md font-medium hover:bg-purple-800 transition-colors inline-flex items-center shadow-md"
@@ -309,10 +313,12 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
               Attendance
             </span>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-white">Attendance System</h2>
-            <p className="text-sm md:text-base text-white/90 mb-4">
-              Attendance system is a feature that allows you to track the attendance of your students. With this
-              feature, you can do mark attendance in a single click.
+            <p className="text-sm md:text-base text-white/90 text-justify">
+              The NeuraCampus Attendance System offers a **seamless and efficient way** to track student attendance.  
+              Designed for accuracy and convenience, it ensures institutions can monitor attendance effortlessly  
+              while enhancing student engagement and accountability.  
             </p>
+
             <Link
               href="#"
               className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-block shadow-lg hover:shadow-purple-900/50"
@@ -364,7 +370,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             </p>
             <Link
               href="#"
-              className="bg-gradient-to-r from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-flex items-center shadow-lg hover:shadow-purple-900/50"
+              className="bg-gradient-to-r  from-purple-700 to-purple-900 text-white px-6 py-3 rounded-full font-medium hover:opacity-90 transition-opacity inline-flex items-center shadow-lg hover:shadow-purple-900/50"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path
