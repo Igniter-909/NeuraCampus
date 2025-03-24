@@ -16,9 +16,6 @@ import { useToast } from '@/components/ui/use-toast';
 import loginImage from '../../../../public/login.png';
 import logo from '../../../../public/logo11.png';
 import { AnimatedBackground } from '@/components/ui/animated-background';
-import { questionnaireApi } from '@/services/api/questionnaire';
-import { QuestionnaireData } from '@/types/questionnaire';
-import { RegistrationQuestionnaire } from '@/components/common/RegistrationQuestionnaire';
 import { FaUserGraduate, FaChalkboardTeacher, FaBriefcase, FaUserShield, FaUserTie } from 'react-icons/fa';
 
 const loginSchema = z.object({
@@ -30,7 +27,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { getUser } = useAuth();
+  const { getUser, login } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [userType, setUserType] = useState("admin");
@@ -43,8 +40,6 @@ export default function LoginPage() {
     }
     return false;
   });
-  const [showQuestionnaire, setShowQuestionnaire] = useState(false);
-  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
 
   const {
     register,
@@ -82,26 +77,38 @@ export default function LoginPage() {
     }
   }, [router, getUser]);
 
-  const onSubmit = async () => {
-    if (userType === 'admin' || userType === 'recruiter'|| userType === 'alumni' || userType === 'faculty' || userType === 'student') {
-      setShowQuestionnaire(true);
-      return;
-    }
-    setShowComingSoon(true);
-  };
-
-  const handleQuestionnaireSubmit = async (data: QuestionnaireData) => {
+  const onSubmit = async (formData: LoginFormData) => {
     try {
       setIsLoading(true);
-      await questionnaireApi.submit(data);
-      setShowQuestionnaire(false);
-      setShowSuccessOverlay(true);
-    } catch (error) {
-      console.error('Questionnaire submission error:', error);
+      const response = await login({
+        email: formData.email,
+        password: formData.password,
+        // role: userType
+      });
+
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true');
+        localStorage.setItem('rememberedEmail', formData.email);
+      } else {
+        localStorage.removeItem('rememberMe');
+        localStorage.removeItem('rememberedEmail');
+      }
+
       toast({
-        title: 'Error',
-        content: 'Failed to submit questionnaire. Please try again.',
-        variant: 'destructive'
+        title: "Success!",
+        content: "Successfully logged in",
+        variant: "default",
+      });
+
+      const redirectPath = ROLE_DASHBOARD_ROUTES[response.role as UserRole];
+      if (redirectPath) {
+        router.push(redirectPath);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        content: error.message || "Failed to login. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -133,13 +140,13 @@ export default function LoginPage() {
     {
       id: "recruiter",
       title: "Recruiter",
-      description: "Placement portal",
+      description: "Placement",
       icon: <FaBriefcase className="w-5 h-5" />,
     },
     {
       id: "admin",
       title: "Admin",
-      description: "School administration",
+      description: "Administration",
       icon: <FaUserShield className="w-5 h-5" />,
     },
     {
@@ -150,68 +157,10 @@ export default function LoginPage() {
     },
   ];
 
-  const handleInputFocus = () => {
-    if (userType === 'recruiter' || userType === 'admin') {
-      setShowQuestionnaire(true);
-    }
-  };
-
   return (
     <div className="relative overflow-hidden h-screen flex">
       <AnimatedBackground />
       
-      {showQuestionnaire && (
-        <RegistrationQuestionnaire
-          userType={userType}
-          email={getValues('email')}
-          onSubmit={handleQuestionnaireSubmit}
-          onCancel={() => setShowQuestionnaire(false)}
-          isLoading={isLoading}
-        />
-      )}
-
-      {/* Success Overlay */}
-      {showSuccessOverlay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 to-black/80 backdrop-blur-md"></div>
-          <div className="relative z-10 bg-white/95 backdrop-blur-sm p-8 rounded-[30px] shadow-2xl max-w-lg mx-4 text-center transform transition-all duration-300 animate-in fade-in zoom-in">
-            <div className="mb-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800 mb-4">
-                Thank You!
-              </h2>
-              <p className="text-gray-600 text-lg mb-8">
-                Thanks for sharing your information. We will review and get back to you soon.
-              </p>
-            </div>
-            <div className="flex flex-col gap-4">
-              <button
-                onClick={() => router.push('/')}
-                className="w-full py-3 px-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-medium 
-                  hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]
-                  shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 flex items-center justify-center gap-2"
-              >
-                <span>Return to Home</span>
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-              </button>
-              <button
-                onClick={() => setShowSuccessOverlay(false)}
-                className="text-gray-600 hover:text-gray-800 transition-colors text-sm"
-              >
-                Continue browsing
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Coming Soon Overlay */}
       {showComingSoon && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center"
@@ -313,7 +262,6 @@ export default function LoginPage() {
                     type="email"
                     {...register('email')}
                     placeholder="Email address"
-                    onFocus={handleInputFocus}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
                   />
                   {errors.email && (
@@ -326,7 +274,6 @@ export default function LoginPage() {
                     type={showPassword ? 'text' : 'password'}
                     {...register('password')}
                     placeholder="Password"
-                    onFocus={handleInputFocus}
                     className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all pr-10 shadow-sm"
                   />
                   {errors.password && (
@@ -335,7 +282,6 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    onFocus={handleInputFocus}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                   >
                     {showPassword ? (
@@ -355,7 +301,6 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    onFocus={handleInputFocus}
                     className="h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500 transition-colors"
                   />
                   <label htmlFor="remember-me" className="ml-2 text-sm text-gray-600">
@@ -364,7 +309,6 @@ export default function LoginPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={handleInputFocus}
                   className="text-sm text-blue-500 hover:text-blue-600 transition-colors"
                 >
                   Forgot password?
