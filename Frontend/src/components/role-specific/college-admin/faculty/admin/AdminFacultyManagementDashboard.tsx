@@ -2,8 +2,16 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, ClipboardList, Calendar, FileText, Shield, DollarSign, CalendarDays } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { 
+  FaChalkboardTeacher, 
+  FaCalendarAlt, 
+  FaBook, 
+  FaFileAlt,
+  FaMoneyCheckAlt, 
+  FaUserShield, 
+  FaUserClock 
+} from "react-icons/fa"
 
 import { FacultyManagement } from "./FacultyManagement"
 import { FacultyTimeTableManagement } from "./FacultyTimeTableManagement"
@@ -21,7 +29,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "faculty-list",
       label: "Faculty List",
-      icon: <Users className="h-5 w-5" />,
+      icon: <FaChalkboardTeacher className="h-5 w-5" />,
       component: <FacultyManagement />,
       title: "Faculty Management",
       description: "Add, edit, view and manage faculty members.",
@@ -29,7 +37,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "timetable",
       label: "Timetable",
-      icon: <Calendar className="h-5 w-5" />,
+      icon: <FaCalendarAlt className="h-5 w-5" />,
       component: <FacultyTimeTableManagement />,
       title: "Faculty Timetable Management",
       description: "Manage and view faculty teaching schedules.",
@@ -37,7 +45,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "courses",
       label: "Courses",
-      icon: <ClipboardList className="h-5 w-5" />,
+      icon: <FaBook className="h-5 w-5" />,
       component: <FacultyCourseManagement />,
       title: "Faculty Course Management",
       description: "Assign and manage courses for faculty members.",
@@ -45,7 +53,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "leave",
       label: "Leave",
-      icon: <FileText className="h-5 w-5" />,
+      icon: <FaFileAlt className="h-5 w-5" />,
       component: <FacultyLeaveManagement />,
       title: "Faculty Leave Management",
       description: "View and manage faculty leave requests.",
@@ -53,7 +61,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "payroll",
       label: "Payroll",
-      icon: <DollarSign className="h-5 w-5" />,
+      icon: <FaMoneyCheckAlt className="h-5 w-5" />,
       component: <FacultyPayrollManagement />,
       title: "Faculty Payroll Management",
       description: "Manage salary and payroll for faculty members.",
@@ -61,7 +69,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "access",
       label: "Access",
-      icon: <Shield className="h-5 w-5" />,
+      icon: <FaUserShield className="h-5 w-5" />,
       component: <FacultyAccessControl />,
       title: "Faculty Access Control",
       description: "Manage system permissions and access for faculty.",
@@ -69,7 +77,7 @@ export function AdminFacultyManagementDashboard() {
     {
       id: "attendance",
       label: "Attendance",
-      icon: <CalendarDays className="h-5 w-5" />,
+      icon: <FaUserClock className="h-5 w-5" />,
       component: <FacultyAttendanceManagement />,
       title: "Faculty Attendance Management",
       description: "Track and manage faculty attendance records.",
@@ -103,7 +111,7 @@ export function AdminFacultyManagementDashboard() {
           >
             <div
               className={cn(
-                "rounded-full p-2 mb-2",
+                "rounded-full p-2.5 mb-2",
                 activeView === view.id 
                   ? "bg-white/20" 
                   : "bg-blue-50 dark:bg-blue-950/50",
@@ -120,7 +128,7 @@ export function AdminFacultyManagementDashboard() {
       <Card className="border-blue-100 dark:border-blue-900/50 dark:bg-gray-800/90 shadow-lg shadow-blue-900/5">
         <CardHeader className="border-b border-blue-100 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/20">
           <div className="flex items-center gap-2">
-            <div className="p-2 rounded-full bg-blue-900 dark:bg-blue-800/90 text-white">
+            <div className="p-2.5 rounded-full bg-blue-900 dark:bg-blue-800/90 text-white">
               {activeViewInfo.icon}
             </div>
             <div>

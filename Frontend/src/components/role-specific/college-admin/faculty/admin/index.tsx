@@ -3,7 +3,7 @@
 import { AdminFacultyManagementDashboard } from './AdminFacultyManagementDashboard';
 
 // Export the main component as the default export for easy importing
-export default AdminFacultyManagementDashboard;
+export { AdminFacultyManagementDashboard as default } from './AdminFacultyManagementDashboard';
 
 // Also export individual components for modular usage if needed
 export { FacultyManagement } from './FacultyManagement';

@@ -1,3 +1,5 @@
+"use client"
+
 import AdminFacultyManagementDashboard from '@/components/role-specific/college-admin/faculty/admin';
 
 export default function FacultyAdminPage() {
