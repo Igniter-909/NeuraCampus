@@ -23,7 +23,7 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
-  const [notificationCount, setNotificationCount] = useState(3)
+  const [notificationCount] = useState(3)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const mobileDropdownRef = useRef<HTMLDivElement>(null)
   const { logout } = useAuth()
@@ -105,7 +105,7 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
   ];
 
   return (
-    <header className="bg-white  shadow-lg dark:bg-black dark:text-white shadow-gray-200  dark:shadow-none w-full z-10">
+    <header className="bg-white shadow-lg dark:bg-black dark:text-white shadow-gray-200 dark:shadow-none w-full z-50">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side - Mobile menu button */}
@@ -114,6 +114,7 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
               type="button"
               className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 hover:text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              title="Toggle menu"
             >
               <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -159,8 +160,8 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
                 )}
               </button>
 
-              <FullscreenToggle className="p-2 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 rounded-full hover:bg-white/20 dark:hover:bg-slate-800/60 transition-colors" />
-              <ThemeToggle className="p-2 text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300 rounded-full hover:bg-white/20 dark:hover:bg-slate-800/60 transition-colors" />
+              <FullscreenToggle />
+              <ThemeToggle />
             </div>
 
             {/* Mobile More Menu */}
@@ -205,7 +206,7 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
                 type="button"
                 className="flex items-center space-x-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 p-1"
                 id="user-menu-button"
-                aria-expanded={dropdownOpen}
+                aria-expanded={dropdownOpen ? 'true' : 'false'}
                 aria-haspopup="true"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >

@@ -88,7 +88,7 @@ export function AdminFacultyManagementDashboard() {
   const activeViewInfo = views.find((view) => view.id === activeView) || views[0]
 
   return (
-    <div className="space-y-6 dark:bg-gray-900/95">
+    <div className="space-y-6 dark:bg-transparent">
       <div>
         <h2 className="text-3xl font-bold tracking-tight text-blue-900 dark:text-blue-50">Faculty Management</h2>
         <p className="text-blue-600 dark:text-blue-300">

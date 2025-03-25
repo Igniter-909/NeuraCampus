@@ -300,15 +300,15 @@ export default function DaySchedule() {
   };
 
   return (
-    <Card className="bg-white">
+    <Card className="bg-white dark:bg-slate-900">
       <CardHeader className="pb-4">
         <div className="flex flex-col sm:flex-row items-center justify-between">
-          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+          <CardTitle className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-gray-100">
             <MdClass className="text-blue-500" />
             Today&apos;s Schedule
           </CardTitle>
           <div className="flex flex-col sm:flex-row items-center gap-4 mt-4 sm:mt-0">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500 dark:text-gray-400">
               {selectedDate.toLocaleDateString('en-US', { 
                 weekday: 'long', 
                 month: 'long', 
@@ -346,16 +346,16 @@ export default function DaySchedule() {
               className={cn(
                 "p-4 rounded-lg border transition-all",
                 getBackgroundColor(session.status),
-                session.status === 'ongoing' && "border-blue-200",
-                session.status === 'upcoming' && "border-purple-200",
-                session.status === 'completed' && "border-green-200",
-                session.attendanceMarked && session.status === 'ongoing' && "border-green-200"
+                session.status === 'ongoing' && "border-blue-200 dark:border-blue-800",
+                session.status === 'upcoming' && "border-purple-200 dark:border-purple-800",
+                session.status === 'completed' && "border-green-200 dark:border-green-800",
+                session.attendanceMarked && session.status === 'ongoing' && "border-green-200 dark:border-green-800"
               )}
             >
               <div className="flex flex-col sm:flex-row items-start justify-between mb-3">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">{session.subject}</h3>
-                  <p className="text-sm text-gray-600">{session.section}</p>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{session.subject}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{session.section}</p>
                 </div>
                 <div className="flex items-center gap-2 mt-2 sm:mt-0">
                   <Badge 
@@ -369,7 +369,7 @@ export default function DaySchedule() {
                       variant={session.attendanceMarked ? "secondary" : "destructive"}
                       className={cn(
                         "capitalize",
-                        session.attendanceMarked && "bg-green-100 text-green-800 hover:bg-green-100"
+                        session.attendanceMarked && "bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900 dark:text-green-200"
                       )}
                     >
                       {session.attendanceMarked ? "Attendance Taken" : "Pending"}
@@ -394,17 +394,17 @@ export default function DaySchedule() {
                   </DropdownMenu>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                 <span className="flex items-center gap-1.5">
-                  <MdRoom className="h-4 w-4 text-gray-500" />
+                  <MdRoom className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                   {session.room}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <MdAccessTime className="h-4 w-4 text-gray-500" />
+                  <MdAccessTime className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                   {session.startTime} - {session.endTime}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <MdPeople className="h-4 w-4 text-gray-500" />
+                  <MdPeople className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                   {session.presentStudents || 0}/{session.totalStudents} Students
                 </span>
               </div>
@@ -425,19 +425,19 @@ export default function DaySchedule() {
       <Dialog open={modalState.type !== null} onOpenChange={() => handleModalClose()}>
         <DialogContent className={cn(
           "sm:max-w-[600px] p-0",
-          modalState.type === 'attendance' || modalState.type === 'absentList' ? "bg-white rounded-xl" : ""
+          modalState.type === 'attendance' || modalState.type === 'absentList' ? "bg-white dark:bg-slate-900 rounded-xl" : ""
         )}>
           {modalState.type === 'attendance' ? (
             <div className="p-6 space-y-8">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-semibold text-gray-900">
+                <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                   Take Attendance
                 </DialogTitle>
                 <div className="mt-2">
-                  <h3 className="text-xl font-medium text-gray-900">
+                  <h3 className="text-xl font-medium text-gray-900 dark:text-gray-100">
                     {classes.find(c => c.id === attendanceSession?.classId)?.subject}
                   </h3>
-                  <p className="text-base text-gray-500">
+                  <p className="text-base text-gray-500 dark:text-gray-400">
                     {classes.find(c => c.id === attendanceSession?.classId)?.section}
                   </p>
                 </div>
@@ -448,7 +448,7 @@ export default function DaySchedule() {
                   variant="default"
                   className={cn(
                     "text-base px-4 py-1 rounded-full capitalize",
-                    attendanceSession?.status === 'active' ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+                    attendanceSession?.status === 'active' ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
                   )}
                 >
                   {attendanceSession?.status || 'Active'}
@@ -459,7 +459,7 @@ export default function DaySchedule() {
                 <div className="space-y-8">
                   <div className="flex flex-col items-center justify-center py-12">
                     <div className="relative">
-                      <div className="absolute -inset-4 rounded-full bg-blue-50"></div>
+                      <div className="absolute -inset-4 rounded-full bg-blue-50 dark:bg-blue-900"></div>
                       <Button
                         variant="outline"
                         size="lg"
@@ -484,7 +484,7 @@ export default function DaySchedule() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-center gap-4 pt-6 border-t">
+                  <div className="flex items-center justify-center gap-4 pt-6 border-t dark:border-gray-700">
                     <Button
                       variant="destructive"
                       size="lg"
@@ -501,15 +501,15 @@ export default function DaySchedule() {
           ) : modalState.type === 'absentList' ? (
             <div className="p-6 space-y-6">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-semibold">
+                <DialogTitle className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
                   Absent Students List
                 </DialogTitle>
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-gray-400">
                   {classes.find(c => c.id === modalState.classId)?.subject} - {classes.find(c => c.id === modalState.classId)?.section}
                 </p>
               </DialogHeader>
               
-              <div className="text-lg font-bold text-gray-900">
+              <div className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 Present: {classes.find(c => c.id === modalState.classId)?.presentStudents} / {classes.find(c => c.id === modalState.classId)?.totalStudents}
               </div>
 
@@ -519,11 +519,11 @@ export default function DaySchedule() {
                   .map(student => (
                     <div
                       key={student.id}
-                      className="flex items-center justify-between p-4 border-b"
+                      className="flex items-center justify-between p-4 border-b dark:border-gray-700"
                     >
                       <div>
-                        <h4 className="font-medium">{student.name}</h4>
-                        <p className="text-sm text-gray-500">{student.rollNumber}</p>
+                        <h4 className="font-medium text-gray-900 dark:text-gray-100">{student.name}</h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{student.rollNumber}</p>
                       </div>
                       <Button
                         variant="outline"
@@ -551,7 +551,7 @@ export default function DaySchedule() {
           ) : (
             <>
               <DialogHeader>
-                <DialogTitle>
+                <DialogTitle className="text-gray-900 dark:text-gray-100">
                   {modalState.type === 'add' ? 'Add New Class' : 
                    modalState.type === 'edit' ? 'Edit Class' : 
                    'Reschedule Class'}
@@ -560,7 +560,7 @@ export default function DaySchedule() {
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Subject</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">Subject</Label>
                     <Input
                       name="subject"
                       value={formData.subject}
@@ -569,7 +569,7 @@ export default function DaySchedule() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Section</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">Section</Label>
                     <Input
                       name="section"
                       value={formData.section}
@@ -580,7 +580,7 @@ export default function DaySchedule() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Start Time</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">Start Time</Label>
                     <Input
                       name="startTime"
                       value={formData.startTime}
@@ -589,7 +589,7 @@ export default function DaySchedule() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>End Time</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">End Time</Label>
                     <Input
                       name="endTime"
                       value={formData.endTime}
@@ -600,7 +600,7 @@ export default function DaySchedule() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Room</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">Room</Label>
                     <Input
                       name="room"
                       value={formData.room}
@@ -609,7 +609,7 @@ export default function DaySchedule() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Total Students</Label>
+                    <Label className="text-gray-900 dark:text-gray-100">Total Students</Label>
                     <Input
                       name="totalStudents"
                       type="number"
@@ -621,7 +621,7 @@ export default function DaySchedule() {
                 </div>
               </div>
               <DialogFooter>
-                <Button variant="outline" onClick={handleModalClose}>
+                <Button variant="outline" onClick={handleModalClose} className="text-gray-900 dark:text-gray-100">
                   Cancel
                 </Button>
                 <Button onClick={handleSubmit} className="bg-blue-500 hover:bg-blue-600 text-white">
