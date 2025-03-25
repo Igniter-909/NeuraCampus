@@ -15,7 +15,7 @@ export const ROUTES = {
     superadmin: '/dashboard/super-admin',
     college_admin: '/dashboard/college-admin',
     hod: '/dashboard/hod',
-    teacher: '/dashboard/faculty',
+    teacher: '/dashboard/teacher',
     clerk: '/dashboard/clerk',
     student: '/dashboard/student',
     recruiter: '/dashboard/recruiter',
@@ -117,7 +117,7 @@ export const ROLE_DASHBOARD_ROUTES = {
   'college_admin': 'dashboard/college-admin',
   'hod': 'dashboard/hod',
   'clerk': 'dashboard/clerk',
-  'teacher': 'dashboard/faculty',
+  'teacher': 'dashboard/teacher',
   'student': 'dashboard/student',
   'recruiter': 'dashboard/recruiter'
 } as const;
@@ -150,7 +150,8 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
     { label: 'Dashboard', path: ROUTES.DASHBOARD.teacher, icon: 'dashboard' },
     { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
     { label: 'Students', path: 'dashboard/teacher/students', icon: 'users' },
-    { label: 'Attendance', path: ROUTES.ACADEMICS.ATTENDANCE, icon: 'attendance' }
+    { label: 'Attendance', path: 'dashboard/teacher/attendance', icon: 'attendance' },
+    { label: 'Community', path: 'dashboard/teacher/community', icon: 'community' }
   ],
   student: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.student, icon: 'dashboard' },

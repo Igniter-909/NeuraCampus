@@ -1,19 +1,12 @@
 // app/(dashboard)/faculty/page.tsx
 'use client'
-// import { Metadata } from "next";
-import { Card, CardContent,  CardHeader, CardTitle } from "@/components/ui/card";
-import { ClassSchedule } from "@/components/role-specific/faculty/ClassSchedule";
-import { PendingAssignments } from "@/components/role-specific/faculty/PendingAssignments";
-import { StudentPerformance } from "@/components/role-specific/faculty/StudentPerformance";
-import { AttendanceOverview } from "@/components/role-specific/faculty/AttendanceOverview";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { redirect } from 'next/navigation';
 import { useUser } from "@/hooks/auth/useUser";
-
-// export const metadata: Metadata = {
-//   title: "Faculty Dashboard | Campus Connect",
-//   description: "Manage your classes, assignments, and student performance",
-// };
+import WelcomeBanner from '@/components/ui/WelcomeBanner';
+import StatsCard from '@/components/ui/StatsCard';
+import DaySchedule from '@/components/role-specific/faculty/DaySchedule';
+import { EventCalendar } from '@/components/ui/EventCalender';
 
 export default function FacultyDashboardPage() {
   const { user, loading, error } = useUser();
@@ -32,70 +25,62 @@ export default function FacultyDashboardPage() {
   if(loading){
     return <LoadingSkeleton height="lg" />;
   }
+
+
   return (
-    <div className="flex flex-col space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Faculty Dashboard</h2>
-        <p className="text-muted-foreground">
-          Welcome back! Heres an overview of your classes and pending tasks.
-        </p>
-      </div>
+    <div className="w-full p-6">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="w-full lg:w-2/3 space-y-6">
+          <WelcomeBanner 
+            title="Welcome back, Professor!" 
+            description="Here's an overview of your classes and tasks" 
+            buttonText="View Schedule" 
+            onButtonClick={() => {}} 
+            className="shadow-lg rounded-xl bg-gradient-to-r from-blue-600 to-purple-600"
+          />
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Classes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">
-              4 classes today
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Students</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">248</div>
-            <p className="text-xs text-muted-foreground">
-              Across 5 courses
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Pending Assignments</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">
-              3 need grading today
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Average Attendance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">86%</div>
-            <p className="text-xs text-muted-foreground">
-              +2.5% from last week
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <StatsCard
+              icon="📚"
+              value={12}
+              title="Total Classes"
+              trend={{ value: 1, isPositive: true }}
+              className="bg-[#FB8892] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4"
+            />
+            <StatsCard
+              icon="👨‍🎓"
+              value={248}
+              title="Total Students"
+              trend={{ value: 2.5, isPositive: true }}
+              className="bg-[#5552AB] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4"
+            />
+            <StatsCard
+              icon="🕒"
+              value={5}
+              title="Lectures Left"
+              trend={{ value: 1, isPositive: false }}
+              className="bg-[#A1A2D8] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4"
+            />
+            <StatsCard
+              icon="📊"
+              value="86%"
+              title="Average Attendance"
+              trend={{ value: 2.5, isPositive: true }}
+              className="bg-[#5552AB] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4"
+            />
+          </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <ClassSchedule />
-        <PendingAssignments />
-      </div>
+          <DaySchedule />
+        </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <StudentPerformance />
-        <AttendanceOverview />
+        <div className="w-full lg:w-1/3 space-y-6">
+          <div className="bg-white shadow-lg rounded-xl p-4 border border-gray-200">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Event Calendar</h2>
+            <EventCalendar 
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

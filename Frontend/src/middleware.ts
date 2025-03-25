@@ -28,7 +28,7 @@ const roleDashboards: Record<UserRole, string> = {
   'superadmin': 'dashboard/super-admin',
   'college_admin': 'dashboard/college-admin',
   'hod': 'dashboard/hod',
-  'teacher': 'dashboard/faculty',
+  'teacher': 'dashboard/teacher', // Changed from 'teacher' to 'faculty'
   'clerk': 'dashboard/clerk',
   'student': 'dashboard/student',
   'recruiter': 'dashboard/recruiter'
