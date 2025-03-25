@@ -155,12 +155,13 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
   ],
   student: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.student, icon: 'dashboard' },
-    { label: 'Courses', path: 'dashboard/student/courses', icon: 'courses' },
-    { label: 'Attendance', path: 'dashboard/student/academics/attendance', icon: 'attendance' },
-    { label: 'Grades', path: 'dashboard/student/academics/grades', icon: 'grades' },
-    { label: 'Community', path: 'dashboard/student/academics/community', icon: 'community' },
-      { label: 'Internship-Portal', path: 'dashboard/student/academics/portal', icon: 'portal' }
 
+    { label: 'Courses', path: 'student/courses', icon: 'courses' },
+    { label: 'Attendance', path: 'student/academics/attendance', icon: 'attendance' },
+    { label: 'Grades', path: 'student/academics/grades', icon: 'grades' },
+    { label: 'Community', path: 'student/academics/community', icon: 'community' },
+    { label: 'Internship-Portal', path: 'student/academics/portal', icon: 'portal' },
+    { label: 'Feeds', path: 'student/academics/feeds', icon: 'feeds' }
 
   ],
   recruiter: [

@@ -120,9 +120,11 @@ export default function Home() {
         <WorkSection id="work" forwardedRef={workRef} />
         <ContactSection id="contact" forwardedRef={contactRef} />
 
+
         {/* Footer */}
         <Footer />
       </motion.div>
+
     </div>
   );
 }

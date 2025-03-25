@@ -1,5 +1,4 @@
-// app/(dashboard)/faculty/page.tsx
-'use client'
+
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { redirect } from 'next/navigation';
 import { useUser } from "@/hooks/auth/useUser";
@@ -7,6 +6,7 @@ import WelcomeBanner from '@/components/ui/WelcomeBanner';
 import StatsCard from '@/components/ui/StatsCard';
 import DaySchedule from '@/components/role-specific/faculty/DaySchedule';
 import { EventCalendar } from '@/components/ui/EventCalender';
+
 
 export default function FacultyDashboardPage() {
   const { user, loading, error } = useUser();
@@ -25,6 +25,7 @@ export default function FacultyDashboardPage() {
   if(loading){
     return <LoadingSkeleton height="lg" />;
   }
+
 
 
   return (
@@ -81,6 +82,7 @@ export default function FacultyDashboardPage() {
             />
           </div>
         </div>
+
       </div>
     </div>
   );

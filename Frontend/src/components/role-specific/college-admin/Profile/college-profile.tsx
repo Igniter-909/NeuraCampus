@@ -9,6 +9,7 @@ import DepartmentsSection from "@/components/role-specific/college-admin/Profile
 import FacultySection from "@/components/role-specific/college-admin/Profile/faculty-section"
 import FacilitiesSection from "@/components/role-specific/college-admin/Profile/facilities"
 import AchievementsSection from "@/components/role-specific/college-admin/Profile/achievements-section"
+import PlacementSection from "@/components/role-specific/college-admin/Profile/placement-section"
 import FloatingActionButton from "@/components/ui/floating-action-button"
 
 export default function CollegeProfile() {
@@ -62,6 +63,8 @@ export default function CollegeProfile() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-6">
             <AboutSection data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
+
+            <PlacementSection data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
 
             <DepartmentsSection
               data={editedData}
