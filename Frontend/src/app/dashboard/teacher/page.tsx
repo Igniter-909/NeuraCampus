@@ -1,4 +1,4 @@
-
+'use client'
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { redirect } from 'next/navigation';
 import { useUser } from "@/hooks/auth/useUser";
