@@ -90,6 +90,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
 
           <div className="text-lg text-muted-foreground dark:text-gray-400 mt-1">
 
+
             <EditableField
               value={data.tagline}
               fieldPath="tagline"
