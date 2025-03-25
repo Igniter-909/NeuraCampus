@@ -53,7 +53,7 @@ export default function PageTransition() {
   return (
     <div ref={overlayRef} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
       <Loader />
-      <Image src={logo} alt="Logo" width={60} height={60} style={{ position: 'absolute', zIndex: 2 }} />
+      {/* <Image src={logo} alt="Logo" width={60} height={60} style={{ position: 'absolute', zIndex: 2 }} /> */}
     </div>
   );
 }

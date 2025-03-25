@@ -12,13 +12,13 @@ export const ROUTES = {
   // Dashboard Routes
   DASHBOARD: {
     root: '/',
-    superadmin: '/super-admin',
-    college_admin: '/college-admin',
-    hod: '/hod',
-    teacher: '/faculty',
-    clerk: '/clerk',
-    student: '/student',
-    recruiter: '/recruiter',
+    superadmin: '/dashboard/super-admin',
+    college_admin: '/dashboard/college-admin',
+    hod: '/dashboard/hod',
+    teacher: '/dashboard/teacher',
+    clerk: '/dashboard/clerk',
+    student: '/dashboard/student',
+    recruiter: '/dashboard/recruiter',
   },
 
   // User Management
@@ -107,19 +107,19 @@ export function isPublicRoute(path: (typeof PUBLIC_ROUTES)[number]): boolean {
 }
 
 export function getDefaultRouteForRole(role: string): string {
-  return ROLE_DEFAULT_ROUTES[role] || ROUTES.DASHBOARD.ROOT;
+  return ROLE_DEFAULT_ROUTES[role] ;
 }
 
 export type AppRoute = typeof ROUTES;
 
 export const ROLE_DASHBOARD_ROUTES = {
-  'superadmin': '/super-admin',
-  'college_admin': '/college-admin',
-  'hod': '/hod',
-  'clerk': '/clerk',
-  'teacher': '/faculty',
-  'student': '/student',
-  'recruiter': '/recruiter'
+  'superadmin': 'dashboard/super-admin',
+  'college_admin': 'dashboard/college-admin',
+  'hod': 'dashboard/hod',
+  'clerk': 'dashboard/clerk',
+  'teacher': 'dashboard/teacher',
+  'student': 'dashboard/student',
+  'recruiter': 'dashboard/recruiter'
 } as const;
 
 // Update the UserRole type to match backend exactly
@@ -128,38 +128,41 @@ export type UserRole = 'superadmin' | 'college_admin' | 'hod' | 'clerk' | 'teach
 export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
   superadmin: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.superadmin, icon: 'dashboard' },
-    { label: 'Institutions', path: 'super-admin/institutions', icon: 'institutions' },
-    { label: 'Users', path: 'super-admin/users', icon: 'users' },
-    { label: 'Colleges', path: 'super-admin/colleges', icon: 'colleges' },
+    { label: 'Institutions', path: 'dashboard/super-admin/institutions', icon: 'institutions' },
+    { label: 'Users', path: 'dashboard/super-admin/users', icon: 'users' },
+    { label: 'Colleges', path: 'dashboard/super-admin/colleges', icon: 'colleges' },
     { label: 'Settings', path: ROUTES.SETTINGS.GENERAL, icon: 'settings' }
   ],
   college_admin: [
-    { label: 'Profile', path: 'college-admin/profile', icon: 'users' },
+    { label: 'Profile', path: 'dashboard/college-admin/profile', icon: 'users' },
     { label: 'Dashboard', path: ROUTES.DASHBOARD.college_admin, icon: 'dashboard' },
-    { label: 'Departments', path: 'college-admin/departments', icon: 'departments' },
-    { label: 'Faculty', path: 'college-admin/faculty', icon: 'faculty' },
-    { label: 'Students', path: 'college-admin/students', icon: 'user2' }
+    { label: 'Departments', path: 'dashboard/college-admin/departments', icon: 'departments' },
+    { label: 'Faculty', path: 'dashboard/college-admin/faculty', icon: 'faculty' },
+    { label: 'Students', path: 'dashboard/college-admin/students', icon: 'user2' }
   ],
   hod: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.hod, icon: 'dashboard' },
-    { label: 'Department', path: 'hod/department', icon: 'departments' },
+    { label: 'Department', path: 'dashboard/hod/department', icon: 'departments' },
     { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
-    { label: 'Faculty', path: 'hod/faculty', icon: 'faculty' }
+    { label: 'Faculty', path: 'dashboard/hod/faculty', icon: 'faculty' }
   ],
   teacher: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.teacher, icon: 'dashboard' },
     { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
-    { label: 'Students', path: 'teacher/students', icon: 'users' },
-    { label: 'Attendance', path: ROUTES.ACADEMICS.ATTENDANCE, icon: 'attendance' }
+    { label: 'Students', path: 'dashboard/teacher/students', icon: 'users' },
+    { label: 'Attendance', path: 'dashboard/teacher/attendance', icon: 'attendance' },
+    { label: 'Community', path: 'dashboard/teacher/community', icon: 'community' }
   ],
   student: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.student, icon: 'dashboard' },
+
     { label: 'Courses', path: 'student/courses', icon: 'courses' },
     { label: 'Attendance', path: 'student/academics/attendance', icon: 'attendance' },
     { label: 'Grades', path: 'student/academics/grades', icon: 'grades' },
     { label: 'Community', path: 'student/academics/community', icon: 'community' },
     { label: 'Internship-Portal', path: 'student/academics/portal', icon: 'portal' },
     { label: 'Feeds', path: 'student/academics/feeds', icon: 'feeds' }
+
   ],
   recruiter: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.recruiter, icon: 'dashboard' },

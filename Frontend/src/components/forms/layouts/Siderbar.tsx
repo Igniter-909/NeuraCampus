@@ -1,10 +1,9 @@
 "use client"
 
 import type React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
-  GraduationCap,
+  // GraduationCap,4
   LogOut,
   ChevronRight,
   ChevronLeft,
@@ -76,6 +75,7 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function Sidebar({ navigationItems, role, userName, isCollapsed, setIsCollapsed, mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { logout } = useAuth()
 
   const mainNavItems = navigationItems.filter((item) =>
@@ -85,6 +85,20 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
   const secondaryNavItems = navigationItems.filter(
     (item) => !["dashboard", "students", "courses", "schedule"].includes(item.icon),
   )
+
+  const handleNavigation = (path: string) => {
+    setMobileMenuOpen(false)
+    
+    // Clean up the path to prevent duplicate segments
+    const segments = path.split('/')
+    const uniqueSegments = [...new Set(segments.filter(Boolean))]
+    const cleanPath = '/' + uniqueSegments.join('/')
+    
+    // Only navigate if the current path is different
+    if (pathname !== cleanPath) {
+      router.replace(cleanPath)
+    }
+  }
 
   return (
     <div className="rounded-xl shadow-2xl shadow-blue-950 p-0">
@@ -148,12 +162,11 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
               {mainNavItems.map((item) => {
                 const isActive = pathname === item.path
                 return (
-                  <Link
+                  <button
                     key={item.path}
-                    href={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 rounded-md transition-all duration-200
-                      ${isActive 
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center gap-3 rounded-md transition-all duration-200
+                      ${pathname === item.path  // Use cleaned path for active state
                         ? "bg-white/10 text-white" 
                         : "text-white/60 hover:bg-white/5 hover:text-white"}
                       ${isCollapsed && !mobileMenuOpen 
@@ -167,7 +180,7 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
                       {iconMap[item.icon]}
                     </span>
                     {(!isCollapsed || mobileMenuOpen) && <span>{item.label}</span>}
-                  </Link>
+                  </button>
                 )
               })}
             </nav>
@@ -184,12 +197,11 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
               {secondaryNavItems.map((item) => {
                 const isActive = pathname === item.path
                 return (
-                  <Link
+                  <button
                     key={item.path}
-                    href={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 rounded-md transition-all duration-200
-                      ${isActive 
+                    onClick={() => handleNavigation(item.path)}
+                    className={`w-full flex items-center gap-3 rounded-md transition-all duration-200
+                      ${pathname === item.path  // Use cleaned path for active state
                         ? "bg-white/10 text-white" 
                         : "text-white/60 hover:bg-white/5 hover:text-white"}
                       ${isCollapsed && !mobileMenuOpen 
@@ -203,7 +215,7 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
                       {iconMap[item.icon]}
                     </span>
                     {(!isCollapsed || mobileMenuOpen) && <span>{item.label}</span>}
-                  </Link>
+                  </button>
                 )
               })}
             </nav>

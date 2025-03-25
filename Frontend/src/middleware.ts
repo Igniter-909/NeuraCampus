@@ -25,13 +25,13 @@ type UserRole = 'superadmin' | 'college_admin' | 'hod' | 'teacher' | 'clerk' | '
 
 // Type-safe role dashboards mapping
 const roleDashboards: Record<UserRole, string> = {
-  'superadmin': '/super-admin',
-  'college_admin': '/college-admin',
-  'hod': '/hod',
-  'teacher': '/faculty',
-  'clerk': '/clerk',
-  'student': '/student',
-  'recruiter': '/recruiter'
+  'superadmin': 'dashboard/super-admin',
+  'college_admin': 'dashboard/college-admin',
+  'hod': 'dashboard/hod',
+  'teacher': 'dashboard/teacher', // Changed from 'teacher' to 'faculty'
+  'clerk': 'dashboard/clerk',
+  'student': 'dashboard/student',
+  'recruiter': 'dashboard/recruiter'
 };
 
 export async function middleware(request: NextRequest) {

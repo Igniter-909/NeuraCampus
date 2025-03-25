@@ -14,11 +14,9 @@ export interface User {
 }
 
 interface TokenPayload {
+  exp: number;
   userId: string;
   role: string;
-  iat: number;
-  exp: number;
-  collegeId?: string;
 }
 
 interface TokenData {
@@ -31,6 +29,7 @@ interface TokenData {
 export interface LoginCredentials {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface RegisterData {
@@ -43,14 +42,33 @@ export interface RegisterData {
 
 export const auth = {
   async login(credentials: LoginCredentials) {
-    const response = await apiClient.post(endpoints.auth.login, credentials);
-    const { token, user } = response.data as { token: string; user: User };
-    
-    // Store token and user data
-    cookieUtils.set('token', token);
-    cookieUtils.set('user', JSON.stringify(user));
-    
-    return user;
+    try {
+      const response = await apiClient.post(endpoints.auth.login, credentials);
+      const { token, user } = response.data as { token: string; user: User };
+      
+      // Store token and user data with expiration based on rememberMe
+      const maxAge = credentials.rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60; // 30 days or 1 day
+      
+      // Set cookies with proper options
+      cookieUtils.set('token', token, { 
+        maxAge,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
+      
+      cookieUtils.set('user', JSON.stringify(user), { 
+        maxAge,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
+      
+      return user;
+    } catch (error) {
+      console.error('Login error:', error);
+      throw error;
+    }
   },
 
   async register(data: RegisterData) {
@@ -68,10 +86,9 @@ export const auth = {
   },
 
   getUser(): User | null {
-    const userStr = cookieUtils.get('user');
-    if (!userStr) return null;
-    
     try {
+      const userStr = cookieUtils.get('user');
+      if (!userStr) return null;
       return JSON.parse(userStr);
     } catch {
       return null;
@@ -79,10 +96,9 @@ export const auth = {
   },
 
   isAuthenticated(): boolean {
-    const token = cookieUtils.get('token');
-    if (!token) return false;
-
     try {
+      const token = cookieUtils.get('token');
+      if (!token) return false;
       const payload = jwtDecode<TokenPayload>(token);
       return payload.exp * 1000 > Date.now();
     } catch {

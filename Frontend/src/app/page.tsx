@@ -1,92 +1,130 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client"
+import { useRef, useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
+// Import all the components we created
+import { Navbar } from "@/components/homePage/Navbar";
+import { HeroSection } from "@/components/homePage/HeroSection";
+import { AboutSection } from "@/components/homePage/AboutSection";
+import { FeaturesSection } from "@/components/homePage/FeaturesSection";
+import { WorkSection } from "@/components/homePage/WorkSection";
+import { ContactSection } from "@/components/homePage/ContactSection";
+import { Footer } from "@/components/homePage/Footer";
+import { WhyUs } from "@/components/homePage/WhyUs";
+import { BackgroundShapes } from "@/components/ui/background-shapes";
+
+/**
+ * Main page component that composes all homepage sections
+ * Handles section navigation and intersection observation
+ */
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("home");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Create refs for each section
+  const homeRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const featuresRef = useRef<HTMLDivElement>(null);
+  const whyUsRef = useRef<HTMLDivElement>(null);
+  const workRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // Set up intersection observer to update active section based on scroll position
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    const sections = [homeRef.current, aboutRef.current, featuresRef.current, whyUsRef.current, workRef.current, contactRef.current];
+    sections.forEach((section) => {
+      if (section) observer.observe(section);
+    });
+    
+    // Clean up when component unmounts
+    return () => {
+      sections.forEach((section) => {
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, []);
+
+  // Function to handle smooth scrolling to sections
+  const scrollToSection = (sectionId: string) => {
+    let ref;
+    switch (sectionId) {
+      case "home":
+        ref = homeRef;
+        break;
+      case "about":
+        ref = aboutRef;
+        break;
+      case "features":
+        ref = featuresRef;
+        break;
+      case "whyus":
+        ref = whyUsRef;
+        break;
+      case "work":
+        ref = workRef;
+        break;
+      case "contact":
+        ref = contactRef;
+        break;
+      default:
+        ref = homeRef;
+    }
+
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
+    setActiveSection(sectionId);
+  };
+
+  // Reset scroll position when the page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen">
-      {/* Navigation Bar */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              {/* Logo */}
-              <Link href="/" className="flex-shrink-0 flex items-center">
-                <Image
-                  className="h-8 w-auto"
-                  src="/logo.png"
-                  alt="Logo"
-                  width={32}
-                  height={32}
-                />
-                <span className="ml-2 text-xl font-bold">Campus MS</span>
-              </Link>
+    <div className="relative min-h-screen flex flex-col">
+      {/* Fixed Navigation */}
+      <Navbar 
+        activeSection={activeSection} 
+        scrollToSection={scrollToSection} 
+        setMobileMenuOpen={setIsMobileMenuOpen}
+        isMobileMenuOpen={isMobileMenuOpen}
+      />
 
-              {/* Navigation Links */}
-              <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-                <Link href="/" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-primary text-sm font-medium">
-                  Home
-                </Link>
-                <Link href="/about" className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">
-                  About
-                </Link>
-                <Link href="/contact" className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">
-                  Contact
-                </Link>
-                <Link href="/our-work" className="text-gray-500 hover:text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 text-sm font-medium">
-                  Our Work
-                </Link>
-              </div>
-            </div>
+      {/* Main content sections with enhanced blur effect when mobile menu is open */}
+      <motion.div 
+        ref={mainContentRef}
+        animate={{ 
+          filter: isMobileMenuOpen ? "blur(8px) brightness(0.6)" : "blur(0px) brightness(1)",
+          scale: isMobileMenuOpen ? 0.97 : 1
+        }}
+        transition={{ duration: 0.4 }}
+        className="relative transition-all"
+      ><BackgroundShapes />
+        <HeroSection id="home" forwardedRef={homeRef} />
+        <AboutSection id="about" forwardedRef={aboutRef} />
+        <FeaturesSection id="features" forwardedRef={featuresRef} />
+        <WhyUs id="whyus" forwardedRef={whyUsRef} />
+        <WorkSection id="work" forwardedRef={workRef} />
+        <ContactSection id="contact" forwardedRef={contactRef} />
 
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/login"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-primary hover:bg-primary hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
-              >
-                Sign in
-              </Link>
-              <Link
-                href="/register"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
-              >
-                Register
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
 
-      {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center">
-          <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">Welcome to</span>
-            <span className="block text-primary">Campus Management System</span>
-          </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            A comprehensive solution for managing educational institutions. Streamline your academic processes, enhance communication, and improve efficiency.
-          </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-            <div className="rounded-md shadow">
-                    <Link
-                      href="/register"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark md:py-4 md:text-lg md:px-10"
-                    >
-                      Get started
-                    </Link>
-            </div>
-            <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
-                    <Link
-                      href="/about"
-                className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white hover:bg-gray-50 md:py-4 md:text-lg md:px-10"
-                    >
-                      Learn more
-                    </Link>
-            </div>
-          </div>
-        </div>
-      </main>
+        {/* Footer */}
+        <Footer />
+      </motion.div>
+
     </div>
   );
 }

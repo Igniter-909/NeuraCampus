@@ -1,14 +1,16 @@
 // src/app/(dashboard)/layout.tsx
 "use client"
 
-import { type ReactNode, useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
+import { type ReactNode,  useState } from "react"
+
 import Sidebar from "@/components/forms/layouts/Siderbar"
 import Header from "@/components/forms/layouts/Header"
 import { NAVIGATION_ROUTES } from "@/constants/routes"
 import { useUser } from "@/hooks/auth/useUser"
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton"
 import RightSidebar from "@/components/forms/layouts/RightSidebar"
+
 import { BackgroundPattern } from "@/components/ui/background-pattern"
 // import PageWrapper from '@/components/common/PageWrapper'
 // import Logo from '@/components/forms/layouts/Logo';
