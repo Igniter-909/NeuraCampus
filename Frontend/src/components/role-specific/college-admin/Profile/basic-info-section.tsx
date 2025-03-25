@@ -7,69 +7,69 @@ import { Building2, Calendar, MapPin, Award, Phone, Mail, Globe, Linkedin, Twitt
 interface BasicInfoSectionProps {
   data: CollegeData
   isAdmin: boolean
-  onEdit: (fieldPath: string, value: any) => void
+  onEdit: (fieldPath: string, value: string | number) => void
   editingField: string | null
 }
 
 export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }: BasicInfoSectionProps) {
   return (
-    <Card>
+    <Card className="dark:bg-slate-900 dark:border-slate-700">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+        <CardTitle className="flex items-center gap-2 text-xl font-semibold dark:text-gray-100">
           <Building2 className="h-5 w-5 text-[#0a66c2]" />
           College Information
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Basic Details</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2 dark:text-gray-400">Basic Details</h3>
 
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <span className="font-medium text-sm shrink-0">Established:</span>
+              <span className="font-medium text-sm shrink-0 dark:text-gray-300">Established:</span>
               <EditableField
                 value={data.established}
                 fieldPath="established"
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "established"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <span className="font-medium text-sm shrink-0">Location:</span>
+              <span className="font-medium text-sm shrink-0 dark:text-gray-300">Location:</span>
               <EditableField
                 value={data.location}
                 fieldPath="location"
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "location"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <span className="font-medium text-sm shrink-0">Accreditations:</span>
+              <span className="font-medium text-sm shrink-0 dark:text-gray-300">Accreditations:</span>
               <EditableField
                 value={data.accreditations}
                 fieldPath="accreditations"
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "accreditations"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="dark:bg-slate-700" />
 
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Contact Information</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2 dark:text-gray-400">Contact Information</h3>
 
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "contact.phone"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
@@ -92,7 +92,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "contact.email"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
@@ -104,16 +104,16 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "contact.website"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="dark:bg-slate-700" />
 
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Social Media</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2 dark:text-gray-400">Social Media</h3>
 
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -124,7 +124,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "socialMedia.linkedin"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
@@ -136,7 +136,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "socialMedia.twitter"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
 
@@ -148,13 +148,13 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "socialMedia.instagram"}
-                textClassName="text-sm"
+                textClassName="text-sm dark:text-gray-300"
               />
             </div>
           </div>
         </div>
 
-        <Separator />
+        <Separator className="dark:bg-slate-700" />
 
         <div className="pt-2">
           <a
@@ -174,7 +174,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
                 onEdit={onEdit}
                 isAdmin={isAdmin}
                 isEditing={editingField === "applyUrl"}
-                textClassName="text-xs text-muted-foreground"
+                textClassName="text-xs text-muted-foreground dark:text-gray-400"
                 placeholder="Set application URL"
               />
             </div>

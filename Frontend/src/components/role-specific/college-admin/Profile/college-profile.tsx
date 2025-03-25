@@ -15,7 +15,7 @@ import FloatingActionButton from "@/components/ui/floating-action-button"
 export default function CollegeProfile() {
   const [collegeData, setCollegeData] = useState<CollegeData>(initialCollegeData)
   const [editedData, setEditedData] = useState<CollegeData>(initialCollegeData)
-  const [isAdmin, setIsAdmin] = useState(true) // In a real app, this would be determined by authentication
+  const [isAdmin] = useState(true) // In a real app, this would be determined by authentication
   const [hasChanges, setHasChanges] = useState(false)
   const [editingField, setEditingField] = useState<string | null>(null)
 
@@ -25,7 +25,7 @@ export default function CollegeProfile() {
     setHasChanges(hasUnsavedChanges)
   }, [collegeData, editedData])
 
-  const handleFieldEdit = (fieldPath: string, value: any) => {
+  const handleFieldEdit = (fieldPath: string, value: string | number | string[] | Record<string, unknown>[]) => {
     setEditingField(fieldPath)
 
     // Create a deep copy of editedData and update the specified field
@@ -56,7 +56,7 @@ export default function CollegeProfile() {
   }
 
   return (
-    <div className="container mx-auto py-6 px-4 md:px-6 ">
+    <div className="container mx-auto py-6 px-4 md:px-6 dark:bg-slate-950">
       <div className="space-y-6">
         <ProfileHeader data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
 

@@ -8,7 +8,7 @@ import { Trophy, PlusCircle, Trash2 } from "lucide-react"
 interface AchievementsSectionProps {
   data: CollegeData
   isAdmin: boolean
-  onEdit: (fieldPath: string, value: any) => void
+  onEdit: (fieldPath: string, value: string | number | string[]) => void
   editingField: string | null
 }
 
@@ -31,9 +31,9 @@ export default function AchievementsSection({ data, isAdmin, onEdit, editingFiel
   }
 
   return (
-    <Card>
+    <Card className="dark:bg-slate-900 dark:border-slate-700">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2 text-xl font-semibold">
+        <CardTitle className="flex items-center gap-2 text-xl font-semibold dark:text-gray-100">
           <Trophy className="h-5 w-5 text-[#0a66c2]" />
           Achievements & Recognitions
         </CardTitle>
@@ -43,7 +43,7 @@ export default function AchievementsSection({ data, isAdmin, onEdit, editingFiel
             variant="ghost"
             size="sm"
             onClick={addAchievement}
-            className="h-8 text-[#0a66c2] hover:text-[#004182] hover:bg-blue-50"
+            className="h-8 text-[#0a66c2] hover:text-[#004182] hover:bg-blue-50 dark:hover:bg-blue-900"
           >
             <PlusCircle className="h-4 w-4 mr-1" />
             Add
@@ -58,7 +58,7 @@ export default function AchievementsSection({ data, isAdmin, onEdit, editingFiel
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute -left-8 top-0 h-6 w-6 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:bg-red-50"
+                  className="absolute -left-8 top-0 h-6 w-6 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900"
                   onClick={() => removeAchievement(index)}
                 >
                   <Trash2 className="h-3 w-3" />
@@ -69,13 +69,14 @@ export default function AchievementsSection({ data, isAdmin, onEdit, editingFiel
                 {index + 1}
               </Badge>
 
-              <div className="flex-1">
+              <div className="flex-1 dark:text-gray-300">
                 <EditableField
                   value={achievement}
                   fieldPath={`achievement-${index}`}
                   onEdit={(_, value) => handleAchievementChange(index, value)}
                   isAdmin={isAdmin}
                   isEditing={editingField === `achievement-${index}`}
+                  textClassName="dark:text-gray-300"
                 />
               </div>
             </li>

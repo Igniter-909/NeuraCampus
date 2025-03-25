@@ -2,17 +2,36 @@ import Image from "next/image"
 import type { CollegeData } from "@/lib/data"
 import EditableField from "@/components/ui/editable-field"
 import { Camera } from "lucide-react"
+import { uploadToCloudinary } from '@/lib/cloudinary'
 
 interface ProfileHeaderProps {
   data: CollegeData
   isAdmin: boolean
-  onEdit: (fieldPath: string, value: any) => void
+  onEdit: (fieldPath: string, value: string | number) => void
   editingField: string | null
 }
 
 export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: ProfileHeaderProps) {
+  const handleImageUpload = async (field: 'coverImage' | 'logo') => {
+    try {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.onchange = async () => {
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const imageUrl = await uploadToCloudinary(file);
+          onEdit(field, imageUrl);
+        }
+      };
+      fileInput.click();
+    } catch (error) {
+      console.error('Image upload failed:', error);
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-sm">
+    <div className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm">
       {/* Cover Image */}
       <div className="h-48 md:h-64 w-full relative group">
         <Image
@@ -26,11 +45,8 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
         {isAdmin && (
           <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
             <div
-              className="bg-white rounded-full p-2 cursor-pointer"
-              onClick={() => {
-                const newUrl = prompt("Enter new cover image URL:", data.coverImage)
-                if (newUrl) onEdit("coverImage", newUrl)
-              }}
+              className="bg-white dark:bg-slate-900 rounded-full p-2 cursor-pointer"
+              onClick={() => handleImageUpload('coverImage')}
             >
               <Camera className="h-6 w-6 text-[#0a66c2]" />
             </div>
@@ -40,7 +56,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
 
       {/* Logo and College Name */}
       <div className="px-6 pb-6 pt-16 relative">
-        <div className="absolute -top-16 left-6 h-24 w-24 rounded-xl overflow-hidden border-4 border-white bg-white shadow-md group">
+        <div className="absolute -top-16 left-6 h-24 w-24 rounded-xl overflow-hidden border-4 border-white bg-white dark:bg-slate-900 shadow-md group">
           <Image
             src={data.logo || "/placeholder.svg?height=100&width=100"}
             alt="College Logo"
@@ -51,11 +67,8 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
           {isAdmin && (
             <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <div
-                className="bg-white rounded-full p-1 cursor-pointer"
-                onClick={() => {
-                  const newUrl = prompt("Enter new logo URL:", data.logo)
-                  if (newUrl) onEdit("logo", newUrl)
-                }}
+                className="bg-white dark:bg-slate-900 rounded-full p-1 cursor-pointer"
+                onClick={() => handleImageUpload('logo')}
               >
                 <Camera className="h-4 w-4 text-[#0a66c2]" />
               </div>
@@ -64,7 +77,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
         </div>
 
         <div className="mt-4">
-          <h1 className="text-3xl font-bold text-[#333333]">
+          <h1 className="text-3xl font-bold text-[#333333] dark:text-gray-100">
             <EditableField
               value={data.name}
               fieldPath="name"
@@ -75,7 +88,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
             />
           </h1>
 
-          <p className="text-lg text-muted-foreground mt-1">
+          <div className="text-lg text-muted-foreground dark:text-gray-400 mt-1">
             <EditableField
               value={data.tagline}
               fieldPath="tagline"
@@ -84,7 +97,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
               isEditing={editingField === "tagline"}
               textClassName="text-lg text-muted-foreground"
             />
-          </p>
+          </div>
         </div>
       </div>
     </div>
