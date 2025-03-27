@@ -1,22 +1,20 @@
-import axios from 'axios';
+import { apiClient } from '@/lib/api';
 import { QuestionnaireData } from '@/types/questionnaire';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cms-backend-kdb3.onrender.com/api';
 
 export const questionnaireApi = {
   submit: async (data: QuestionnaireData) => {
-    const response = await axios.post(`${API_URL}/questionnaire`, data);
+    const response = await apiClient.post('/questionnaire', data);
     return response.data;
   },
 
   // Admin endpoints
   getAll: async () => {
-    const response = await axios.get(`${API_URL}/questionnaire`);
+    const response = await apiClient.get('/questionnaire');
     return response.data;
   },
 
   downloadExcel: async () => {
-    const response = await axios.get(`${API_URL}/questionnaire/export`, {
+    const response = await apiClient.get('/questionnaire/export', {
       responseType: 'blob'
     });
     

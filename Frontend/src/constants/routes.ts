@@ -131,7 +131,8 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
     { label: 'Institutions', path: 'dashboard/super-admin/institutions', icon: 'institutions' },
     { label: 'Users', path: 'dashboard/super-admin/users', icon: 'users' },
     { label: 'Colleges', path: 'dashboard/super-admin/colleges', icon: 'colleges' },
-    { label: 'Settings', path: ROUTES.SETTINGS.GENERAL, icon: 'settings' }
+    { label: 'Settings', path: ROUTES.SETTINGS.GENERAL, icon: 'settings' },
+    { label:'Requests', path:'dashboard/super-admin/questionnare_data', icon:'request'}
   ],
   college_admin: [
     { label: 'Profile', path: 'dashboard/college-admin/profile', icon: 'users' },
