@@ -131,7 +131,8 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
     { label: 'Institutions', path: 'dashboard/super-admin/institutions', icon: 'institutions' },
     { label: 'Users', path: 'dashboard/super-admin/users', icon: 'users' },
     { label: 'Colleges', path: 'dashboard/super-admin/colleges', icon: 'colleges' },
-    { label: 'Settings', path: ROUTES.SETTINGS.GENERAL, icon: 'settings' }
+    { label: 'Settings', path: ROUTES.SETTINGS.GENERAL, icon: 'settings' },
+    { label:'Requests', path:'dashboard/super-admin/questionnare_data', icon:'request'}
   ],
   college_admin: [
     { label: 'Profile', path: 'dashboard/college-admin/profile', icon: 'users' },
@@ -148,10 +149,11 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
   ],
   teacher: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.teacher, icon: 'dashboard' },
-    { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
+    { label: 'Courses', path: 'dashboard/teacher/courses', icon: 'courses' },
     { label: 'Students', path: 'dashboard/teacher/students', icon: 'users' },
     { label: 'Attendance', path: 'dashboard/teacher/attendance', icon: 'attendance' },
-    { label: 'Community', path: 'dashboard/teacher/community', icon: 'community' }
+    { label: 'Community', path: 'dashboard/teacher/community', icon: 'community' },
+    { label: 'Profile', path: 'dashboard/teacher/profile', icon: 'users' }
   ],
   student: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.student, icon: 'dashboard' },
