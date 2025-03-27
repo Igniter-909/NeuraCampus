@@ -148,7 +148,7 @@ export const NAVIGATION_ROUTES: Record<string, NavigationItem[]> = {
   ],
   teacher: [
     { label: 'Dashboard', path: ROUTES.DASHBOARD.teacher, icon: 'dashboard' },
-    { label: 'Courses', path: ROUTES.COURSES.LIST, icon: 'courses' },
+    { label: 'Courses', path: 'dashboard/teacher/courses', icon: 'courses' },
     { label: 'Students', path: 'dashboard/teacher/students', icon: 'users' },
     { label: 'Attendance', path: 'dashboard/teacher/attendance', icon: 'attendance' },
     { label: 'Community', path: 'dashboard/teacher/community', icon: 'community' },
