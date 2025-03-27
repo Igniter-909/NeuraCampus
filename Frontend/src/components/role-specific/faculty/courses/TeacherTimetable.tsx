@@ -1,4 +1,4 @@
-import { Calendar, Download } from "lucide-react"
+import { Calendar, Download, Building2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -9,35 +9,90 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useToast } from "@/components/ui/use-toast"
+import { Badge } from "@/components/ui/badge"
+
+interface ClassDetails {
+  name: string
+  room: string
+  semester: string
+}
 
 interface TimeSlot {
   time: string
-  monday: string
-  tuesday: string
-  wednesday: string
-  thursday: string
-  friday: string
-  saturday: string
+  monday: ClassDetails | string
+  tuesday: ClassDetails | string
+  wednesday: ClassDetails | string
+  thursday: ClassDetails | string
+  friday: ClassDetails | string
+  saturday: ClassDetails | string
 }
 
 const timeSlots: TimeSlot[] = [
   {
     time: "9:00 AM - 10:00 AM",
-    monday: "Data Structures",
-    tuesday: "Database Management",
-    wednesday: "Data Structures",
-    thursday: "Database Management",
-    friday: "Data Structures",
-    saturday: "Advanced Mathematics",
+    monday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
+    tuesday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
+    wednesday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
+    thursday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
+    friday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
+    saturday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
   },
   {
     time: "10:00 AM - 11:00 AM",
-    monday: "Advanced Mathematics",
-    tuesday: "Quantum Physics",
-    wednesday: "Advanced Mathematics",
-    thursday: "Quantum Physics",
-    friday: "Advanced Mathematics",
-    saturday: "Database Management",
+    monday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
+    tuesday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
+    wednesday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
+    thursday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
+    friday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
+    saturday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
   },
   {
     time: "11:00 AM - 12:00 PM",
@@ -68,21 +123,69 @@ const timeSlots: TimeSlot[] = [
   },
   {
     time: "2:00 PM - 3:00 PM",
-    monday: "Database Management",
-    tuesday: "Data Structures",
-    wednesday: "Database Management",
-    thursday: "Data Structures",
-    friday: "Database Management",
-    saturday: "Quantum Physics",
+    monday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
+    tuesday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
+    wednesday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
+    thursday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
+    friday: {
+      name: "Database Management",
+      room: "Room 302",
+      semester: "3rd Semester",
+    },
+    saturday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
   },
   {
     time: "3:00 PM - 4:00 PM",
-    monday: "Quantum Physics",
-    tuesday: "Advanced Mathematics",
-    wednesday: "Quantum Physics",
-    thursday: "Advanced Mathematics",
-    friday: "Quantum Physics",
-    saturday: "Data Structures",
+    monday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
+    tuesday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
+    wednesday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
+    thursday: {
+      name: "Advanced Mathematics",
+      room: "Room 303",
+      semester: "5th Semester",
+    },
+    friday: {
+      name: "Quantum Physics",
+      room: "Room 304",
+      semester: "7th Semester",
+    },
+    saturday: {
+      name: "Data Structures",
+      room: "Room 301",
+      semester: "3rd Semester",
+    },
   },
 ]
 
@@ -94,6 +197,46 @@ export function TeacherTimetable() {
       title: "Download Started",
       variant: "default",
     })
+  }
+
+  const getSubjectColor = (subjectName: string) => {
+    switch (subjectName) {
+      case "Data Structures":
+        return "bg-blue-50 dark:bg-blue-950/30"
+      case "Database Management":
+        return "bg-blue-100 dark:bg-blue-950/40"
+      case "Advanced Mathematics":
+        return "bg-blue-200 dark:bg-blue-950/50"
+      case "Quantum Physics":
+        return "bg-blue-300 dark:bg-blue-950/60"
+      default:
+        return ""
+    }
+  }
+
+  const renderCell = (content: ClassDetails | string) => {
+    if (typeof content === "string") {
+      return (
+        <div className={`p-2 rounded-md ${content === "Free Period" ? "text-muted-foreground" : ""}`}>
+          {content}
+        </div>
+      )
+    }
+
+    return (
+      <div className={`p-3 rounded-md ${getSubjectColor(content.name)}`}>
+        <div className="font-medium">{content.name}</div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Building2 className="h-3 w-3" />
+          <span>{content.room}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <Badge variant="secondary" className="text-xs">
+            {content.semester}
+          </Badge>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -129,24 +272,12 @@ export function TeacherTimetable() {
             {timeSlots.map((slot, index) => (
               <TableRow key={index}>
                 <TableCell className="font-medium">{slot.time}</TableCell>
-                <TableCell className={slot.monday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.monday}
-                </TableCell>
-                <TableCell className={slot.tuesday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.tuesday}
-                </TableCell>
-                <TableCell className={slot.wednesday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.wednesday}
-                </TableCell>
-                <TableCell className={slot.thursday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.thursday}
-                </TableCell>
-                <TableCell className={slot.friday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.friday}
-                </TableCell>
-                <TableCell className={slot.saturday === "Free Period" ? "text-muted-foreground" : ""}>
-                  {slot.saturday}
-                </TableCell>
+                <TableCell>{renderCell(slot.monday)}</TableCell>
+                <TableCell>{renderCell(slot.tuesday)}</TableCell>
+                <TableCell>{renderCell(slot.wednesday)}</TableCell>
+                <TableCell>{renderCell(slot.thursday)}</TableCell>
+                <TableCell>{renderCell(slot.friday)}</TableCell>
+                <TableCell>{renderCell(slot.saturday)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
