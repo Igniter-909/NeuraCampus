@@ -30,7 +30,6 @@ import {
   Info,
   Play,
   Pause,
-  Square,
   Clock8,
   Sparkles,
   UserCheck
@@ -44,11 +43,10 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
+import { playSound } from '@/utils/playSound'
 
 // Define types
 interface Student {
@@ -240,6 +238,12 @@ function StudentAvatar({ student, size }: { student: Student, size: 'small' | 'm
   );
 }
 
+// Add this function before the AttendancePage component
+const generateRandomFrequency = () => {
+  // Generate a random frequency between 440Hz (A4) and 880Hz (A5)
+  return Math.floor(Math.random() * (8000 - 1000 + 1)) + 440;
+};
+
 function AttendancePage() {
   const [classes, setClasses] = useState<ClassSession[]>([]);
   const [selectedClass, setSelectedClass] = useState<ClassSession | null>(null);
@@ -257,10 +261,17 @@ function AttendancePage() {
   const [digitalAttendanceCount, setDigitalAttendanceCount] = useState(0);
   const [autoMarkEnabled, setAutoMarkEnabled] = useState(false);
   
+  // Add new state for sound frequency
+  const [soundFrequency, setSoundFrequency] = useState<number | null>(null);
+  
   // Handle starting digital attendance session
   const startDigitalSession = () => {
     setDigitalSessionStatus('active');
     setIsDigitalSessionActive(true);
+    
+    // Generate random frequency when starting session
+    const frequency = generateRandomFrequency();
+    setSoundFrequency(frequency);
     
     const interval = setInterval(() => {
       setDigitalSessionTime(prev => prev + 1);
@@ -271,13 +282,11 @@ function AttendancePage() {
     
     // Auto-mark some students when session starts (for demonstration)
     if (autoMarkEnabled && remainingStudents.length > 0) {
-      // Mark automatically 20% of students
       const autoMarkCount = Math.min(Math.ceil(remainingStudents.length * 0.2), remainingStudents.length);
       setDigitalAttendanceCount(autoMarkCount);
       
       const studentsToMark = [...remainingStudents].slice(0, autoMarkCount);
       
-      // Mark students with delay for realistic effect
       let markIndex = 0;
       const markingInterval = setInterval(() => {
         if (markIndex < studentsToMark.length) {
@@ -300,7 +309,7 @@ function AttendancePage() {
   };
   
   // Handle resuming digital attendance session
-  const resumeDigitalSession = () => {
+  const resumeDigitalSession = async () => {
     setDigitalSessionStatus('active');
     
     const interval = setInterval(() => {
@@ -309,15 +318,18 @@ function AttendancePage() {
     
     setDigitalSessionInterval(interval);
     
+    // Play sound when resuming
+    if (soundFrequency) {
+      await playSound([soundFrequency]);
+    }
+    
     // Auto-mark additional students when resuming (for demonstration)
     if (autoMarkEnabled && remainingStudents.length > 0) {
-      // Mark automatically 10% more students
       const autoMarkCount = Math.min(Math.ceil(remainingStudents.length * 0.1), remainingStudents.length);
       setDigitalAttendanceCount(prev => prev + autoMarkCount);
       
       const studentsToMark = [...remainingStudents].slice(0, autoMarkCount);
       
-      // Mark students with delay for realistic effect
       let markIndex = 0;
       const markingInterval = setInterval(() => {
         if (markIndex < studentsToMark.length) {
@@ -545,108 +557,96 @@ function AttendancePage() {
             {selectedClass && (
               <Dialog open={showDigitalControls} onOpenChange={setShowDigitalControls}>
                 <DialogTrigger asChild>
-                  <Button className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 shadow-md hover:shadow-lg transition-all group relative overflow-hidden">
-                    <div className="absolute inset-0 bg-white/20 group-hover:bg-white/30 transition-all"></div>
-                    <div className="absolute -inset-1 animate-pulse opacity-30 group-hover:opacity-40 bg-blue-400 blur-md"></div>
-                    <Sparkles className="mr-2 h-4 w-4" />
+                  <Button 
+                    variant="outline" 
+                    className="bg-gradient-to-r from-violet-600 to-purple-800 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
                     Digital Attendance
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md bg-white dark:bg-slate-900 border-none shadow-lg">
-                  <DialogHeader>
-                    <DialogTitle className="text-center text-xl font-bold text-blue-800 dark:text-white">
-                      {selectedClass.subject} - {selectedClass.section}
-                    </DialogTitle>
-                    <DialogDescription className="text-center text-gray-600 dark:text-gray-400">
-                      {isDigitalSessionActive 
-                        ? 'Manage your ongoing attendance session.' 
-                        : 'Start a new digital attendance session for this class.'}
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex flex-col items-center justify-center py-6">
-                    {isDigitalSessionActive ? (
-                      <>
-                        <div className="text-5xl font-bold mb-6 text-blue-800 dark:text-blue-400">
-                          {formatSessionTime(digitalSessionTime)}
+                {!isDigitalSessionActive ? (
+                  <DialogContent className="sm:max-w-md">
+                    <div className="flex flex-col space-y-4">
+                      <DialogTitle className="text-xl font-semibold text-blue-600">
+                        {selectedClass.subject} - {selectedClass.section}
+                      </DialogTitle>
+                      <div className="text-sm text-gray-600">
+                        Start a new digital attendance session for this class.
+                      </div>
+                      
+                      <div className="flex flex-col items-center justify-center py-6 space-y-6">
+                        <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                          <UserCheck className="h-8 w-8 text-blue-600" />
                         </div>
                         
-                        <div className="mb-6 text-center">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            Auto-marked students:
-                          </span>
-                          <span className="ml-2 font-semibold text-blue-700 dark:text-blue-400">
-                            {digitalAttendanceCount} of {selectedClass.students}
-                          </span>
-                        </div>
-                        
-                        <div className="flex items-center gap-4">
-                          {digitalSessionStatus === 'active' ? (
-                            <Button 
-                              variant="outline" 
-                              className="border-yellow-300 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-800"
-                              onClick={pauseDigitalSession}
-                            >
-                              <Pause className="mr-2 h-4 w-4" />
-                              Pause Session
-                            </Button>
-                          ) : (
-                            <Button 
-                              variant="outline" 
-                              className="border-green-300 bg-green-50 text-green-700 hover:bg-green-100 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
-                              onClick={resumeDigitalSession}
-                            >
-                              <Play className="mr-2 h-4 w-4" />
-                              Resume Session
-                            </Button>
-                          )}
-                          <Button 
-                            variant="outline"
-                            className="border-red-300 bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800"
-                            onClick={endDigitalSession}
-                          >
-                            <Square className="mr-2 h-4 w-4" />
-                            End Session
-                          </Button>
-                        </div>
-                        <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
-                          Session duration will be recorded for {selectedClass.subject}.
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mx-auto mb-6">
-                          <UserCheck className="h-10 w-10 text-blue-600 dark:text-blue-400" />
-                        </div>
-                        
-                        <div className="flex items-center mb-6 gap-2">
+                        <div className="flex items-center gap-2">
                           <Checkbox 
                             id="auto-mark" 
                             checked={autoMarkEnabled}
                             onCheckedChange={toggleAutoMark}
-                            className="border-blue-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600 dark:border-blue-700"
+                            className="border-blue-300 data-[state=checked]:bg-blue-600"
                           />
                           <label 
                             htmlFor="auto-mark" 
-                            className="text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
+                            className="text-sm text-gray-600 cursor-pointer"
                           >
                             Auto-mark students who join digitally
                           </label>
                         </div>
                         
                         <Button 
-                          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+                          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                           onClick={startDigitalSession}
                         >
-                          <Play className="mr-2 h-4 w-4" />
                           Start Attendance Session
                         </Button>
-                        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                          Start a timed attendance session for {selectedClass.subject}.
+                      </div>
+                    </div>
+                  </DialogContent>
+                ) : (
+                  <DialogContent className="sm:max-w-md">
+                    <div className="flex flex-col space-y-4">
+                      <DialogTitle className="text-xl font-semibold">
+                        Take Attendance
+                      </DialogTitle>
+                      <div className="text-gray-600">
+                        {selectedClass.subject}
+                        <div className="text-sm text-gray-500">{selectedClass.section}</div>
+                      </div>
+                      
+                      <div className="flex justify-end">
+                        <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">
+                          Active
+                        </span>
+                      </div>
+                      
+                      <div className="flex flex-col items-center justify-center py-8 space-y-8">
+                        <div className="relative w-24 h-24">
+                          <div className="absolute inset-0 rounded-full border-4 border-green-200"></div>
+                          <button 
+                            onClick={digitalSessionStatus === 'active' ? pauseDigitalSession : resumeDigitalSession}
+                            className="absolute inset-2 rounded-full bg-green-500 hover:bg-green-600 transition-colors flex items-center justify-center text-white"
+                          >
+                            {digitalSessionStatus === 'active' ? (
+                              <Pause className="h-8 w-8" />
+                            ) : (
+                              <Play className="h-8 w-8" />
+                            )}
+                          </button>
                         </div>
-                      </>
-                    )}
-                  </div>
-                </DialogContent>
+                        
+                        <Button 
+                          variant="destructive" 
+                          className="w-full bg-red-500 hover:bg-red-600 text-white"
+                          onClick={endDigitalSession}
+                        >
+                          End Session
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                )}
               </Dialog>
             )}
             

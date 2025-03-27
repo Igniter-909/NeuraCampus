@@ -14,6 +14,11 @@ import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
+interface Media {
+  type: "image" | "video"
+  url: string
+}
+
 interface Comment {
   id: string
   author: string
@@ -31,6 +36,7 @@ interface Post {
   createdAt: string
   likes: number
   comments: Comment[]
+  media?: Media[]
 }
 
 interface PostCardProps {
@@ -181,7 +187,34 @@ export default function PostCard({ post, setPosts }: PostCardProps) {
               </div>
             </motion.div>
           ) : (
-            <p className="whitespace-pre-wrap text-foreground">{postData.content}</p>
+            <div className="space-y-4">
+              <div 
+                className="prose prose-sm dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: postData.content }}
+              />
+
+              {postData.media && postData.media.length > 0 && (
+                <div className={`grid gap-2 mt-4 ${postData.media.length > 1 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {postData.media.map((file, index) => (
+                    <div key={index} className="relative rounded-lg overflow-hidden bg-muted">
+                      {file.type === "image" ? (
+                        <img
+                          src={file.url}
+                          alt={`Post media ${index + 1}`}
+                          className="w-full h-48 object-cover"
+                        />
+                      ) : (
+                        <video
+                          src={file.url}
+                          className="w-full h-48 object-cover"
+                          controls
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </CardContent>
 

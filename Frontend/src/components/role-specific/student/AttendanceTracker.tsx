@@ -63,7 +63,7 @@ export default function AttendanceTracker({ student }: { student: Student }) {
   const activeComponent = navItems.find((item) => item.id === activeSection)?.component
 
   return (
-    <div className="container mx-auto p-4 lg:p-8">
+    <div className="container mx-auto p-4 lg:p-6">
       <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6">
         {/* Sidebar */}
         <div className="flex flex-col gap-6">

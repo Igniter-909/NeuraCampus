@@ -21,7 +21,7 @@ export default function StudentProfileDock({
   cgpa,
 }: StudentProfileDockProps) {
   return (
-    <div className="fixed right-8 lg:right-12 top-[1%] h-[98%] w-80 lg:w-96 overflow-hidden hidden md:block">
+    <div className="fixed right-8 pt-8 lg:right-12 top-[6%] h-[92%] w-80 lg:w-96 overflow-hidden hidden md:block">
       <Card className="h-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-lg border border-gray-200 dark:border-gray-800">
         <CardContent className="p-8 h-full overflow-y-auto">
           <div className="flex flex-col items-center justify-start space-y-8 h-full">

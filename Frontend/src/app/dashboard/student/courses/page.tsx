@@ -231,7 +231,7 @@ export default function CoursesPage() {
   }, [semesterFilter, typeFilter, sortOption])
 
   return (
-    <div className="container mx-auto p-4 max-w-7xl bg-transparent min-h-screen">
+    <div className="container mx-auto p-4  bg-transparent min-h-screen">
       {/* Page Title */}
       <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6">Courses Enrolled</h1>
 
