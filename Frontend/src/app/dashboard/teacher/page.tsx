@@ -1,4 +1,6 @@
-'use client'
+"use client"
+
+import { useState, useEffect } from "react"
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { redirect } from 'next/navigation';
 import { useUser } from "@/hooks/auth/useUser";
@@ -7,26 +9,30 @@ import StatsCard from '@/components/ui/StatsCard';
 import DaySchedule from '@/components/role-specific/faculty/DaySchedule';
 import { EventCalendar } from '@/components/ui/EventCalender';
 
-
 export default function FacultyDashboardPage() {
   const { user, loading, error } = useUser();
-  console.log(user,"user");
-  console.log(loading,"loading");
-  console.log(error,"error");
+  const [mounted, setMounted] = useState(false);
 
-  if (loading) return <LoadingSkeleton height="lg" />;
-  if ( !user) {
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Don't render anything until after mounting to prevent hydration mismatch
+  if (!mounted) {
+    return <LoadingSkeleton height="lg" />;
+  }
+
+  if (loading) {
+    return <LoadingSkeleton height="lg" />;
+  }
+
+  if (!user) {
     redirect('/login');
   }
 
   if (user?.role !== 'teacher') {
     redirect('/login');
   }
-  if(loading){
-    return <LoadingSkeleton height="lg" />;
-  }
-
-
 
   return (
     <div className="w-full p-6 bg-white dark:bg-black">

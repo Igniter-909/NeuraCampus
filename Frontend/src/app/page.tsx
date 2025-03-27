@@ -104,9 +104,9 @@ export default function Home() {
       />
 
       {/* Main content sections with enhanced blur effect when mobile menu is open */}
-      <motion.div 
+          <motion.div
         ref={mainContentRef}
-        animate={{ 
+              animate={{
           filter: isMobileMenuOpen ? "blur(8px) brightness(0.6)" : "blur(0px) brightness(1)",
           scale: isMobileMenuOpen ? 0.97 : 1
         }}
@@ -123,7 +123,7 @@ export default function Home() {
 
         {/* Footer */}
         <Footer />
-      </motion.div>
+            </motion.div>
 
     </div>
   );

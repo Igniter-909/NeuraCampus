@@ -6,7 +6,7 @@ import {ToastProvider} from '@/components/ui/toaster'
 import { ThemeProvider } from '@/contexts/ThemeProvider';
 import { ReduxProvider } from '@/components/providers/ReduxProvider';
 import { Providers } from './providers';
-
+import { Toaster } from "sonner"
 
 import PageTransition from '@/components/common/PageTransition';
 import '@/styles/scrollbar.css'
@@ -65,6 +65,7 @@ export default function RootLayout({
           </ReduxProvider>
         </Providers>
         <ToastProvider />
+        <Toaster />
       </body>
     </html>
   );
