@@ -71,7 +71,7 @@ export default function FacultySection({ data, isAdmin, onEdit, editingField }: 
                 <User className="h-6 w-6 text-[#0a66c2]" />
               </div>
 
-              <h3 className="text-lg font-semibold dark:text-gray-100">
+              <div className="text-lg font-semibold dark:text-gray-100">
                 <EditableField
                   value={faculty.name}
                   fieldPath={`faculty-${index}-name`}
@@ -80,9 +80,9 @@ export default function FacultySection({ data, isAdmin, onEdit, editingField }: 
                   isEditing={editingField === `faculty-${index}-name`}
                   textClassName="text-lg font-semibold dark:text-gray-100"
                 />
-              </h3>
+              </div>
 
-              <p className="text-[#0a66c2]">
+              <div className="text-[#0a66c2]">
                 <EditableField
                   value={faculty.position}
                   fieldPath={`faculty-${index}-position`}
@@ -91,9 +91,9 @@ export default function FacultySection({ data, isAdmin, onEdit, editingField }: 
                   isEditing={editingField === `faculty-${index}-position`}
                   textClassName="text-[#0a66c2]"
                 />
-              </p>
+              </div>
 
-              <p className="text-sm text-muted-foreground dark:text-gray-400">
+              <div className="text-sm text-muted-foreground dark:text-gray-400">
                 <EditableField
                   value={faculty.specialization}
                   fieldPath={`faculty-${index}-specialization`}
@@ -102,7 +102,7 @@ export default function FacultySection({ data, isAdmin, onEdit, editingField }: 
                   isEditing={editingField === `faculty-${index}-specialization`}
                   textClassName="text-sm text-muted-foreground dark:text-gray-400"
                 />
-              </p>
+              </div>
             </div>
           ))}
         </div>

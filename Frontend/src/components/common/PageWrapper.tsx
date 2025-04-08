@@ -8,7 +8,7 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(pageRef.current, {
-        opacity: 0,
+        opacity: 0.5,
         y: 20,
         duration: 0.5,
         ease: 'power2.out',

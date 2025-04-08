@@ -5,12 +5,6 @@ import type React from "react"
 import { motion } from "framer-motion"
 import { Marquee } from "@/components/magicui/marquee"
 import { ReviewCard } from "./ReviewCard"
-import college from "../../../public/college.png"
-import attendance from "../../../public/attendance.png"
-import intern from "../../../public/intern.png"
-import pyq from "../../../public/pyq.png"
-import networking from "../../../public/networking.png"
-import additional from "../../../public/additional.png"
 import { BackgroundShapes } from "@/components/ui/background-shapes"
 
 interface WorkSectionProps {
@@ -26,32 +20,32 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ id, forwardedRef }) =>
     {
       name: "College Management",
       body: "Manage documents without having to sit under piles of paper",
-      img: college,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743969659/college_qh8yjp.png",
     },
     {
       name: "Attendance Management",
       body: "Proxy-proof sound-cum-face recognition based attendance",
-      img: attendance,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743968217/attendance_x9fcus.png",
     },
     {
       name: "Internship & Placement Support",
       body: "Connect with recruiters and showcase your skills",
-      img: intern,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743969508/intern_qco3fu.png",
     },
     {
       name: "PYQ Papers",
       body: "Access to previous year papers with solutions",
-      img: pyq,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743969702/pyq_bkkscz.png",
     },
     {
       name: "Additional Features",
       body: "Additional features for college like fee payments and admission stats",
-      img: additional,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743970028/additional_vd0gsl.png",
     },
     {
       name: "Networking",
       body: "Collaborate with other institutions through exciting events",
-      img: networking,
+      img: "https://res.cloudinary.com/dxueqphl3/image/upload/v1743969751/networking_sphifl.png",
     },
   ]
 

@@ -77,7 +77,7 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
         </div>
 
         <div className="mt-4">
-          <h1 className="text-3xl font-bold text-[#333333] dark:text-gray-100">
+          <div className="text-3xl font-bold text-[#333333] dark:text-gray-100">
             <EditableField
               value={data.name}
               fieldPath="name"
@@ -86,11 +86,9 @@ export default function ProfileHeader({ data, isAdmin, onEdit, editingField }: P
               isEditing={editingField === "name"}
               textClassName="text-3xl font-bold"
             />
-          </h1>
+          </div>
 
           <div className="text-lg text-muted-foreground dark:text-gray-400 mt-1">
-
-
             <EditableField
               value={data.tagline}
               fieldPath="tagline"

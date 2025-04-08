@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import Image from "next/image";
+
+// import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Typewriter } from "react-simple-typewriter";
@@ -17,15 +17,7 @@ interface HeroSectionProps {
  * Features animated elements, typwriter effect, and responsive layout
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ id, forwardedRef }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [startTyping, setStartTyping] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-      setTimeout(() => setStartTyping(true), 600);
-    }, 2200);
-  }, []);
+ 
 
   return (
     <section
@@ -39,36 +31,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ id, forwardedRef }) =>
         <main className="max-w-full mx-4 sm:mx-10 flex items-center my-5 md:my-auto px-4 sm:px-6 lg:px-0 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 w-full">
             <div className="flex flex-col justify-center space-y-6">
-              {isLoading ? (
-                <motion.div
-                  className="text-white text-2xl sm:text-3xl font-bold"
-                  initial={{ opacity: 1 }}
-                  animate={{ opacity: 0 }}
-                  transition={{ duration: 0.5, delay: 2.5 }}
-                ></motion.div>
-              ) : (
-                <motion.h1
+              
+                <h1
                   className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-white"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
                 >
                   <span className="block">Welcome to</span>
                   <span className="block text-gray-900">
-                    {startTyping && (
                       <>
                         <span className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl">Neura</span>
                         <span className="text-black text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
                           <Typewriter words={["Campus"]} typeSpeed={300} delaySpeed={500} cursor loop={true} />
                         </span>
                       </>
-                    )}
                   </span>
-                </motion.h1>
-              )}
+                </h1>
+              
               <motion.p
                 className="mt-2 text-sm sm:text-base md:text-lg text-blue-100 max-w-md sm:max-w-lg md:max-w-2xl"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 1, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 2, duration: 1.5, ease: "easeInOut" }}
               >

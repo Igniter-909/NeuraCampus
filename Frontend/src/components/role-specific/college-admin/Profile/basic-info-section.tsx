@@ -28,40 +28,46 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-[#0a66c2] shrink-0" />
               <span className="font-medium text-sm shrink-0 dark:text-gray-300">Established:</span>
-              <EditableField
-                value={data.established}
-                fieldPath="established"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "established"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.established}
+                  fieldPath="established"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "established"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-[#0a66c2] shrink-0" />
               <span className="font-medium text-sm shrink-0 dark:text-gray-300">Location:</span>
-              <EditableField
-                value={data.location}
-                fieldPath="location"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "location"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.location}
+                  fieldPath="location"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "location"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Award className="h-4 w-4 text-[#0a66c2] shrink-0" />
               <span className="font-medium text-sm shrink-0 dark:text-gray-300">Accreditations:</span>
-              <EditableField
-                value={data.accreditations}
-                fieldPath="accreditations"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "accreditations"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.accreditations}
+                  fieldPath="accreditations"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "accreditations"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -74,38 +80,44 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.contact.phone}
-                fieldPath="contact.phone"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "contact.phone"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.contact.phone}
+                  fieldPath="contact.phone"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "contact.phone"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.contact.email}
-                fieldPath="contact.email"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "contact.email"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.contact.email}
+                  fieldPath="contact.email"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "contact.email"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Globe className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.contact.website}
-                fieldPath="contact.website"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "contact.website"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.contact.website}
+                  fieldPath="contact.website"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "contact.website"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -118,38 +130,44 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Linkedin className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.socialMedia.linkedin}
-                fieldPath="socialMedia.linkedin"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "socialMedia.linkedin"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.socialMedia.linkedin}
+                  fieldPath="socialMedia.linkedin"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "socialMedia.linkedin"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Twitter className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.socialMedia.twitter}
-                fieldPath="socialMedia.twitter"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "socialMedia.twitter"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.socialMedia.twitter}
+                  fieldPath="socialMedia.twitter"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "socialMedia.twitter"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Instagram className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <EditableField
-                value={data.socialMedia.instagram}
-                fieldPath="socialMedia.instagram"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "socialMedia.instagram"}
-                textClassName="text-sm dark:text-gray-300"
-              />
+              <div className="text-[#0a66c2]">
+                <EditableField
+                  value={data.socialMedia.instagram}
+                  fieldPath="socialMedia.instagram"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "socialMedia.instagram"}
+                  textClassName="text-sm dark:text-gray-300"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -168,15 +186,16 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
 
           {isAdmin && (
             <div className="mt-2">
-              <EditableField
-                value={data.applyUrl}
-                fieldPath="applyUrl"
-                onEdit={onEdit}
-                isAdmin={isAdmin}
-                isEditing={editingField === "applyUrl"}
-                textClassName="text-xs text-muted-foreground dark:text-gray-400"
-                placeholder="Set application URL"
-              />
+              <div className="text-xs text-muted-foreground dark:text-gray-400">
+                <EditableField
+                  value={data.applyUrl}
+                  fieldPath="applyUrl"
+                  onEdit={onEdit}
+                  isAdmin={isAdmin}
+                  isEditing={editingField === "applyUrl"}
+                  textClassName="text-xs text-muted-foreground dark:text-gray-400"
+                />
+              </div>
             </div>
           )}
         </div>

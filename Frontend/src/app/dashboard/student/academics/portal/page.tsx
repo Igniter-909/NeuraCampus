@@ -1,4 +1,3 @@
-
 "use client"
 
 import Image from "next/image"
@@ -7,7 +6,7 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, CheckCircle, Edit, FileText, ChevronRight, Plus, Trash2 } from "lucide-react"
+import { Github, Linkedin, Mail, MapPin, Calendar, ExternalLink, CheckCircle, Edit, FileText, ChevronRight, Plus, Trash2, Camera } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -16,11 +15,14 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Check, X } from "lucide-react"
+import FloatingActionButton from "@/components/ui/floating-action-button"
+import EditableField from "@/components/ui/editable-field"
+import { uploadToCloudinary } from '@/lib/cloudinary'
 
 // Animation variants
 const fadeIn = {
@@ -82,6 +84,7 @@ interface Experience {
   period: string
   description: string
   document?: string
+  image?: string
 }
 
 // Add interface for Project
@@ -173,14 +176,15 @@ const activities: Activity[] = [
 ]
 
 // Sample experience data with documents
-const experiences: Experience[] = [
+const initialExperiences: Experience[] = [
   {
     role: "Software Engineering Intern",
     company: "Tech Innovations Inc.",
     period: "May 2023 - Aug 2023",
     description:
       "Developed and maintained features for the company's main product using React and Node.js. Collaborated with the design team to implement responsive UI components.",
-    document: "/documents/tech-innovations-internship.pdf"
+    document: "/documents/tech-innovations-internship.pdf",
+    image: "/placeholder.jpg"
   },
   {
     role: "Data Science Intern",
@@ -188,15 +192,8 @@ const experiences: Experience[] = [
     period: "Jun 2022 - Aug 2022",
     description:
       "Analyzed large datasets to extract meaningful insights. Built predictive models using Python and scikit-learn. Presented findings to stakeholders.",
-    document: "/documents/datacorp-internship.pdf"
-  },
-  {
-    role: "Web Development Intern",
-    company: "WebSolutions",
-    period: "May 2021 - Jul 2021",
-    description:
-      "Assisted in the development of client websites using HTML, CSS, and JavaScript. Implemented responsive designs and fixed cross-browser compatibility issues.",
-    document: "/documents/websolutions-internship.pdf"
+    document: "/documents/datacorp-internship.pdf",
+    image: "/placeholder.jpg"
   },
 ]
 
@@ -212,7 +209,7 @@ export default function ProfilePage() {
       technical: ["JavaScript", "TypeScript", "React", "Next.js", "Node.js", "Python", "TensorFlow", "SQL", "Git", "AWS", "Docker"],
       soft: ["Team Leadership", "Project Management", "Problem Solving", "Communication", "Time Management"]
     },
-    experiences: experiences,
+    experiences: initialExperiences,
     activities: activities,
     hackathons: hackathons,
     projects: [
@@ -247,6 +244,26 @@ export default function ProfilePage() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [addDialogSection, setAddDialogSection] = useState<"experiences" | "projects" | "activities" | "hackathons" | null>(null)
   const [newItem, setNewItem] = useState<any>(null)
+
+  // Add state for experience editing
+  const [experiences, setExperiences] = useState<Experience[]>(initialExperiences)
+  const [editedExperiences, setEditedExperiences] = useState<Experience[]>(initialExperiences)
+  const [editingField, setEditingField] = useState<string | null>(null)
+  const [hasChanges, setHasChanges] = useState(false)
+  const [showAddDialog, setShowAddDialog] = useState(false)
+  const [newExperience, setNewExperience] = useState<Experience>({
+    role: "",
+    company: "",
+    period: "",
+    description: "",
+    image: "/placeholder.jpg"
+  })
+
+  // Update hasChanges when editedExperiences changes
+  useEffect(() => {
+    const hasUnsavedChanges = JSON.stringify(experiences) !== JSON.stringify(editedExperiences)
+    setHasChanges(hasUnsavedChanges)
+  }, [experiences, editedExperiences])
 
   // Function to handle edit mode toggle
   const toggleEdit = (section: string) => {
@@ -355,6 +372,62 @@ export default function ProfilePage() {
       [section]: newItems
     })
     setEditingItem(null)
+  }
+
+  const handleFieldEdit = (index: number, field: keyof Experience, value: string) => {
+    const updatedExperiences = [...editedExperiences]
+    updatedExperiences[index] = { ...updatedExperiences[index], [field]: value }
+    setEditedExperiences(updatedExperiences)
+  }
+
+  const handleImageUpload = async (index: number) => {
+    try {
+      const fileInput = document.createElement('input')
+      fileInput.type = 'file'
+      fileInput.accept = 'image/*'
+      fileInput.onchange = async () => {
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0]
+          const imageUrl = await uploadToCloudinary(file)
+          handleFieldEdit(index, 'image', imageUrl)
+        }
+      }
+      fileInput.click()
+    } catch (error) {
+      console.error('Image upload failed:', error)
+    }
+  }
+
+  const handleSaveChanges = () => {
+    setExperiences(editedExperiences)
+    setHasChanges(false)
+    setEditingField(null)
+  }
+
+  const handleDiscardChanges = () => {
+    setEditedExperiences(experiences)
+    setHasChanges(false)
+    setEditingField(null)
+  }
+
+  const handleAddExperience = () => {
+    if (newExperience.role && newExperience.company) {
+      const updatedExperiences = [...editedExperiences, newExperience]
+      setEditedExperiences(updatedExperiences)
+      setShowAddDialog(false)
+      setNewExperience({
+        role: "",
+        company: "",
+        period: "",
+        description: "",
+        image: "/placeholder.jpg"
+      })
+    }
+  }
+
+  const handleDeleteExperience = (index: number) => {
+    const updatedExperiences = editedExperiences.filter((_, i) => i !== index)
+    setEditedExperiences(updatedExperiences)
   }
 
   return (
@@ -846,70 +919,89 @@ export default function ProfilePage() {
 
             {editingSection === "experiences" ? (
               <div className="mt-6 space-y-6">
-                {editData.experiences.map((exp, index) => (
+                {editedExperiences.map((experience, index) => (
                   <div key={index} className="space-y-4 rounded-lg border border-blue-100 bg-white/50 p-4">
-                    <div className="flex justify-end">
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteItem("experiences", index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label>Role</Label>
-                        <Input
-                          value={exp.role}
-                          onChange={(e) => {
-                            const newExperiences = [...editData.experiences]
-                            newExperiences[index] = { ...exp, role: e.target.value }
-                            setEditData({ ...editData, experiences: newExperiences })
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Label>Company</Label>
-                        <Input
-                          value={exp.company}
-                          onChange={(e) => {
-                            const newExperiences = [...editData.experiences]
-                            newExperiences[index] = { ...exp, company: e.target.value }
-                            setEditData({ ...editData, experiences: newExperiences })
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Label>Period</Label>
-                        <Input
-                          value={exp.period}
-                          onChange={(e) => {
-                            const newExperiences = [...editData.experiences]
-                            newExperiences[index] = { ...exp, period: e.target.value }
-                            setEditData({ ...editData, experiences: newExperiences })
-                          }}
-                        />
-                      </div>
-                      <div>
-                        <Label>Document URL</Label>
-                        <Input
-                          value={exp.document || ""}
-                          onChange={(e) => {
-                            const newExperiences = [...editData.experiences]
-                            newExperiences[index] = { ...exp, document: e.target.value }
-                            setEditData({ ...editData, experiences: newExperiences })
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label>Description</Label>
-                      <Textarea
-                        value={exp.description}
-                        onChange={(e) => {
-                          const newExperiences = [...editData.experiences]
-                          newExperiences[index] = { ...exp, description: e.target.value }
-                          setEditData({ ...editData, experiences: newExperiences })
-                        }}
-                        className="mt-2"
+                    <div className="relative group mb-4 h-48 w-full overflow-hidden rounded-lg">
+                      <Image
+                        src={experience.image || "/placeholder.jpg"}
+                        alt={`${experience.company} experience`}
+                        className="object-cover"
+                        fill
                       />
+                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-white hover:text-blue-200"
+                          onClick={() => handleImageUpload(index)}
+                        >
+                          <Camera className="h-6 w-6" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <EditableField
+                          value={experience.role}
+                          fieldPath={`experience-${index}-role`}
+                          onEdit={(_, value) => handleFieldEdit(index, "role", value)}
+                          isAdmin={true}
+                          isEditing={editingField === `experience-${index}-role`}
+                          textClassName="text-xl font-semibold"
+                        />
+                        <EditableField
+                          value={experience.company}
+                          fieldPath={`experience-${index}-company`}
+                          onEdit={(_, value) => handleFieldEdit(index, "company", value)}
+                          isAdmin={true}
+                          isEditing={editingField === `experience-${index}-company`}
+                          textClassName="text-lg text-muted-foreground"
+                        />
+                      </div>
+
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Calendar className="h-4 w-4" />
+                        <EditableField
+                          value={experience.period}
+                          fieldPath={`experience-${index}-period`}
+                          onEdit={(_, value) => handleFieldEdit(index, "period", value)}
+                          isAdmin={true}
+                          isEditing={editingField === `experience-${index}-period`}
+                          textClassName="text-sm"
+                        />
+                      </div>
+
+                      <EditableField
+                        value={experience.description}
+                        fieldPath={`experience-${index}-description`}
+                        onEdit={(_, value) => handleFieldEdit(index, "description", value)}
+                        isAdmin={true}
+                        isEditing={editingField === `experience-${index}-description`}
+                        textClassName="text-sm text-muted-foreground"
+                        isMultiline
+                      />
+
+                      {experience.document && (
+                        <Link
+                          href={experience.document}
+                          className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-600"
+                        >
+                          <FileText className="h-4 w-4" />
+                          View Certificate
+                        </Link>
+                      )}
+
+                      <div className="flex justify-end">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-red-500 hover:text-red-600"
+                          onClick={() => handleDeleteExperience(index)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -922,7 +1014,7 @@ export default function ProfilePage() {
               viewport={{ once: true }}
               className="mt-6 space-y-6"
             >
-                {editData.experiences.map((exp, index) => (
+                {editedExperiences.map((experience, index) => (
                 <motion.div
                   key={index}
                   variants={fadeIn}
@@ -939,7 +1031,7 @@ export default function ProfilePage() {
                     <div className="flex items-start justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                  <h4 className="text-lg font-semibold">{exp.role}</h4>
+                  <h4 className="text-lg font-semibold">{experience.role}</h4>
                           {editingItem?.section === "experiences" && editingItem?.index === index ? (
                             <div className="flex gap-1">
                               <Button variant="ghost" size="icon" onClick={() => handleItemSave("experiences", index)} className="text-green-500 hover:text-green-600 hover:bg-green-50">
@@ -948,7 +1040,7 @@ export default function ProfilePage() {
                               <Button variant="ghost" size="icon" onClick={() => handleItemCancel("experiences", index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
                                 <X className="h-3 w-3" />
                               </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDeleteItem("experiences", index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
+                              <Button variant="ghost" size="icon" onClick={() => handleDeleteExperience(index)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
                                 <Trash2 className="h-3 w-3" />
                               </Button>
                             </div>
@@ -959,69 +1051,52 @@ export default function ProfilePage() {
                           )}
                         </div>
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <span>{exp.company}</span>
+                    <span>{experience.company}</span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
                             <Calendar className="h-3 w-3 text-blue-500" />
-                      {exp.period}
+                      {experience.period}
                     </span>
                   </div>
                         {editingItem?.section === "experiences" && editingItem?.index === index ? (
                           <div className="mt-2 space-y-2">
                             <Input
-                              value={exp.role}
+                              value={experience.role}
                               onChange={(e) => {
-                                const newExperiences = [...editData.experiences]
-                                newExperiences[index] = { ...exp, role: e.target.value }
-                                setEditData({ ...editData, experiences: newExperiences })
+                                const newExperiences = [...editedExperiences]
+                                newExperiences[index] = { ...experience, role: e.target.value }
+                                setEditedExperiences(newExperiences)
                               }}
                             />
                             <Input
-                              value={exp.company}
+                              value={experience.company}
                               onChange={(e) => {
-                                const newExperiences = [...editData.experiences]
-                                newExperiences[index] = { ...exp, company: e.target.value }
-                                setEditData({ ...editData, experiences: newExperiences })
+                                const newExperiences = [...editedExperiences]
+                                newExperiences[index] = { ...experience, company: e.target.value }
+                                setEditedExperiences(newExperiences)
                               }}
                             />
                             <Input
-                              value={exp.period}
+                              value={experience.period}
                               onChange={(e) => {
-                                const newExperiences = [...editData.experiences]
-                                newExperiences[index] = { ...exp, period: e.target.value }
-                                setEditData({ ...editData, experiences: newExperiences })
+                                const newExperiences = [...editedExperiences]
+                                newExperiences[index] = { ...experience, period: e.target.value }
+                                setEditedExperiences(newExperiences)
                               }}
                             />
                             <Textarea
-                              value={exp.description}
+                              value={experience.description}
                               onChange={(e) => {
-                                const newExperiences = [...editData.experiences]
-                                newExperiences[index] = { ...exp, description: e.target.value }
-                                setEditData({ ...editData, experiences: newExperiences })
+                                const newExperiences = [...editedExperiences]
+                                newExperiences[index] = { ...experience, description: e.target.value }
+                                setEditedExperiences(newExperiences)
                               }}
-                            />
-                            <Input
-                              value={exp.document || ""}
-                              onChange={(e) => {
-                                const newExperiences = [...editData.experiences]
-                                newExperiences[index] = { ...exp, document: e.target.value }
-                                setEditData({ ...editData, experiences: newExperiences })
-                              }}
-                              placeholder="Document URL"
                             />
                           </div>
                         ) : (
-                  <p className="mt-2 text-sm">{exp.description}</p>
+                  <p className="mt-2 text-sm">{experience.description}</p>
                         )}
                       </div>
-                      {exp.document && (
-                        <Button variant="ghost" size="icon" className="ml-4 text-blue-500 hover:text-blue-600" asChild>
-                          <Link href={exp.document} target="_blank" className="flex items-center gap-1">
-                            <FileText className="h-4 w-4" />
-                            <span className="sr-only">View Document</span>
-                          </Link>
-                        </Button>
-                      )}
                     </div>
                 </motion.div>
               ))}
@@ -1657,6 +1732,11 @@ export default function ProfilePage() {
               <Link href="/student/academics/portal/jobs">View More Job Listings</Link>
             </Button>
           </motion.div>
+
+          {/* Floating Action Button for Save/Discard Changes */}
+          {hasChanges && (
+            <FloatingActionButton onSave={handleSaveChanges} onDiscard={handleDiscardChanges} />
+          )}
         </div>
       </div>
     </div>

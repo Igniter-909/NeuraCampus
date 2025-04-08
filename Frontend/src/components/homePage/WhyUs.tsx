@@ -5,14 +5,6 @@ import Link from "next/link"
 import { Play } from "lucide-react"
 import type React from "react"
 import { motion } from "framer-motion"
-import whyUs1 from "../../../public/whyUs1.svg"
-import whyUs2 from "../../../public/whyUs2.svg"
-import message from "../../../public/message.svg"
-import exams from "../../../public/exams.png"
-import questionAnswer from "../../../public/qna.png"
-import attendance from "../../../public/attendancee.png"
-import lab from "../../../public/lab.png"
-import adminControl from "../../../public/adminControl.png"
 import { BackgroundShapes } from "@/components/ui/background-shapes"
 
 interface WhyUsProps {
@@ -77,7 +69,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                 viewport={{ once: true }}
               >
                 <Image
-                  src={whyUs1 || "/placeholder.svg"}
+                  src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968869/whyUs1_wqcopf.svg"
                   alt="NeuraCampus Dashboard"
                   width={400}
                   height={300}
@@ -117,7 +109,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
                 viewport={{ once: true }}
               >
                 <Image
-                  src={whyUs2 || "/placeholder.svg"}
+                  src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743969158/whyUs2_conuwv.svg"
                   alt="School Staff Illustration"
                   width={600}
                   height={400}
@@ -170,7 +162,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={message || "/placeholder.svg"}
+              src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968735/message_ufvvfo.svg"
               alt="Messaging System"
               width={400}
               height={300}
@@ -222,7 +214,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <Image src={exams || "/placeholder.svg"} alt="Exam Services" width={400} height={300} className="h-auto" />
+            <Image src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968609/exams_k9lcnn.png" alt="Exam Services" width={400} height={300} className="h-auto" />
           </motion.div>
         </motion.div>
       </section>
@@ -283,7 +275,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={questionAnswer || "/placeholder.svg"}
+              src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968367/qna_fun1vo.png"
               alt="question answer"
               width={400}
               height={300}
@@ -334,7 +326,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={attendance || "/placeholder.svg"}
+              src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968217/attendance_x9fcus.png"
               alt="attendance"
               width={400}
               height={300}
@@ -389,7 +381,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             transition={{ duration: 0.6, delay: 0.3 }}
             viewport={{ once: true }}
           >
-            <Image src={lab || "/placeholder.svg"} alt="lab" width={400} height={300} className="h-auto" />
+            <Image src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968094/lab_oqt9tv.png" alt="lab" width={400} height={300} className="h-auto" />
           </motion.div>
         </motion.div>
       </section>
@@ -433,7 +425,7 @@ export const WhyUs: React.FC<WhyUsProps> = ({ id, forwardedRef }) => {
             viewport={{ once: true }}
           >
             <Image
-              src={adminControl || "/placeholder.svg"}
+              src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743968681/adminControl_zgcshv.png"
               alt="admin control"
               width={400}
               height={300}

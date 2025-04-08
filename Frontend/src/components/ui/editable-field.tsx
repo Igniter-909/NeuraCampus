@@ -2,22 +2,21 @@
 
 import type React from "react"
 
-import { useState, useEffect, useRef } from "react"
+import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
-import { Pencil } from "lucide-react"
+import { Edit } from "lucide-react"
 
-interface EditableFieldProps {
+export interface EditableFieldProps {
   value: string
   fieldPath: string
   onEdit: (fieldPath: string, value: string) => void
   isAdmin: boolean
   isEditing: boolean
-  type?: "input" | "textarea"
-  className?: string
-  placeholder?: string
   textClassName?: string
+  isMultiline?: boolean
+  placeholder?: string
 }
 
 export default function EditableField({
@@ -25,77 +24,68 @@ export default function EditableField({
   fieldPath,
   onEdit,
   isAdmin,
-  isEditing,
-  type = "input",
-  className = "",
-  placeholder = "Click to edit",
+  isEditing: isEditingProp,
   textClassName = "",
+  isMultiline = false,
+  placeholder = "Click to edit"
 }: EditableFieldProps) {
-  const [localValue, setLocalValue] = useState(value)
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
+  const [isHovered, setIsHovered] = useState(false)
+  const [isEditing, setIsEditing] = useState(isEditingProp)
+  const [currentValue, setCurrentValue] = useState(value)
 
-  useEffect(() => {
-    setLocalValue(value)
-  }, [value])
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isEditing])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setLocalValue(e.target.value)
-    onEdit(fieldPath, e.target.value)
-  }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && type === "input") {
-      e.preventDefault()
-      inputRef.current?.blur()
+  const handleClick = () => {
+    if (isAdmin) {
+      setIsEditing(true)
     }
   }
 
-  if (isEditing) {
-    if (type === "textarea") {
-      return (
-        <Textarea
-          ref={inputRef as React.RefObject<HTMLTextAreaElement>}
-          value={localValue}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          className={cn("w-full", className)}
-          placeholder={placeholder}
-          rows={4}
-        />
-      )
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value
+    setCurrentValue(newValue)
+    onEdit(fieldPath, newValue)
+  }
 
-    return (
-      <Input
-        ref={inputRef as React.RefObject<HTMLInputElement>}
-        value={localValue}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        className={cn("w-full", className)}
-        placeholder={placeholder}
-      />
-    )
+  const handleBlur = () => {
+    setIsEditing(false)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setIsEditing(false)
+    }
+    if (e.key === 'Escape') {
+      setCurrentValue(value)
+      setIsEditing(false)
+    }
   }
 
   return (
-    <div
-      className={cn("group relative", isAdmin && "cursor-pointer hover:bg-gray-50 rounded px-1 -mx-1")}
-      onClick={isAdmin ? () => onEdit(fieldPath, value) : undefined}
+    <div 
+      className={`group relative ${isAdmin ? 'cursor-text' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
-      <div className={cn("min-h-[1.5rem]", textClassName)}>
-        {value || <span className="text-gray-400">{placeholder}</span>}
-      </div>
-
-      {isAdmin && (
-        <div className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Pencil className="h-4 w-4 text-gray-400" />
-        </div>
+      {isEditing ? (
+        <input
+          type="text"
+          value={currentValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          className={`w-full bg-transparent outline-none border-b border-primary px-2 py-1 ${textClassName}`}
+          placeholder={placeholder}
+          autoFocus
+        />
+      ) : (
+        <span className={`block px-2 py-1 rounded transition-colors ${textClassName} ${
+          isAdmin && isHovered ? 'bg-primary/5' : ''
+        }`}>
+          {currentValue || placeholder}
+        </span>
+      )}
+      {isAdmin && isHovered && !isEditing && (
+        <div className="absolute inset-0 pointer-events-none border border-primary/10 rounded" />
       )}
     </div>
   )

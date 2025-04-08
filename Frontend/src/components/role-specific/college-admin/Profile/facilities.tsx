@@ -93,7 +93,7 @@ export default function FacilitiesSection({ data, isAdmin, onEdit, editingField 
                   />
                 </h3>
 
-                <p className="text-sm text-muted-foreground dark:text-gray-400 mt-1">
+                <div className="text-sm text-muted-foreground dark:text-gray-400 mt-1">
                   <EditableField
                     value={facility.description}
                     fieldPath={`facility-${index}-description`}
@@ -102,7 +102,7 @@ export default function FacilitiesSection({ data, isAdmin, onEdit, editingField 
                     isEditing={editingField === `facility-${index}-description`}
                     textClassName="text-sm text-muted-foreground dark:text-gray-400"
                   />
-                </p>
+                </div>
               </div>
             </div>
           ))}

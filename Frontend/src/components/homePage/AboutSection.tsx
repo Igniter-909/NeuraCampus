@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
-import about from "../../../public/about.png";
+
 import { BackgroundShapes } from "@/components/ui/background-shapes";
 
 interface AboutSectionProps {
@@ -41,7 +41,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ id, forwardedRef }) 
             className="aspect-square w-full max-w-lg mx-auto"
           >
             <Image
-              src={about}
+              src="https://res.cloudinary.com/dxueqphl3/image/upload/v1743967956/about_ys5eeh.png"
               alt="About NeuraCampus"
               width={500}
               height={500}

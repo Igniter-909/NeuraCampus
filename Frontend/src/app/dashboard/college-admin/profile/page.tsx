@@ -2,9 +2,9 @@ import CollegeProfile from "@/components/role-specific/college-admin/Profile/col
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-transparent">
+    <div className="min-h-screen bg-transparent">
       <CollegeProfile />
-    </main>
+    </div>
   )
 }
 

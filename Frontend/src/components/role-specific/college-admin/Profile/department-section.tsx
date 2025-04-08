@@ -72,14 +72,16 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
               >
                 <div className="font-medium dark:text-gray-100">
                   {isAdmin && expandedDept === index ? (
-                    <EditableField
-                      value={dept.name}
-                      fieldPath={`dept-${index}-name`}
-                      onEdit={(_, value) => handleDepartmentChange(index, "name", value)}
-                      isAdmin={true}
-                      isEditing={editingField === `dept-${index}-name`}
-                      textClassName="dark:text-gray-100"
-                    />
+                    <div>
+                      <EditableField
+                        value={dept.name}
+                        fieldPath={`dept-${index}-name`}
+                        onEdit={(_, value) => handleDepartmentChange(index, "name", value)}
+                        isAdmin={true}
+                        isEditing={editingField === `dept-${index}-name`}
+                        textClassName="dark:text-gray-100"
+                      />
+                    </div>
                   ) : (
                     dept.name
                   )}
@@ -105,55 +107,63 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-[#0a66c2]" />
                     <span className="font-medium dark:text-gray-300">HOD:</span>
-                    <EditableField
-                      value={dept.hod}
-                      fieldPath={`dept-${index}-hod`}
-                      onEdit={(_, value) => handleDepartmentChange(index, "hod", value)}
-                      isAdmin={isAdmin}
-                      isEditing={editingField === `dept-${index}-hod`}
-                      textClassName="dark:text-gray-300"
-                    />
+                    <div>
+                      <EditableField
+                        value={dept.hod}
+                        fieldPath={`dept-${index}-hod`}
+                        onEdit={(_, value) => handleDepartmentChange(index, "hod", value)}
+                        isAdmin={isAdmin}
+                        isEditing={editingField === `dept-${index}-hod`}
+                        textClassName="dark:text-gray-300"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-[#0a66c2]" />
                     <span className="font-medium dark:text-gray-300">Faculty:</span>
-                    <EditableField
-                      value={dept.teachers.toString()}
-                      fieldPath={`dept-${index}-teachers`}
-                      onEdit={(_, value) => handleDepartmentChange(index, "teachers", value)}
-                      isAdmin={isAdmin}
-                      isEditing={editingField === `dept-${index}-teachers`}
-                      textClassName="dark:text-gray-300"
-                    />
+                    <div>
+                      <EditableField
+                        value={dept.teachers.toString()}
+                        fieldPath={`dept-${index}-teachers`}
+                        onEdit={(_, value) => handleDepartmentChange(index, "teachers", value)}
+                        isAdmin={isAdmin}
+                        isEditing={editingField === `dept-${index}-teachers`}
+                        textClassName="dark:text-gray-300"
+                      />
+                    </div>
                     <span className="dark:text-gray-300">Teachers</span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <GraduationCap className="h-4 w-4 text-[#0a66c2]" />
                     <span className="font-medium dark:text-gray-300">Students:</span>
-                    <EditableField
-                      value={dept.students.toString()}
-                      fieldPath={`dept-${index}-students`}
-                      onEdit={(_, value) => handleDepartmentChange(index, "students", value)}
-                      isAdmin={isAdmin}
-                      isEditing={editingField === `dept-${index}-students`}
-                      textClassName="dark:text-gray-300"
-                    />
+                    <div>
+                      <EditableField
+                        value={dept.students.toString()}
+                        fieldPath={`dept-${index}-students`}
+                        onEdit={(_, value) => handleDepartmentChange(index, "students", value)}
+                        isAdmin={isAdmin}
+                        isEditing={editingField === `dept-${index}-students`}
+                        textClassName="dark:text-gray-300"
+                      />
+                    </div>
                     <span className="dark:text-gray-300">Students</span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-[#0a66c2]" />
                     <span className="font-medium dark:text-gray-300">Programs:</span>
-                    <EditableField
-                      value={dept.programs}
-                      fieldPath={`dept-${index}-programs`}
-                      onEdit={(_, value) => handleDepartmentChange(index, "programs", value)}
-                      isAdmin={isAdmin}
-                      isEditing={editingField === `dept-${index}-programs`}
-                      textClassName="dark:text-gray-300"
-                    />
+                    <div>
+                      <EditableField
+                        value={dept.programs}
+                        fieldPath={`dept-${index}-programs`}
+                        onEdit={(_, value) => handleDepartmentChange(index, "programs", value)}
+                        isAdmin={isAdmin}
+                        isEditing={editingField === `dept-${index}-programs`}
+                        textClassName="dark:text-gray-300"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

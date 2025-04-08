@@ -12,14 +12,14 @@ import { Search, Bell, Menu, X, User, Settings, LogOut, MessageSquare, HelpCircl
 
 interface HeaderProps {
   userRole: Role
-  userName: string
+  userName?: string
   userAvatar?: string
   mobileMenuOpen: boolean
   setMobileMenuOpen: (value: boolean) => void
   PageName: string
 }
 
-export default function Header({ userRole, userName, userAvatar, mobileMenuOpen, setMobileMenuOpen,PageName }: HeaderProps) {
+export default function Header({ userRole, userName = 'User', userAvatar, mobileMenuOpen, setMobileMenuOpen,PageName }: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
@@ -214,20 +214,20 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
                 <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-white/20 dark:border-slate-700/20">
                   {userAvatar ? (
                     <Image
-                      src={userAvatar || "/placeholder.svg"}
-                      alt={userName || ""}
+                      src={userAvatar}
+                      alt={userName || "User"}
                       width={32}
                       height={32}
                       className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-primary/10 text-primary">
-                      {userName ? userName.charAt(0).toUpperCase() : "U"}
+                      {userName?.charAt(0)?.toUpperCase() || "U"}
                     </div>
                   )}
                 </div>
                 <span className="hidden sm:block text-sm font-medium text-slate-700 dark:text-slate-200">
-                  {userName.split(" ")[0]}
+                  {userName?.split(" ")?.[0] || "User"}
                 </span>
               </button>
 
@@ -240,8 +240,12 @@ export default function Header({ userRole, userName, userAvatar, mobileMenuOpen,
                   aria-labelledby="user-menu-button"
                 >
                   <div className="px-4 py-3">
-                    <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{userName}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{ROLE_DISPLAY_NAMES[userRole]}</p>
+                    <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                      {userName || "User"}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      {ROLE_DISPLAY_NAMES[userRole]}
+                    </p>
                   </div>
 
                   <div className="py-1">

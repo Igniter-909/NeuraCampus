@@ -43,11 +43,11 @@ export interface NavigationItem {
 interface SidebarProps {
   navigationItems: NavigationItem[]
   role: Role
-  userName: string
-  isCollapsed:boolean
-  setIsCollapsed:any
-  mobileMenuOpen:boolean;
-  setMobileMenuOpen:any
+  userName?: string
+  isCollapsed: boolean
+  setIsCollapsed: (value: boolean) => void
+  mobileMenuOpen: boolean
+  setMobileMenuOpen: (value: boolean) => void
 }
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -73,7 +73,7 @@ const iconMap: Record<string, React.ReactNode> = {
   feeds: <Image src={JobsIcon} width={30} height={30} alt="Feeds" />,
 }
 
-export default function Sidebar({ navigationItems, role, userName, isCollapsed, setIsCollapsed, mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
+export default function Sidebar({ navigationItems, role, userName = 'User', isCollapsed, setIsCollapsed, mobileMenuOpen, setMobileMenuOpen }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const { logout } = useAuth()
@@ -224,11 +224,11 @@ export default function Sidebar({ navigationItems, role, userName, isCollapsed, 
          {/* User Profile */}
         <div className={`px-4 py-4 border-b border-white/10 flex items-center ${isCollapsed && !mobileMenuOpen ? 'justify-center' : 'gap-3'} flex-shrink-0`}>
           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-            {userName.charAt(0).toUpperCase()}
+            {userName?.charAt(0)?.toUpperCase() || 'U'}
           </div>
           {(!isCollapsed || mobileMenuOpen) && (
             <div>
-              <p className="text-sm font-medium text-gray-400">{userName}</p>
+              <p className="text-sm font-medium text-gray-400">{userName || 'User'}</p>
               <p className="text-xs text-white/60">{ROLE_DISPLAY_NAMES[role]}</p>
             </div>
           )}

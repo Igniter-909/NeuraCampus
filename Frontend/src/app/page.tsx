@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useRef, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Import all the components we created
 import { Navbar } from "@/components/homePage/Navbar";
@@ -13,15 +13,10 @@ import { Footer } from "@/components/homePage/Footer";
 import { WhyUs } from "@/components/homePage/WhyUs";
 import { BackgroundShapes } from "@/components/ui/background-shapes";
 
-/**
- * Main page component that composes all homepage sections
- * Handles section navigation and intersection observation
- */
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  // Create refs for each section
+
   const homeRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
@@ -30,8 +25,8 @@ export default function Home() {
   const contactRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
 
-  // Set up intersection observer to update active section based on scroll position
   useEffect(() => {
+    // IntersectionObserver to track active section
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -47,8 +42,7 @@ export default function Home() {
     sections.forEach((section) => {
       if (section) observer.observe(section);
     });
-    
-    // Clean up when component unmounts
+
     return () => {
       sections.forEach((section) => {
         if (section) observer.unobserve(section);
@@ -56,7 +50,6 @@ export default function Home() {
     };
   }, []);
 
-  // Function to handle smooth scrolling to sections
   const scrollToSection = (sectionId: string) => {
     let ref;
     switch (sectionId) {
@@ -83,19 +76,73 @@ export default function Home() {
     }
 
     if (ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth" });
+      // Smooth scrolling logic
+      ref.current.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     }
-    setActiveSection(sectionId);
   };
 
-  // Reset scroll position when the page loads
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Ensure the page starts at the top on load
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  useEffect(() => {
+    let isThrottled = false;
+
+    const handleScroll = (event: WheelEvent) => {
+      if (isThrottled) return;
+
+      isThrottled = true;
+      setTimeout(() => {
+        isThrottled = false;
+      }, 100); // Adjust the throttle duration (100ms for slower scroll)
+
+      const scrollAmount = event.deltaY > 0 ? 50 : -50; // Adjust scroll speed (50px per scroll)
+      window.scrollBy({
+        top: scrollAmount,
+        behavior: "smooth", // Smooth scrolling
+      });
+    };
+
+    // Add event listener to restrict scroll speed
+    window.addEventListener("wheel", handleScroll, { passive: false });
+
+    return () => {
+      // Cleanup event listener
+      window.removeEventListener("wheel", handleScroll);
+    };
   }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col">
-      {/* Fixed Navigation */}
+    <div className="relative min-h-screen flex flex-col overflow-hidden">
+      {/* Apply smooth scrolling globally */}
+      <style jsx global>{`
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+          width: 6px; /* Make the scrollbar thinner */
+          height: 6px; /* For horizontal scrollbars */
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.5); /* Darker thumb for visibility */
+          border-radius: 10px; /* Rounded edges */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(0, 0, 0, 0.7); /* Darker on hover */
+        }
+
+        ::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.1); /* Light track */
+        }
+
+        /* Ensure no horizontal scrolling */
+        html, body {
+          overflow-x: hidden;
+        }
+      `}</style>
+
+      {/* Navbar */}
       <Navbar 
         activeSection={activeSection} 
         scrollToSection={scrollToSection} 
@@ -103,28 +150,29 @@ export default function Home() {
         isMobileMenuOpen={isMobileMenuOpen}
       />
 
-      {/* Main content sections with enhanced blur effect when mobile menu is open */}
-          <motion.div
+      {/* Main content */}
+      <motion.div 
         ref={mainContentRef}
-              animate={{
+        animate={{ 
           filter: isMobileMenuOpen ? "blur(8px) brightness(0.6)" : "blur(0px) brightness(1)",
           scale: isMobileMenuOpen ? 0.97 : 1
         }}
         transition={{ duration: 0.4 }}
-        className="relative transition-all"
-      ><BackgroundShapes />
-        <HeroSection id="home" forwardedRef={homeRef} />
-        <AboutSection id="about" forwardedRef={aboutRef} />
-        <FeaturesSection id="features" forwardedRef={featuresRef} />
-        <WhyUs id="whyus" forwardedRef={whyUsRef} />
-        <WorkSection id="work" forwardedRef={workRef} />
-        <ContactSection id="contact" forwardedRef={contactRef} />
-
-
-        {/* Footer */}
+        className="relative transition-all overflow-hidden"
+      >
+        <BackgroundShapes />
+        
+        {/* Render all sections */}
+        <div className="w-full"> {/* Use w-full instead of 100vw */}
+          <HeroSection id="home" forwardedRef={homeRef} />
+          <AboutSection id="about" forwardedRef={aboutRef} />
+          <FeaturesSection id="features" forwardedRef={featuresRef} />
+          <WhyUs id="whyus" forwardedRef={whyUsRef} />
+          <WorkSection id="work" forwardedRef={workRef} />
+          <ContactSection id="contact" forwardedRef={contactRef} />
+        </div>
         <Footer />
-            </motion.div>
-
+      </motion.div>
     </div>
   );
 }

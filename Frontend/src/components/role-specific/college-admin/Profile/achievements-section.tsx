@@ -70,14 +70,16 @@ export default function AchievementsSection({ data, isAdmin, onEdit, editingFiel
               </Badge>
 
               <div className="flex-1 dark:text-gray-300">
-                <EditableField
-                  value={achievement}
-                  fieldPath={`achievement-${index}`}
-                  onEdit={(_, value) => handleAchievementChange(index, value)}
-                  isAdmin={isAdmin}
-                  isEditing={editingField === `achievement-${index}`}
-                  textClassName="dark:text-gray-300"
-                />
+                <div className="text-[#0a66c2]">
+                  <EditableField
+                    value={achievement}
+                    fieldPath={`achievement-${index}`}
+                    onEdit={(_, value) => handleAchievementChange(index, value)}
+                    isAdmin={isAdmin}
+                    isEditing={editingField === `achievement-${index}`}
+                    textClassName="text-[#0a66c2]"
+                  />
+                </div>
               </div>
             </li>
           ))}
