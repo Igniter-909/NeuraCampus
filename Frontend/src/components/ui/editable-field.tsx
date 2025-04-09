@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
@@ -17,6 +17,7 @@ export interface EditableFieldProps {
   textClassName?: string
   isMultiline?: boolean
   placeholder?: string
+  type?: "text" | "textarea"
 }
 
 export default function EditableField({
@@ -27,11 +28,22 @@ export default function EditableField({
   isEditing: isEditingProp,
   textClassName = "",
   isMultiline = false,
-  placeholder = "Click to edit"
+  placeholder = "Click to edit",
+  type = "text"
 }: EditableFieldProps) {
   const [isHovered, setIsHovered] = useState(false)
   const [isEditing, setIsEditing] = useState(isEditingProp)
-  const [currentValue, setCurrentValue] = useState(value)
+  const [currentValue, setCurrentValue] = useState(value || "")
+
+  // Update currentValue when value prop changes
+  useEffect(() => {
+    setCurrentValue(value || "")
+  }, [value])
+
+  // Update isEditing state when isEditingProp changes
+  useEffect(() => {
+    setIsEditing(isEditingProp)
+  }, [isEditingProp])
 
   const handleClick = () => {
     if (isAdmin) {
@@ -39,7 +51,7 @@ export default function EditableField({
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const newValue = e.target.value
     setCurrentValue(newValue)
     onEdit(fieldPath, newValue)
@@ -49,12 +61,12 @@ export default function EditableField({
     setIsEditing(false)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && type !== 'textarea') {
       setIsEditing(false)
     }
     if (e.key === 'Escape') {
-      setCurrentValue(value)
+      setCurrentValue(value || "")
       setIsEditing(false)
     }
   }
@@ -67,16 +79,29 @@ export default function EditableField({
       onClick={handleClick}
     >
       {isEditing ? (
-        <input
-          type="text"
-          value={currentValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          className={`w-full bg-transparent outline-none border-b border-primary px-2 py-1 ${textClassName}`}
-          placeholder={placeholder}
-          autoFocus
-        />
+        type === "textarea" ? (
+          <Textarea
+            value={currentValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className={`w-full bg-transparent outline-none border border-primary px-2 py-1 ${textClassName}`}
+            placeholder={placeholder}
+            autoFocus
+            rows={4}
+          />
+        ) : (
+          <Input
+            type="text"
+            value={currentValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            className={`w-full bg-transparent outline-none border-b border-primary px-2 py-1 ${textClassName}`}
+            placeholder={placeholder}
+            autoFocus
+          />
+        )
       ) : (
         <span className={`block px-2 py-1 rounded transition-colors ${textClassName} ${
           isAdmin && isHovered ? 'bg-primary/5' : ''

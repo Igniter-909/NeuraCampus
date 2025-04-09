@@ -42,6 +42,9 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
     setExpandedDept(null)
   }
 
+  // Make sure departments array exists, if not use empty array
+  const departments = data.departments || []
+
   return (
     <Card className="dark:bg-slate-900 dark:border-slate-700">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
@@ -64,7 +67,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {data.departments.map((dept, index) => (
+          {departments.map((dept, index) => (
             <div key={index} className="border rounded-lg overflow-hidden bg-white dark:bg-slate-800 dark:border-slate-700 hover:shadow-md transition-shadow">
               <div
                 className={`p-4 cursor-pointer flex justify-between items-center ${expandedDept === index ? "bg-blue-50 dark:bg-blue-900/30" : ""}`}
@@ -74,7 +77,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                   {isAdmin && expandedDept === index ? (
                     <div>
                       <EditableField
-                        value={dept.name}
+                        value={dept.name || "Department Name"}
                         fieldPath={`dept-${index}-name`}
                         onEdit={(_, value) => handleDepartmentChange(index, "name", value)}
                         isAdmin={true}
@@ -83,7 +86,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                       />
                     </div>
                   ) : (
-                    dept.name
+                    dept.name || "Department Name"
                   )}
                 </div>
 
@@ -109,7 +112,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                     <span className="font-medium dark:text-gray-300">HOD:</span>
                     <div>
                       <EditableField
-                        value={dept.hod}
+                        value={dept.hod || ""}
                         fieldPath={`dept-${index}-hod`}
                         onEdit={(_, value) => handleDepartmentChange(index, "hod", value)}
                         isAdmin={isAdmin}
@@ -124,7 +127,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                     <span className="font-medium dark:text-gray-300">Faculty:</span>
                     <div>
                       <EditableField
-                        value={dept.teachers.toString()}
+                        value={dept.teachers !== undefined ? dept.teachers.toString() : "0"}
                         fieldPath={`dept-${index}-teachers`}
                         onEdit={(_, value) => handleDepartmentChange(index, "teachers", value)}
                         isAdmin={isAdmin}
@@ -140,7 +143,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                     <span className="font-medium dark:text-gray-300">Students:</span>
                     <div>
                       <EditableField
-                        value={dept.students.toString()}
+                        value={dept.students !== undefined ? dept.students.toString() : "0"}
                         fieldPath={`dept-${index}-students`}
                         onEdit={(_, value) => handleDepartmentChange(index, "students", value)}
                         isAdmin={isAdmin}
@@ -156,7 +159,7 @@ export default function DepartmentsSection({ data, isAdmin, onEdit, editingField
                     <span className="font-medium dark:text-gray-300">Programs:</span>
                     <div>
                       <EditableField
-                        value={dept.programs}
+                        value={dept.programs || ""}
                         fieldPath={`dept-${index}-programs`}
                         onEdit={(_, value) => handleDepartmentChange(index, "programs", value)}
                         isAdmin={isAdmin}

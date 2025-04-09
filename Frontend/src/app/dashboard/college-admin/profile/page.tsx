@@ -22,9 +22,13 @@ export default function Home() {
     )
   }
 
+  // Determine if user can edit the profile
+  // Only allow editing if user is a college_admin
+  const canEdit = user.role === 'superadmin';
+
   return (
     <div className="min-h-screen bg-transparent">
-      <CollegeProfile collegeId={user.college || ""} />
+      <CollegeProfile collegeId={user.college || ""} canEdit={canEdit} />
     </div>
   )
 }

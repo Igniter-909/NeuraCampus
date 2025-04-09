@@ -101,63 +101,65 @@ function EventCalendar({
   const getEventColor = (type: string) => {
     switch (type) {
       case 'academic':
-        return "bg-blue-500 text-blue-50";
+        return "bg-blue-500 text-blue-50 dark:bg-blue-600 dark:text-blue-50";
       case 'cultural':
-        return "bg-purple-500 text-purple-50";
+        return "bg-purple-500 text-purple-50 dark:bg-purple-600 dark:text-purple-50";
       case 'sports':
-        return "bg-green-500 text-green-50";
+        return "bg-green-500 text-green-50 dark:bg-green-600 dark:text-green-50";
       case 'placement':
-        return "bg-yellow-500 text-yellow-50";
+        return "bg-yellow-500 text-yellow-50 dark:bg-yellow-600 dark:text-yellow-900";
       case 'seminar':
-        return "bg-red-500 text-red-50";
+        return "bg-red-500 text-red-50 dark:bg-red-600 dark:text-red-50";
       case 'workshop':
-        return "bg-indigo-500 text-indigo-50";
+        return "bg-indigo-500 text-indigo-50 dark:bg-indigo-600 dark:text-indigo-50";
       case 'event':
-        return "bg-blue-500 text-blue-50"; // Default color for 'event' type
+        return "bg-blue-500 text-blue-50 dark:bg-blue-600 dark:text-blue-50"; // Default color for 'event' type
       default:
-        return "bg-gray-500 text-gray-50";
+        return "bg-gray-500 text-gray-50 dark:bg-gray-600 dark:text-gray-50";
     }
   }
 
   // Render event tooltip content
   const renderEventTooltip = (event: EventType) => {
     return (
-      <div className="p-2 max-w-xs">
-        <h3 className="font-semibold text-sm">{event.title}</h3>
+      <div className="p-2 max-w-xs dark:bg-slate-800 dark:border-slate-700">
+        <h3 className="font-semibold text-sm dark:text-white">{event.title}</h3>
         <div className="mt-1 space-y-1 text-xs">
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 dark:text-gray-300">
             <Clock className="h-3 w-3" />
             <span>{event.time}</span>
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 dark:text-gray-300">
             <MapPin className="h-3 w-3" />
             <span>{event.location}</span>
           </div>
-          <p className="text-xs mt-1 line-clamp-2">{event.description}</p>
+          <p className="text-xs mt-1 line-clamp-2 dark:text-gray-300">{event.description}</p>
         </div>
       </div>
     )
   }
 
   return (
-    <Card className={cn("w-full", className)}>
+    <Card className={cn("w-full dark:bg-slate-900 dark:border-slate-700", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-xl font-bold">Calendar</CardTitle>
+        <CardTitle className="text-xl font-bold dark:text-white">Calendar</CardTitle>
         <div className="flex items-center space-x-2">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+            className="dark:text-gray-300 dark:hover:text-white dark:hover:bg-slate-800"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm font-medium">
+          <span className="text-sm font-medium dark:text-gray-300">
             {format(currentDate, "MMMM yyyy")}
           </span>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+            className="dark:text-gray-300 dark:hover:text-white dark:hover:bg-slate-800"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -183,15 +185,17 @@ function EventCalendar({
                 onClick={() => handleDateClick(date)}
                 className={cn(
                   "relative h-24 p-2 border border-gray-200 dark:border-gray-700 rounded-lg",
-                  !disableDateClick && "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
-                  !isCurrentMonth && "text-gray-400 dark:text-gray-500",
-                  isToday && "ring-2 ring-blue-500",
+                  !disableDateClick && "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors",
+                  !isCurrentMonth && "text-gray-400 dark:text-gray-600 dark:border-gray-800",
+                  isToday && "ring-2 ring-blue-500 dark:ring-blue-400",
                   isSelected && "bg-blue-50 dark:bg-blue-900/20"
                 )}
               >
                 <span className={cn(
                   "text-sm",
-                  isCurrentMonth ? "text-gray-900 dark:text-white" : "text-gray-400 dark:text-gray-500"
+                  isCurrentMonth 
+                    ? "text-gray-900 dark:text-gray-100" 
+                    : "text-gray-400 dark:text-gray-500"
                 )}>
                   {date.getDate()}
                 </span>
@@ -203,21 +207,21 @@ function EventCalendar({
                           <TooltipTrigger asChild>
                             <div
                               className={cn(
-                                "text-xs px-1 py-0.5 rounded truncate",
+                                "text-xs px-1 py-0.5 rounded truncate font-medium shadow-sm",
                                 getEventColor(event.type)
                               )}
                             >
                               {event.title}
                             </div>
                           </TooltipTrigger>
-                          <TooltipContent side="right" className="p-0">
+                          <TooltipContent side="right" className="p-0 dark:bg-slate-800 dark:border-slate-700">
                             {renderEventTooltip(event)}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     ))}
                     {dayEvents.length > 2 && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 text-center px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded">
                         +{dayEvents.length - 2} more
                       </div>
                     )}

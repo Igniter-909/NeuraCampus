@@ -30,7 +30,8 @@ export interface Department {
   }
   
   export interface Placement {
-    companyName: string
+    id: string
+    company: string
     role: string
     studentName: string
     package: string
@@ -38,7 +39,8 @@ export interface Department {
   }
   
   export interface Internship {
-    companyName: string
+    id: string
+    company: string
     role: string
     studentName: string
     duration: string
@@ -150,21 +152,24 @@ export interface Department {
     ],
     placements: [
       {
-        companyName: "Google",
+        id: "placement-1",
+        company: "Google",
         role: "Software Engineer",
         studentName: "John Doe",
         package: "$120,000",
         year: "2023"
       },
       {
-        companyName: "Microsoft",
+        id: "placement-2",
+        company: "Microsoft",
         role: "Product Manager",
         studentName: "Jane Smith",
         package: "$110,000",
         year: "2023"
       },
       {
-        companyName: "Amazon",
+        id: "placement-3",
+        company: "Amazon",
         role: "Data Scientist",
         studentName: "Robert Johnson",
         package: "$115,000",
@@ -173,21 +178,24 @@ export interface Department {
     ],
     internships: [
       {
-        companyName: "Meta",
+        id: "internship-1",
+        company: "Meta",
         role: "UX Designer Intern",
         studentName: "Emily Chen",
         duration: "3 months",
         year: "2023"
       },
       {
-        companyName: "IBM",
+        id: "internship-2",
+        company: "IBM",
         role: "Machine Learning Intern",
         studentName: "David Wilson",
         duration: "6 months",
         year: "2023"
       },
       {
-        companyName: "Apple",
+        id: "internship-3",
+        company: "Apple",
         role: "iOS Developer Intern",
         studentName: "Sarah Lee",
         duration: "3 months",

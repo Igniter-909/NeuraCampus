@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import type { CollegeData, Placement, Internship } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -43,6 +43,10 @@ interface PlacementSectionProps {
 export default function PlacementSection({ data, isAdmin, onEdit, editingField }: PlacementSectionProps) {
   const [showPlacementsDialog, setShowPlacementsDialog] = useState(false)
   const [showInternshipsDialog, setShowInternshipsDialog] = useState(false)
+  const initialRenderRef = useRef(true)
+
+  // Helper to generate unique IDs
+  const generateId = () => `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
   // Handler for placement changes
   const handlePlacementChange = (index: number, field: keyof Placement, value: string) => {
@@ -60,25 +64,33 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
 
   // Add new placement
   const addPlacement = () => {
-    const updatedPlacements = [...data.placements, {
-      companyName: "New Company",
-      role: "New Role",
-      studentName: "Student Name",
-      package: "$XX,XXX",
-      year: new Date().getFullYear().toString()
-    }]
+    const updatedPlacements = [
+      ...data.placements, 
+      {
+        id: generateId(),
+        company: "New Company",
+        role: "New Role",
+        studentName: "Student Name",
+        package: "$XX,XXX",
+        year: new Date().getFullYear().toString()
+      }
+    ]
     onEdit("placements", updatedPlacements)
   }
 
   // Add new internship
   const addInternship = () => {
-    const updatedInternships = [...data.internships, {
-      companyName: "New Company",
-      role: "New Role",
-      studentName: "Student Name",
-      duration: "X months",
-      year: new Date().getFullYear().toString()
-    }]
+    const updatedInternships = [
+      ...data.internships, 
+      {
+        id: generateId(),
+        company: "New Company",
+        role: "New Role",
+        studentName: "Student Name",
+        duration: "X months",
+        year: new Date().getFullYear().toString()
+      }
+    ]
     onEdit("internships", updatedInternships)
   }
 
@@ -95,6 +107,42 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
     updatedInternships.splice(index, 1)
     onEdit("internships", updatedInternships)
   }
+
+  // Ensure all internships and placements have IDs, only runs once on initial mount
+  useEffect(() => {
+    // Skip ID check after the initial render
+    if (initialRenderRef.current) {
+      initialRenderRef.current = false;
+      
+      let needsUpdate = false;
+      let updatedPlacements = [...data.placements];
+      let updatedInternships = [...data.internships];
+      
+      // Check and fix placements
+      updatedPlacements = data.placements.map(placement => {
+        if (!placement.id) {
+          needsUpdate = true;
+          return { ...placement, id: generateId() };
+        }
+        return placement;
+      });
+      
+      // Check and fix internships
+      updatedInternships = data.internships.map(internship => {
+        if (!internship.id) {
+          needsUpdate = true;
+          return { ...internship, id: generateId() };
+        }
+        return internship;
+      });
+      
+      // Update if any records were missing IDs
+      if (needsUpdate) {
+        onEdit("placements", updatedPlacements);
+        onEdit("internships", updatedInternships);
+      }
+    }
+  }, [data.placements, data.internships, onEdit]);
 
   return (
     <Card className="dark:bg-slate-900 dark:border-slate-700">
@@ -155,14 +203,14 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                 </TableHeader>
                 <TableBody>
                   {data.placements.map((placement, index) => (
-                    <TableRow key={index} className="dark:border-slate-700">
+                    <TableRow key={placement.id || index} className="dark:border-slate-700">
                       <TableCell className="dark:text-gray-300">
                         <div className="flex items-center gap-2">
                           <Building className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={placement.companyName}
+                            value={placement.company || ""}
                             fieldPath={`placement-${index}-company`}
-                            onEdit={(_, value) => handlePlacementChange(index, "companyName", value)}
+                            onEdit={(_, value) => handlePlacementChange(index, "company", value)}
                             isAdmin={isAdmin}
                             isEditing={editingField === `placement-${index}-company`}
                             textClassName="dark:text-gray-300"
@@ -171,7 +219,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                       </TableCell>
                       <TableCell className="dark:text-gray-300">
                         <EditableField
-                          value={placement.role}
+                          value={placement.role || ""}
                           fieldPath={`placement-${index}-role`}
                           onEdit={(_, value) => handlePlacementChange(index, "role", value)}
                           isAdmin={isAdmin}
@@ -183,7 +231,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <UserCircle className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={placement.studentName}
+                            value={placement.studentName || ""}
                             fieldPath={`placement-${index}-student`}
                             onEdit={(_, value) => handlePlacementChange(index, "studentName", value)}
                             isAdmin={isAdmin}
@@ -196,7 +244,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <DollarSign className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={placement.package}
+                            value={placement.package || ""}
                             fieldPath={`placement-${index}-package`}
                             onEdit={(_, value) => handlePlacementChange(index, "package", value)}
                             isAdmin={isAdmin}
@@ -209,7 +257,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <CalendarDays className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={placement.year}
+                            value={placement.year || ""}
                             fieldPath={`placement-${index}-year`}
                             onEdit={(_, value) => handlePlacementChange(index, "year", value)}
                             isAdmin={isAdmin}
@@ -295,14 +343,14 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                 </TableHeader>
                 <TableBody>
                   {data.internships.map((internship, index) => (
-                    <TableRow key={index} className="dark:border-slate-700">
+                    <TableRow key={internship.id || index} className="dark:border-slate-700">
                       <TableCell className="dark:text-gray-300">
                         <div className="flex items-center gap-2">
                           <Building className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={internship.companyName}
+                            value={internship.company || ""}
                             fieldPath={`internship-${index}-company`}
-                            onEdit={(_, value) => handleInternshipChange(index, "companyName", value)}
+                            onEdit={(_, value) => handleInternshipChange(index, "company", value)}
                             isAdmin={isAdmin}
                             isEditing={editingField === `internship-${index}-company`}
                             textClassName="dark:text-gray-300"
@@ -311,7 +359,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                       </TableCell>
                       <TableCell className="dark:text-gray-300">
                         <EditableField
-                          value={internship.role}
+                          value={internship.role || ""}
                           fieldPath={`internship-${index}-role`}
                           onEdit={(_, value) => handleInternshipChange(index, "role", value)}
                           isAdmin={isAdmin}
@@ -323,7 +371,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <UserCircle className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={internship.studentName}
+                            value={internship.studentName || ""}
                             fieldPath={`internship-${index}-student`}
                             onEdit={(_, value) => handleInternshipChange(index, "studentName", value)}
                             isAdmin={isAdmin}
@@ -336,7 +384,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={internship.duration}
+                            value={internship.duration || ""}
                             fieldPath={`internship-${index}-duration`}
                             onEdit={(_, value) => handleInternshipChange(index, "duration", value)}
                             isAdmin={isAdmin}
@@ -349,7 +397,7 @@ export default function PlacementSection({ data, isAdmin, onEdit, editingField }
                         <div className="flex items-center gap-2">
                           <CalendarDays className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                           <EditableField
-                            value={internship.year}
+                            value={internship.year || ""}
                             fieldPath={`internship-${index}-year`}
                             onEdit={(_, value) => handleInternshipChange(index, "year", value)}
                             isAdmin={isAdmin}

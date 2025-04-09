@@ -2,7 +2,8 @@ import type { CollegeData } from "@/lib/data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import EditableField from "@/components/ui/editable-field"
 import { Separator } from "@/components/ui/separator"
-import { Building2, Calendar, MapPin, Award, Phone, Mail, Globe, Linkedin, Twitter, Instagram } from "lucide-react"
+import { Building2, Calendar, MapPin, Award, Phone, Mail, Globe, Linkedin, Twitter, Instagram, ExternalLink } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 interface BasicInfoSectionProps {
   data: CollegeData
@@ -10,6 +11,12 @@ interface BasicInfoSectionProps {
   onEdit: (fieldPath: string, value: string | number) => void
   editingField: string | null
 }
+
+// Helper function to truncate URLs
+const truncateUrl = (url: string, maxLength = 30) => {
+  if (!url) return "";
+  return url.length > maxLength ? `${url.substring(0, maxLength)}...` : url;
+};
 
 export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }: BasicInfoSectionProps) {
   return (
@@ -43,7 +50,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-[#0a66c2] shrink-0" />
               <span className="font-medium text-sm shrink-0 dark:text-gray-300">Location:</span>
-              <div className="text-[#0a66c2]">
+              <div className="text-[#0a66c2] overflow-hidden">
                 <EditableField
                   value={data.location}
                   fieldPath="location"
@@ -80,7 +87,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
+              <div className="text-[#0a66c2] overflow-hidden">
                 <EditableField
                   value={data.contact.phone}
                   fieldPath="contact.phone"
@@ -94,7 +101,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
 
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
+              <div className="text-[#0a66c2] overflow-hidden">
                 <EditableField
                   value={data.contact.email}
                   fieldPath="contact.email"
@@ -108,7 +115,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
 
             <div className="flex items-center gap-2">
               <Globe className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
+              <div className="text-[#0a66c2] overflow-hidden">
                 <EditableField
                   value={data.contact.website}
                   fieldPath="contact.website"
@@ -128,46 +135,112 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
           <h3 className="text-sm font-medium text-muted-foreground mb-2 dark:text-gray-400">Social Media</h3>
 
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <Linkedin className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
-                <EditableField
-                  value={data.socialMedia.linkedin}
-                  fieldPath="socialMedia.linkedin"
-                  onEdit={onEdit}
-                  isAdmin={isAdmin}
-                  isEditing={editingField === "socialMedia.linkedin"}
-                  textClassName="text-sm dark:text-gray-300"
-                />
-              </div>
+            {/* LinkedIn */}
+            <div className="flex items-start gap-2">
+              <Linkedin className="h-4 w-4 text-[#0a66c2] shrink-0 mt-1" />
+              {isAdmin ? (
+                <div className="text-[#0a66c2] overflow-hidden w-full">
+                  <EditableField
+                    value={data.socialMedia.linkedin}
+                    fieldPath="socialMedia.linkedin"
+                    onEdit={onEdit}
+                    isAdmin={isAdmin}
+                    isEditing={editingField === "socialMedia.linkedin"}
+                    textClassName="text-sm dark:text-gray-300"
+                  />
+                </div>
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a 
+                        href={data.socialMedia.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer" 
+                        className="flex items-center gap-1 text-sm dark:text-gray-300 hover:text-[#0a66c2] break-all line-clamp-1 max-w-[90%]"
+                      >
+                        {truncateUrl(data.socialMedia.linkedin)}
+                        <ExternalLink className="h-3 w-3 inline shrink-0" />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{data.socialMedia.linkedin}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Twitter className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
-                <EditableField
-                  value={data.socialMedia.twitter}
-                  fieldPath="socialMedia.twitter"
-                  onEdit={onEdit}
-                  isAdmin={isAdmin}
-                  isEditing={editingField === "socialMedia.twitter"}
-                  textClassName="text-sm dark:text-gray-300"
-                />
-              </div>
+            {/* Twitter */}
+            <div className="flex items-start gap-2">
+              <Twitter className="h-4 w-4 text-[#0a66c2] shrink-0 mt-1" />
+              {isAdmin ? (
+                <div className="text-[#0a66c2] overflow-hidden w-full">
+                  <EditableField
+                    value={data.socialMedia.twitter}
+                    fieldPath="socialMedia.twitter"
+                    onEdit={onEdit}
+                    isAdmin={isAdmin}
+                    isEditing={editingField === "socialMedia.twitter"}
+                    textClassName="text-sm dark:text-gray-300"
+                  />
+                </div>
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a 
+                        href={data.socialMedia.twitter}
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center gap-1 text-sm dark:text-gray-300 hover:text-[#0a66c2] break-all line-clamp-1 max-w-[90%]"
+                      >
+                        {truncateUrl(data.socialMedia.twitter)}
+                        <ExternalLink className="h-3 w-3 inline shrink-0" />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{data.socialMedia.twitter}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Instagram className="h-4 w-4 text-[#0a66c2] shrink-0" />
-              <div className="text-[#0a66c2]">
-                <EditableField
-                  value={data.socialMedia.instagram}
-                  fieldPath="socialMedia.instagram"
-                  onEdit={onEdit}
-                  isAdmin={isAdmin}
-                  isEditing={editingField === "socialMedia.instagram"}
-                  textClassName="text-sm dark:text-gray-300"
-                />
-              </div>
+            {/* Instagram */}
+            <div className="flex items-start gap-2">
+              <Instagram className="h-4 w-4 text-[#0a66c2] shrink-0 mt-1" />
+              {isAdmin ? (
+                <div className="text-[#0a66c2] overflow-hidden w-full">
+                  <EditableField
+                    value={data.socialMedia.instagram}
+                    fieldPath="socialMedia.instagram"
+                    onEdit={onEdit}
+                    isAdmin={isAdmin}
+                    isEditing={editingField === "socialMedia.instagram"}
+                    textClassName="text-sm dark:text-gray-300"
+                  />
+                </div>
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <a 
+                        href={data.socialMedia.instagram}
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="flex items-center gap-1 text-sm dark:text-gray-300 hover:text-[#0a66c2] break-all line-clamp-1 max-w-[90%]"
+                      >
+                        {truncateUrl(data.socialMedia.instagram)}
+                        <ExternalLink className="h-3 w-3 inline shrink-0" />
+                      </a>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{data.socialMedia.instagram}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
           </div>
         </div>
@@ -186,7 +259,7 @@ export default function BasicInfoSection({ data, isAdmin, onEdit, editingField }
 
           {isAdmin && (
             <div className="mt-2">
-              <div className="text-xs text-muted-foreground dark:text-gray-400">
+              <div className="text-xs text-muted-foreground dark:text-gray-400 max-w-full overflow-hidden">
                 <EditableField
                   value={data.applyUrl}
                   fieldPath="applyUrl"

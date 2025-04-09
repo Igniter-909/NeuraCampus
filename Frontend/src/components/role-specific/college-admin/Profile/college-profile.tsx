@@ -15,12 +15,17 @@ import { apiClient } from "@/lib/api"
 
 interface CollegeProfileProps {
   collegeId: string
+  /**
+   * Determines if the user can edit the profile
+   * - For college_admin users viewing their own college: true
+   * - For other roles or users viewing other colleges: false
+   */
+  canEdit?: boolean
 }
 
-export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
+export default function CollegeProfile({ collegeId, canEdit = false }: CollegeProfileProps) {
   const [collegeData, setCollegeData] = useState<CollegeData>(initialCollegeData)
   const [editedData, setEditedData] = useState<CollegeData>(initialCollegeData)
-  const [isAdmin] = useState(true) // In a real app, this would be determined by authentication
   const [hasChanges, setHasChanges] = useState(false)
   const [editingField, setEditingField] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
@@ -37,7 +42,6 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
       try {
         setLoading(true)
         const response = await apiClient.get(`/colleges/${collegeId}/profile`)
-        console.log("1313d",response.data);
         const data = response.data.data;
         
         // If backend returns data in a different format, transform it to match CollegeData interface
@@ -64,6 +68,9 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
 
   // Using unknown is safer than any but still allows for the flexibility needed
   const handleFieldEdit = (fieldPath: string, value: unknown) => {
+    // Only allow editing if canEdit is true
+    if (!canEdit) return;
+    
     setEditingField(fieldPath)
 
     // Create a deep copy of editedData and update the specified field
@@ -82,12 +89,13 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
   }
 
   const handleSaveChanges = async () => {
+    // Don't allow saving if user can't edit
+    if (!canEdit) return;
+    
     try {
       // Save changes to backend
       if (collegeId) {
-        console.log("1313derrngklnme",editedData);
-        const response = await apiClient.put(`/colleges/${collegeId}/profile`, editedData)
-        console.log("1313d",response.data);
+        await apiClient.put(`/colleges/${collegeId}/profile`, editedData)
       }
       
       setCollegeData(editedData)
@@ -100,6 +108,9 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
   }
 
   const handleDiscardChanges = () => {
+    // Don't allow discarding if user can't edit
+    if (!canEdit) return;
+    
     setEditedData(collegeData)
     setHasChanges(false)
     setEditingField(null)
@@ -124,33 +135,33 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
   return (
     <div className="container mx-auto py-6 px-4 md:px-6 dark:bg-slate-950">
       <div className="space-y-6">
-        <ProfileHeader data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
+        <ProfileHeader data={editedData} isAdmin={canEdit} onEdit={handleFieldEdit} editingField={editingField} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-6">
-            <AboutSection data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
+            <AboutSection data={editedData} isAdmin={canEdit} onEdit={handleFieldEdit} editingField={editingField} />
 
-            <PlacementSection data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
+            <PlacementSection data={editedData} isAdmin={canEdit} onEdit={handleFieldEdit} editingField={editingField} />
 
             <DepartmentsSection
               data={editedData}
-              isAdmin={isAdmin}
+              isAdmin={canEdit}
               onEdit={handleFieldEdit}
               editingField={editingField}
             />
 
-            <FacultySection data={editedData} isAdmin={isAdmin} onEdit={handleFieldEdit} editingField={editingField} />
+            <FacultySection data={editedData} isAdmin={canEdit} onEdit={handleFieldEdit} editingField={editingField} />
 
             <FacilitiesSection
               data={editedData}
-              isAdmin={isAdmin}
+              isAdmin={canEdit}
               onEdit={handleFieldEdit}
               editingField={editingField}
             />
 
             <AchievementsSection
               data={editedData}
-              isAdmin={isAdmin}
+              isAdmin={canEdit}
               onEdit={handleFieldEdit}
               editingField={editingField}
             />
@@ -159,7 +170,7 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
           <div className="space-y-6">
             <BasicInfoSection
               data={editedData}
-              isAdmin={isAdmin}
+              isAdmin={canEdit}
               onEdit={handleFieldEdit}
               editingField={editingField}
             />
@@ -167,7 +178,7 @@ export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
         </div>
       </div>
 
-      {hasChanges && <FloatingActionButton onSave={handleSaveChanges} onDiscard={handleDiscardChanges} />}
+      {hasChanges && canEdit && <FloatingActionButton onSave={handleSaveChanges} onDiscard={handleDiscardChanges} />}
     </div>
   )
 }
