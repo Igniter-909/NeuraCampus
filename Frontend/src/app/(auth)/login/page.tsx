@@ -30,7 +30,7 @@ export default function LoginPage() {
   const { getUser, login } = useAuth();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const [userType, setUserType] = useState("admin");
+  const [userType, setUserType] = useState("super_admin");
   const [isLoading, setIsLoading] = useState(false);
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [rememberMe, setRememberMe] = useState(() => {
@@ -45,8 +45,7 @@ export default function LoginPage() {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
-    getValues
+    formState: { errors }
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -83,9 +82,10 @@ export default function LoginPage() {
       const response = await login({
         email: formData.email,
         password: formData.password,
-        // role: userType
+        role: userType,
+        rememberMe: rememberMe
       });
-
+      console.log("enfjlnwkfm",response);
       if (rememberMe) {
         localStorage.setItem('rememberMe', 'true');
         localStorage.setItem('rememberedEmail', formData.email);
@@ -104,10 +104,11 @@ export default function LoginPage() {
       if (redirectPath) {
         router.push(redirectPath);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to login. Please try again.";
       toast({
         title: "Error",
-        content: error.message || "Failed to login. Please try again.",
+        content: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -144,15 +145,15 @@ export default function LoginPage() {
       icon: <FaBriefcase className="w-5 h-5" />,
     },
     {
-      id: "admin",
-      title: "Admin",
+      id: "super_admin",
+      title: "Super Admin",
       description: "Administration",
       icon: <FaUserShield className="w-5 h-5" />,
     },
     {
-      id: "alumni",
-      title: "Alumni",
-      description: "Former students",
+      id: "college_admin",
+      title: "College Admin",
+      description: "College management",
       icon: <FaUserTie className="w-5 h-5" />,
     },
   ];

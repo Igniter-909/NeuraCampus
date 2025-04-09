@@ -30,8 +30,8 @@ export const useUser = () => {
         // console.log(tokenData,"tokenData");
         // Then fetch complete user details
         const response = await apiClient.get(`auth/user/${tokenData.userId}`);
-        // console.log(response,"response");
-        setUser(response.data);
+        console.log(response,"responseq3klwmrklq");
+        setUser(response.data.user);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch user data');
       } finally {

@@ -30,6 +30,7 @@ export interface LoginCredentials {
   email: string;
   password: string;
   rememberMe?: boolean;
+  role?: string;
 }
 
 export interface RegisterData {
@@ -145,6 +146,7 @@ export const auth = {
   },
 
   async verifyToken(token: string): Promise<TokenData> {
+    console.log("token",token);
     try {
       const decoded = jwtDecode<TokenData>(token);
       return {
@@ -153,7 +155,7 @@ export const auth = {
         status: decoded.status,
         lastLogin: new Date(decoded.lastLogin)
       };
-    } catch (error) {
+    } catch {
       throw new Error('Invalid token');
     }
   },

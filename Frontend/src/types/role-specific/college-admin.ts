@@ -95,10 +95,41 @@ export interface ReportAccess {
 
 export interface DashboardStatsInterface {
   stats: {
-    totalStudents: number;
-    totalTeachers: number;
-    totalBranches: number;
+    students: {
+      total: number;
+      value: number;
+      trend: { value: number; isPositive: boolean };
+    };
+    teachers: {
+      total: number;
+      value: number;
+      trend: { value: number; isPositive: boolean };
+    };
+    events: {
+      total: number;
+      value: number;
+      trend: { value: number; isPositive: boolean };
+    };
+    invoices: {
+      total: number;
+      value: number;
+      trend: { value: number; isPositive: boolean };
+    };
+  };
+  collegeInfo: {
+    name: string;
+    logo: string;
+    address: string;
+  };
+  subscription: {
+    status: string;
+    expiresAt: string;
+    pricing: {
+      plan: string;
+      amount: number;
+      interval: string;
+    };
   };
   recentUsers: any[];
-  branchStats: any[];
+  recentEvents: any[];
 } 

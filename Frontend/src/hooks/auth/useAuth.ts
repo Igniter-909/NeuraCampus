@@ -25,7 +25,7 @@ export const useAuth = () => {
   const login = useCallback(async (credentials: LoginCredentials) => {
     try {
       const response = await auth.login(credentials);
-      
+      console.log("response",response);
       // Get the dashboard route for the user's role
       const dashboardRoute = ROLE_DASHBOARD_ROUTES[response?.role as UserRole];
       if (!dashboardRoute) {

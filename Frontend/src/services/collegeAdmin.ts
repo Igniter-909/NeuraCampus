@@ -2,7 +2,9 @@ import { apiClient } from "@/lib/api";
 
 export const collegeAdminApi = {
   // Dashboard
-  getDashboardStats: () => apiClient.get('/college-admin/dashboard'),
+  getDashboardStats: (collegeId?: string) => collegeId 
+    ? apiClient.get(`/college-admin/dashboard/${collegeId}`) 
+    : apiClient.get('/college-admin/dashboard'),
 
   // Users
   getUsers: (params?: any) => apiClient.get('/college-admin/users', { params }),

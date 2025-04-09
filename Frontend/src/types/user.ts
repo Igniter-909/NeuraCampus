@@ -6,6 +6,7 @@ export interface User {
   name: string;
   email: string;
   role: Role;
+  college?: string; // ID of the college the user belongs to
   media: {
     avatar: {
       url: string;
@@ -43,7 +44,7 @@ export interface User {
 }
 
 // User Profile
-export interface UserProfile extends User {
+export interface UserProfile extends Omit<User, 'preferences'> {
   phone?: string;
   address?: string;
   bio?: string;

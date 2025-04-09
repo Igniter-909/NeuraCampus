@@ -22,7 +22,7 @@ export default function DashboardLayout({
 }: {
   children: ReactNode
 }) {
-  const { user, loading } = useUser()
+  const { user, loading } = useUser();
   const pathname = usePathname()
   // const router = useRouter()
   // const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)

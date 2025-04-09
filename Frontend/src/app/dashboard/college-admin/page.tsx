@@ -1,7 +1,7 @@
 // src/app/(dashboard)/college-admin/page.tsx
 'use client'
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useUser } from '@/hooks/auth/useUser';
 import { redirect } from 'next/navigation';
 import { Role, ROLES } from '@/constants/roles';
@@ -9,146 +9,356 @@ import { ROLE_DASHBOARD_ROUTES } from '@/constants/routes';
 import { useToast } from '@/components/ui/use-toast';
 import LoadingSkeleton from '@/components/ui/LoadingSkeleton';
 import { collegeAdminApi } from '@/services/collegeAdmin';
+import { eventApi } from '@/services/event';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DashboardStatsInterface } from '@/types/role-specific/college-admin';
 import { useState, useEffect } from 'react'
-import AddEventModal, { EventType } from '@/components/ui/AddEventModal'
+import AddEventModal from '@/components/ui/AddEventModal'
+import { Button } from '@/components/ui/button';
+import { CalendarPlus } from 'lucide-react';
+import { format } from 'date-fns';
 
 // Components
 import WelcomeBanner from '@/components/ui/WelcomeBanner';
 import FinanceChart from '@/components/role-specific/college-admin/Dashboard/FinanceChart';
 import PerformanceChart from '@/components/role-specific/college-admin/Dashboard/PerformanceChart';
 import StatsCard from '@/components/ui/StatsCard';
-import{ EventCalendar }from '@/components/ui/EventCalender';
+import { EventCalendar } from '@/components/ui/EventCalender';
 import UpcomingEvents from '@/components/ui/UpcomingEvents';
 
-const statsData = [
-  {
-    icon: "👨‍🎓",
-    value: 8998,
-    label: "Total Students",
-    trend: { value: 0.5, isPositive: true }
-  },
-  {
-    icon: "👨‍🏫",
-    value: 854,
-    label: "Total Teachers",
-    trend: { value: 5, isPositive: false }
-  },
-  {
-    icon: "📅",
-    value: 520,
-    label: "Events",
-    trend: { value: 6, isPositive: true }
-  },
-  {
-    icon: "📄",
-    value: 2235,
-    label: "Invoice Status",
-    trend: { value: 0.2, isPositive: true }
-  }
-];
+interface Event {
+  _id: string;
+  title: string;
+  description: string;
+  eventDate: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  status: 'upcoming' | 'ongoing' | 'completed';
+  ticketInfo?: {
+    isPaid: boolean;
+    soldTickets: number;
+    totalTickets: number;
+  };
+}
 
-const financeData = [
-  { date: 'Mon', invoices: 20000, expenses: 15000 },
-  { date: 'Tue', invoices: 32000, expenses: 20000 },
-  { date: 'Wed', invoices: 28000, expenses: 25000 },
-  { date: 'Thu', invoices: 35000, expenses: 18000 },
-  { date: 'Fri', invoices: 30000, expenses: 22000 },
-  { date: 'Sat', invoices: 25000, expenses: 16000 }
-];
+interface FormattedEvent {
+  id: string;
+  title: string;
+  date: Date;
+  time: string;
+  location: string;
+  description: string;
+  type: 'ticket-sale' | 'event';
+  ticketsSold: number;
+  totalTickets: number;
+  status: 'upcoming' | 'ongoing' | 'completed';
+}
 
-const performanceData = Array.from({ length: 10 }, (_, i) => ({
-  week: `Week ${String(i + 1).padStart(2, '0')}`,
-  students: Math.floor(Math.random() * 40) + 20,
-  teachers: Math.floor(Math.random() * 30) + 10
-}));
+interface ApiError extends Error {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+}
 
-const calendarEvents = [
-  { date: new Date(2025, 1, 3), count: 2 },
-  { date: new Date(2025, 1, 5), count: 1 },
-  { date: new Date(2025, 1, 15), count: 3 },
-];
+// Generate realistic finance data 
+const generateFinanceData = () => {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  return days.map(date => {
+    const invoices = Math.floor(10000 + Math.random() * 30000);
+    const expenses = Math.floor(8000 + Math.random() * 20000);
+    return { 
+      date, 
+      invoices, 
+      expenses 
+    };
+  });
+};
 
-const upcomingEvents = [
-  {
-    id: '1',
-    title: 'School Live Concert cashier',
-    date: new Date(2024, 1, 3),
-    type: 'ticket-sale',
-    ticketsSold: 200,
-    totalTickets: 300,
-    status: 'upcoming'
-  },
-  {
-    id: '2',
-    title: 'School Live Concert Event 2022',
-    date: new Date(2024, 1, 5),
-    time: '14:00 - 16:00',
-    location: 'Main Auditorium',
-    type: 'event',
-    status: 'upcoming'
-  },
-  // Add more events as needed
-];
+// Generate realistic performance data
+const generatePerformanceData = (students: number, teachers: number) => {
+  return Array.from({ length: 10 }, (_, i) => ({
+    week: `Week ${String(i + 1).padStart(2, '0')}`,
+    students: Math.floor((students / 10) * (0.8 + Math.random() * 0.4)),
+    teachers: Math.floor((teachers / 10) * (0.8 + Math.random() * 0.4))
+  }));
+};
 
 export default function CollegeAdminDashboard() {
   // User-related hooks
-  const { user, loading: userLoading, error: userError } = useUser()
-  const { toast } = useToast()
+  const { user, loading: userLoading } = useUser();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Modified state hooks
-  const [events, setEvents] = useState<EventType[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem("events")
-      return saved ? JSON.parse(saved) : []
-    }
-    return []
-  })
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date>()
+  // State hooks
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [dateRange, setDateRange] = useState('period-1');
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
-  // Query hooks
-  const { data: stats, isLoading } = useQuery<DashboardStatsInterface>({
-    queryKey: ['dashboardStats', user?._id],
+  // Get college ID safely
+  const collegeId = user?.college || '';
+  
+  // Query for dashboard stats
+  const { data: stats, isLoading: statsLoading } = useQuery<DashboardStatsInterface>({
+    queryKey: ['dashboardStats', collegeId],
     queryFn: async () => {
-      const response = await collegeAdminApi.getDashboardStats()
-      return response.data
+      if (!collegeId) throw new Error('No college ID found');
+      const response = await collegeAdminApi.getDashboardStats(collegeId);
+      return response.data.data;
     },
-    enabled: user?.role === ROLES.college_admin,
-    refetchOnMount: true,
-    staleTime: 0,
-    gcTime: 30 * 60 * 1000,
+    enabled: !!collegeId && user?.role === ROLES.college_admin,
     refetchOnWindowFocus: false,
-    retry: 2,
-  })
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+  
+  // Query for events
+  const { data: eventsData, isLoading: eventsLoading } = useQuery({
+    queryKey: ['events', collegeId],
+    queryFn: async () => {
+      if (!collegeId) return { data: [] };
+      try {
+        console.log('Fetching events for college ID:', collegeId);
+        const response = await eventApi.getEvents(collegeId, {
+          limit: 10,
+          status: 'upcoming'
+        });
+        console.log('Events data:', response.data);
+        return response.data;
+      } catch (error: unknown) {
+        const apiError = error as ApiError;
+        console.error('Error fetching events:', apiError);
+        if (apiError?.response?.status === 401) {
+          console.log('Auth error detected, attempting to refresh session...');
+          if (typeof window !== 'undefined') {
+            // Implement token refresh mechanism here if needed
+          }
+        }
+        return { data: [] };
+      }
+    },
+    enabled: !!collegeId && user?.role === ROLES.college_admin,
+    refetchOnWindowFocus: false,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1, // Only retry once to avoid hanging on auth errors
+  });
 
-  // Effects
+  // Create event mutation
+  const createEventMutation = useMutation({
+    mutationFn: (newEvent: Omit<FormattedEvent, 'id'>) => {
+      if (!collegeId) throw new Error('No college ID found');
+      return eventApi.createEvent(collegeId, {
+        title: newEvent.title,
+        description: newEvent.description,
+        eventDate: format(newEvent.date, 'yyyy-MM-dd'),
+        startTime: newEvent.time.split(' - ')[0],
+        endTime: newEvent.time.split(' - ')[1],
+        location: newEvent.location,
+        ticketInfo: {
+          isPaid: newEvent.type === 'ticket-sale',
+          totalTickets: newEvent.totalTickets
+        }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events', collegeId] });
+      setIsAddModalOpen(false);
+      toast({
+        title: 'Success',
+        content: 'Event created successfully',
+      });
+    },
+    onError: (error: unknown) => {
+      const apiError = error as ApiError;
+      toast({
+        title: 'Error',
+        content: apiError?.response?.data?.message || 'Failed to create event',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Update event mutation
+  const updateEventMutation = useMutation({
+    mutationFn: ({ eventId, eventData }: { eventId: string, eventData: Record<string, any> }) => {
+      return eventApi.updateEvent(eventId, eventData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['events', collegeId] });
+      toast({
+        title: 'Success',
+        content: 'Event updated successfully',
+      });
+    },
+    onError: (error: unknown) => {
+      const apiError = error as ApiError;
+      toast({
+        title: 'Error',
+        content: apiError?.response?.data?.message || 'Failed to update event',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Generate finance and performance data based on stats
+  const financeData = stats?.subscription?.pricing?.amount 
+    ? generateFinanceData()
+    : Array.from({ length: 7 }, (_, i) => ({ 
+        date: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i], 
+        invoices: 0, 
+        expenses: 0 
+      }));
+  
+  const performanceData = stats?.stats
+    ? generatePerformanceData(stats.stats.students.total, stats.stats.teachers.total)
+    : Array.from({ length: 10 }, (_, i) => ({
+        week: `Week ${String(i + 1).padStart(2, '0')}`,
+        students: 0,
+        teachers: 0
+      }));
+
+  // Format events for the calendar
+  const formattedEvents: FormattedEvent[] = eventsData?.data?.map((event: Event) => ({
+    id: event._id,
+    title: event.title,
+    date: new Date(event.eventDate),
+    time: `${event.startTime} - ${event.endTime}`,
+    location: event.location,
+    description: event.description,
+    type: event.ticketInfo?.isPaid ? 'ticket-sale' : 'event',
+    ticketsSold: event.ticketInfo?.soldTickets || 0,
+    totalTickets: event.ticketInfo?.totalTickets || 0,
+    status: event.status
+  })) || [];
+
+  // Add finance-related state variables
+  const [financePeriod] = useState('Weekly');
+  const [totalInvoices, setTotalInvoices] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+
+  // Update useEffect to set finance totals
   useEffect(() => {
-    const savedEvents = JSON.parse(localStorage.getItem('events') || '[]')
-    setEvents(savedEvents)
-  }, [])
+    if (stats?.stats?.invoices?.value) {
+      setTotalInvoices(stats.stats.invoices.value);
+      setTotalExpenses(Math.round(stats.stats.invoices.value * 0.7));
+    }
+  }, [stats]);
 
+  // Handle event update
+  const handleEventUpdate = (event: any) => {
+    if (!event._id) {
+      toast({
+        title: 'Error',
+        content: 'Event ID not found',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    // Convert the event to the format expected by the API
+    const eventData: any = {
+      title: event.title,
+      description: event.description,
+      eventDate: event.eventDate || event.date,
+      startTime: event.startTime || (event.time?.split(' - ')[0]),
+      endTime: event.endTime || (event.time?.split(' - ')[1]),
+      location: event.location,
+      status: event.status,
+      ticketInfo: event.ticketInfo
+    };
+
+    updateEventMutation.mutate({ eventId: event._id, eventData });
+    
+    // Invalidate the events query to refresh the data
+    queryClient.invalidateQueries({ queryKey: ['events'] });
+  };
+
+  // Update handleEventAdd to include the required date property
+  const handleEventAdd = (eventData: {
+    title: string;
+    type: 'academic' | 'cultural' | 'sports' | 'placement' | 'seminar' | 'workshop' | 'other';
+    location: string;
+    description: string;
+    eventDate: Date;
+    startTime: string;
+    endTime: string;
+    organizer: {
+      name: string;
+      email: string;
+      phone: string;
+    };
+    isPublic: boolean;
+    media?: {
+      gallery: string[];
+      coverImage?: string;
+    };
+  }) => {
+    const newEvent: Omit<FormattedEvent, 'id'> = {
+      title: eventData.title,
+      date: eventData.eventDate,
+      time: `${eventData.startTime} - ${eventData.endTime}`,
+      location: eventData.location,
+      description: eventData.description,
+      type: 'event',
+      ticketsSold: 0,
+      totalTickets: 0,
+      status: 'upcoming'
+    };
+    createEventMutation.mutate(newEvent);
+  };
+
+  // Redirect non-admin users
   useEffect(() => {
     if (!userLoading && user?.role !== ROLES?.college_admin) {
-      redirect(ROLE_DASHBOARD_ROUTES[user?.role as Role] || '/login')
+      redirect(ROLE_DASHBOARD_ROUTES[user?.role as Role] || '/login');
     }
-  }, [user, userLoading])
+  }, [user, userLoading]);
 
-  // Modified event handler
-  const handleEventAdd = (newEvent: EventType) => {
-    setEvents(prev => [...prev, newEvent])
-    // Save to localStorage
-    const existingEvents = JSON.parse(localStorage.getItem('events') || '[]')
-    localStorage.setItem('events', JSON.stringify([...existingEvents, newEvent]))
-    toast({
-      title: "Event added successfully",
-      content: "Your new event has been added to the calendar",
-    })
+  // Set initial load state with proper data dependencies
+  useEffect(() => {
+    if (!userLoading && !statsLoading) {
+      // Show content immediately once the main data is loaded
+      // Even if events are still loading
+      const timer = setTimeout(() => setIsInitialLoad(false), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [userLoading, statsLoading]);
+
+  // Add debug information in development - MOVED ABOVE the conditional loading check
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Dashboard render stats:', {
+        userLoading,
+        statsLoading,
+        eventsLoading,
+        hasUser: !!user,
+        hasStats: !!stats,
+        hasEvents: !!(eventsData?.data?.length > 0),
+        collegeId
+      });
+    }
+  }, [userLoading, statsLoading, eventsLoading, user, stats, eventsData, collegeId]);
+
+  // Show a lightweight loading skeleton only during initial load
+  if (isInitialLoad) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="h-24 bg-gray-200 animate-pulse rounded-xl"></div>
+        <div className="flex flex-wrap gap-4">
+          <div className="h-32 w-64 bg-gray-200 animate-pulse rounded-xl"></div>
+          <div className="h-32 w-64 bg-gray-200 animate-pulse rounded-xl"></div>
+        </div>
+      </div>
+    );
   }
 
-  if (userLoading || isLoading) return <LoadingSkeleton height="lg" />
+  const loading = userLoading || statsLoading || eventsLoading;
+  if (loading) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <>
@@ -179,8 +389,8 @@ export default function CollegeAdminDashboard() {
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           <div className="w-full lg:w-2/3 space-y-4 sm:space-y-6">
             <WelcomeBanner 
-              title="Welcome to your dashboard" 
-              description="Here you can manage your college and see your stats" 
+              title={`Welcome, ${user?.name || 'Admin'}`}
+              description={`Manage ${stats?.collegeInfo?.name || 'your college'} and view analytics`}
               buttonText="View Stats" 
               onButtonClick={() => {}} 
               className="shadow-lg rounded-xl bg-gradient-to-r from-purple-800 to-amber-500"
@@ -191,30 +401,30 @@ export default function CollegeAdminDashboard() {
                 <div className="grid grid-cols-2 gap-6">
                   <StatsCard
                     icon="👨‍🎓"
-                    value={8998}
+                    value={stats?.stats?.students?.total || 0}
                     title="Total Students"
-                    trend={{ value: 0.5, isPositive: true }}
+                    trend={stats?.stats?.students?.trend || { value: 0, isPositive: true }}
                     className="bg-[#5552AB] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6"
                   />
                   <StatsCard
                     icon="👨‍🏫"
-                    value={854}
+                    value={stats?.stats?.teachers?.total || 0}
                     title="Total Teachers"
-                    trend={{ value: 5, isPositive: false }}
+                    trend={stats?.stats?.teachers?.trend || { value: 0, isPositive: true }}
                     className="bg-[#FB8892] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6"
                   />
                   <StatsCard
                     icon="📅"
-                    value={520}
+                    value={stats?.stats?.events?.total || 0}
                     title="Events"
-                    trend={{ value: 6, isPositive: true }}
+                    trend={stats?.stats?.events?.trend || { value: 0, isPositive: true }}
                     className="bg-[#A1A2D8] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6"
                   />
                   <StatsCard
                     icon="📄"
-                    value={2235}
-                    title="Invoice Status"
-                    trend={{ value: 0.2, isPositive: true }}
+                    value={stats?.stats?.invoices?.total || 0}
+                    title="Invoices"
+                    trend={stats?.stats?.invoices?.trend || { value: 0, isPositive: true }}
                     className="bg-[#5552AB] text-white rounded-xl shadow-lg hover:shadow-xl transition-shadow p-4 sm:p-6"
                   />
                 </div>
@@ -223,10 +433,9 @@ export default function CollegeAdminDashboard() {
               <div className='w-full md:w-1/2'>
                 <FinanceChart
                   data={financeData}
-                  period="Weekly"
-                  totalInvoices={352586.00}
-                  totalExpenses={10528}
-                  className="shadow-lg rounded-xl hover:shadow-xl transition-shadow"
+                  period={financePeriod}
+                  totalInvoices={totalInvoices}
+                  totalExpenses={totalExpenses}
                 />
               </div>
             </div>
@@ -241,39 +450,73 @@ export default function CollegeAdminDashboard() {
           </div>
 
           <div className="w-full lg:w-1/3 space-y-4 sm:space-y-6">
-            <Card className="p-3 sm:p-4 shadow-lg hover:shadow-xl transition-shadow">
-              <Select defaultValue="period-1">
-                <SelectTrigger className="shadow-sm hover:shadow transition-shadow">
-                  <SelectValue placeholder="Jan 20th - Feb 28th 2022" />
+            <Card className="p-3 sm:p-4 shadow-lg hover:shadow-xl transition-shadow flex justify-between items-center">
+              <Select 
+                value={dateRange} 
+                onValueChange={setDateRange}
+              >
+                <SelectTrigger className="shadow-sm hover:shadow transition-shadow w-[240px]">
+                  <SelectValue placeholder="Select date range" />
                 </SelectTrigger>
                 <SelectContent className="shadow-lg">
-                  <SelectItem value="period-1">Jan 20th - Feb 28th 2022</SelectItem>
+                  <SelectItem value="period-1">{format(new Date(), 'MMM dd')} - {format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), 'MMM dd, yyyy')}</SelectItem>
+                  <SelectItem value="period-2">Last 30 days</SelectItem>
+                  <SelectItem value="period-3">Last 90 days</SelectItem>
                 </SelectContent>
               </Select>
+              
+              <Button 
+                size="sm" 
+                onClick={() => setIsAddModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <CalendarPlus className="h-4 w-4 mr-2" />
+                Add Event
+              </Button>
             </Card>
 
-            <div className="flex justify-between items-center">
-              <AddEventModal 
-                open={isAddModalOpen}
-                onOpenChange={setIsAddModalOpen}
-                onEventAdd={handleEventAdd}
-                initialDate={selectedDate}
-                className="shadow-2xl"
-              />
-            </div>
-            
+            <AddEventModal 
+              open={isAddModalOpen}
+              onOpenChange={setIsAddModalOpen}
+              onEventAdded={(newEvent) => {
+                // After successful event creation, invalidate the events query to refresh the data
+                queryClient.invalidateQueries({ queryKey: ['events'] });
+                // Call the original handler if needed
+                handleEventAdd(newEvent);
+              }}
+            />
             <EventCalendar 
-              eventsList={events}
-              onDateSelect={(date: Date) => {
-                setSelectedDate(date)
-                setIsAddModalOpen(true)
+              events={formattedEvents.map(event => ({
+                ...event,
+                date: event.date.toISOString() // Convert Date to string
+              }))}
+              disableDateClick={true} 
+              onDateSelect={(date) => {
+                // This won't be called if disableDateClick is true
+                console.log("Selected date:", date);
               }}
               className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
             />
 
             <UpcomingEvents 
-              events={events}
+              events={formattedEvents}
               className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              onViewMore={() => {}}
+              onAddEvent={() => setIsAddModalOpen(true)}
+              onEventClick={(event) => {
+                // Handle event click - could open a details modal
+                console.log('Event clicked:', event);
+              }}
+              onEditEvent={(event) => {
+                // Handle edit event - could open the edit modal with pre-filled data
+                console.log('Edit event:', event);
+                // TODO: Implement edit functionality
+              }}
+              onDeleteEvent={() => {
+                // After successful deletion, invalidate the events query to refresh the data
+                queryClient.invalidateQueries({ queryKey: ['events'] });
+              }}
+              onEventUpdated={handleEventUpdate}
             />
           </div>
         </div>

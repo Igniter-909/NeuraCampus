@@ -16,6 +16,10 @@ apiClient.interceptors.request.use((config) => {
   
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    // Log token presence for debugging - remove in production
+    console.log('Request with token:', config.url);
+  } else {
+    console.warn('No auth token available for request:', config.url);
   }
   
   return config;
@@ -24,13 +28,43 @@ apiClient.interceptors.request.use((config) => {
 // Handle response errors
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      document.cookie = 'token=; Max-Age=0; path=/;';
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Handle authentication errors
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        console.log('Auth error detected, attempting to refresh token');
+        // Try to refresh token - implement your token refresh logic here
+        // const refreshResponse = await apiClient.post('/auth/refresh-token');
+        // if (refreshResponse.data.token) {
+        //   cookieUtils.set('token', refreshResponse.data.token);
+        //   originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.token}`;
+        //   return apiClient(originalRequest);
+        // }
+        
+        // For now, just log out the user
+        console.warn('Token refresh not implemented, logging out user');
+        document.cookie = 'token=; Max-Age=0; path=/;';
+        document.cookie = 'user=; Max-Age=0; path=/;';
+        
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        // Clear cookies and redirect to login
+        document.cookie = 'token=; Max-Age=0; path=/;';
+        document.cookie = 'user=; Max-Age=0; path=/;';
+        
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
       }
     }
+    
     return Promise.reject(error);
   }
 );

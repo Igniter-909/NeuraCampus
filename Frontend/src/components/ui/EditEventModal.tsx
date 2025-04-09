@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -36,6 +36,41 @@ import { cn } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
 import { eventApi } from "@/services/event"
 
+// Event interface
+interface Event {
+  _id?: string;
+  id?: string;
+  title?: string;
+  name?: string;
+  description?: string;
+  location?: string;
+  startTime?: string;
+  endTime?: string;
+  time?: string;
+  eventDate?: string;
+  date?: Date;
+  type?: 'academic' | 'cultural' | 'sports' | 'placement' | 'seminar' | 'workshop' | 'other';
+  organizer?: {
+    name: string;
+    email: string;
+    phone: string;
+  };
+  isPublic?: boolean;
+  media?: {
+    coverImage?: string;
+    gallery: string[];
+  };
+  ticketInfo?: {
+    isPaid: boolean;
+    soldTickets: number;
+    totalTickets: number;
+  };
+  ticketsSold?: number;
+  totalTickets?: number;
+  status?: 'upcoming' | 'ongoing' | 'completed';
+  eventPdf?: string;
+}
+
 // Event schema validation
 const formSchema = z.object({
   title: z.string().min(3, { message: "Event title must be at least 3 characters" }),
@@ -61,17 +96,19 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-interface AddEventModalProps {
+interface EditEventModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onEventAdded?: (data: FormValues) => void
+  event: Event
+  onEventUpdated?: (data: Event) => void
 }
 
-export default function AddEventModal({
+export default function EditEventModal({
   open,
   onOpenChange,
-  onEventAdded
-}: AddEventModalProps) {
+  event,
+  onEventUpdated
+}: EditEventModalProps) {
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -96,6 +133,31 @@ export default function AddEventModal({
     },
   })
 
+  // Update form values when event changes
+  useEffect(() => {
+    if (event) {
+      const formData = {
+        title: event.title || event.name || "",
+        description: event.description || "",
+        location: event.location || "",
+        startTime: event.startTime || (event.time?.split(' - ')[0] || ""),
+        endTime: event.endTime || (event.time?.split(' - ')[1] || ""),
+        type: (event.type as 'academic' | 'cultural' | 'sports' | 'placement' | 'seminar' | 'workshop' | 'other') || "academic",
+        eventDate: event.eventDate ? new Date(event.eventDate) : (event.date ? new Date(event.date) : new Date()),
+        organizer: event.organizer || {
+          name: "",
+          email: "",
+          phone: ""
+        },
+        isPublic: event.isPublic !== undefined ? event.isPublic : true,
+        media: event.media || {
+          gallery: []
+        }
+      };
+      form.reset(formData);
+    }
+  }, [event, form]);
+
   async function onSubmit(data: FormValues) {
     setIsSubmitting(true)
     
@@ -116,34 +178,45 @@ export default function AddEventModal({
         formData.append("media", JSON.stringify(data.media))
       }
 
-      // Replace with your API endpoint
-      const collegeId = "67c0c6c6dd69613ecc8e430a"; // Ensure collegeId is a string
-      const response = await eventApi?.createEvent(collegeId, data);
+      // Get the event ID
+      const eventId = event._id || event.id;
+      
+      if (!eventId) {
+        throw new Error("Event ID not found");
+      }
+
+      // Update the event
+      const response = await eventApi.updateEvent(eventId, {
+        ...data,
+        media: data.media ? {
+          coverImage: data.media.coverImage || "",
+          gallery: data.media.gallery || []
+        } : undefined
+      });
 
       if (!response?.data) {
-        throw new Error("Failed to create event");
+        throw new Error("Failed to update event");
       }
 
       const result = response.data;
       
       toast({
-        title: "Event created",
-        children: "Your event has been successfully created",
+        title: "Event updated",
+        children: "Your event has been successfully updated",
       })
       
-      if (onEventAdded) {
-        onEventAdded(result)
+      if (onEventUpdated) {
+        onEventUpdated(result)
       }
       
       // Close modal and reset form
       onOpenChange(false)
-      form.reset()
       
     } catch (error) {
-      console.error("Error creating event:", error)
+      console.error("Error updating event:", error)
       toast({
         title: "Error",
-        children: "Failed to create event. Please try again.",
+        children: "Failed to update event. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -158,9 +231,9 @@ export default function AddEventModal({
         <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-900 dark:via-blue-950 dark:to-indigo-950 p-8 rounded-t-2xl relative overflow-hidden flex-shrink-0">
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0MCIgaGVpZ2h0PSIxMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48Y2lyY2xlIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iLjA1IiBjeD0iNzIwIiBjeT0iNjAiIHI9IjYwIi8+PGNpcmNsZSBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9Ii4wNSIgY3g9IjcyMCIgY3k9IjYwIiByPSI0NSIvPjxjaXJjbGUgZmlsbD0iIzAwMDAwMCIgZmlsbC1vcGFjaXR5PSIuMDUiIGN4PSI3MjAiIGN5PSI2MCIgcj0iMzAiLz48Y2lyY2xlIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iLjA1IiBjeD0iNzIwIiBjeT0iNjAiIHI9IjE1Ii8+PC9nPjwvc3ZnPg==')] opacity-10"></div>
           <DialogHeader className="space-y-3 relative z-10">
-            <DialogTitle className="text-3xl font-bold text-white tracking-tight">Add New Event</DialogTitle>
+            <DialogTitle className="text-3xl font-bold text-white tracking-tight">Edit Event</DialogTitle>
             <DialogDescription className="text-blue-100 dark:text-blue-200 text-lg">
-              Fill in the event details below. Click save when you&apos;re done.
+              Update the event details below. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
         </div>
@@ -443,7 +516,7 @@ export default function AddEventModal({
                   <span>Saving...</span>
                 </div>
               ) : (
-                "Save Event"
+                "Save Changes"
               )}
             </Button>
           </DialogFooter>
@@ -486,5 +559,4 @@ if (typeof document !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = customScrollbarStyles;
   document.head.appendChild(style);
-}
-
+} 
