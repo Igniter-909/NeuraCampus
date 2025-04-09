@@ -1,7 +1,7 @@
 import axios from 'axios';
 import cookieUtils from '@/lib/cookies';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cms-backend-kdb3.onrender.com/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://cms-backend-kdb3.onrender.com/api/v1';
 
 export const apiClient = axios.create({
   baseURL: API_URL,

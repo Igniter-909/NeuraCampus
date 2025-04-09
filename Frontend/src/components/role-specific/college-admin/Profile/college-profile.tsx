@@ -11,13 +11,50 @@ import FacilitiesSection from "@/components/role-specific/college-admin/Profile/
 import AchievementsSection from "@/components/role-specific/college-admin/Profile/achievements-section"
 import PlacementSection from "@/components/role-specific/college-admin/Profile/placement-section"
 import FloatingActionButton from "@/components/ui/floating-action-button"
+import { apiClient } from "@/lib/api"
 
-export default function CollegeProfile() {
+interface CollegeProfileProps {
+  collegeId: string
+}
+
+export default function CollegeProfile({ collegeId }: CollegeProfileProps) {
   const [collegeData, setCollegeData] = useState<CollegeData>(initialCollegeData)
   const [editedData, setEditedData] = useState<CollegeData>(initialCollegeData)
   const [isAdmin] = useState(true) // In a real app, this would be determined by authentication
   const [hasChanges, setHasChanges] = useState(false)
   const [editingField, setEditingField] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Fetch college data when component mounts or collegeId changes
+  useEffect(() => {
+    const fetchCollegeData = async () => {
+      if (!collegeId) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        const response = await apiClient.get(`/colleges/${collegeId}/profile`)
+        console.log("1313d",response.data);
+        const data = response.data.data;
+        
+        // If backend returns data in a different format, transform it to match CollegeData interface
+        if (data) {
+          setCollegeData(data)
+          setEditedData(data)
+        }
+      } catch (err) {
+        console.error("Error fetching college data:", err)
+        setError("Failed to load college data. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchCollegeData()
+  }, [collegeId])
 
   // Update hasChanges when editedData changes
   useEffect(() => {
@@ -25,7 +62,8 @@ export default function CollegeProfile() {
     setHasChanges(hasUnsavedChanges)
   }, [collegeData, editedData])
 
-  const handleFieldEdit = (fieldPath: string, value: string | number | string[] | Record<string, unknown>[]) => {
+  // Using unknown is safer than any but still allows for the flexibility needed
+  const handleFieldEdit = (fieldPath: string, value: unknown) => {
     setEditingField(fieldPath)
 
     // Create a deep copy of editedData and update the specified field
@@ -43,16 +81,44 @@ export default function CollegeProfile() {
     setEditedData(newData)
   }
 
-  const handleSaveChanges = () => {
-    setCollegeData(editedData)
-    setHasChanges(false)
-    setEditingField(null)
+  const handleSaveChanges = async () => {
+    try {
+      // Save changes to backend
+      if (collegeId) {
+        console.log("1313derrngklnme",editedData);
+        const response = await apiClient.put(`/colleges/${collegeId}/profile`, editedData)
+        console.log("1313d",response.data);
+      }
+      
+      setCollegeData(editedData)
+      setHasChanges(false)
+      setEditingField(null)
+    } catch (err) {
+      console.error("Error saving college data:", err)
+      setError("Failed to save changes. Please try again later.")
+    }
   }
 
   const handleDiscardChanges = () => {
     setEditedData(collegeData)
     setHasChanges(false)
     setEditingField(null)
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p>Loading college profile...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <p>{error}</p>
+      </div>
+    )
   }
 
   return (
